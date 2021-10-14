@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
-export const StandardButton = (props) => {
+export default StandardButton = (props) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={props.action}>
@@ -10,7 +10,6 @@ export const StandardButton = (props) => {
     </View>
   );
 };
-export default StandardButton;
 
 const styles = StyleSheet.create({
   container: {

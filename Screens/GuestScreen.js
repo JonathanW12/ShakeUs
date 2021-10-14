@@ -2,7 +2,7 @@ import React from "react";
 import Banner from "../Components/Banner";
 import { View, Text, StyleSheet, Image } from "react-native";
 
-export const GuestScreen = ({ navigation }) => {
+export default GuestScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Banner title="Guest Screen" />
@@ -10,7 +10,6 @@ export const GuestScreen = ({ navigation }) => {
     </View>
   );
 };
-export default GuestScreen;
 
 const styles = StyleSheet.create({
   container: {},

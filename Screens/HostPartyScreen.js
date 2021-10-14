@@ -2,8 +2,9 @@ import React from "react";
 import Banner from "../Components/Banner";
 import { View, Text, StyleSheet, Image } from "react-native";
 import StandardButton from "../Components/StandardButton";
+import Colors from "../Constants/Colors";
 
-export const HostPartyScreen = ({ navigation }) => {
+export default HostPartyScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Banner title="Host Party" />
@@ -42,7 +43,6 @@ export const HostPartyScreen = ({ navigation }) => {
     </View>
   );
 };
-export default HostPartyScreen;
 
 const styles = StyleSheet.create({
   container: {},

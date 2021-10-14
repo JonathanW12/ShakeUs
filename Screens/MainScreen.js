@@ -4,8 +4,9 @@ import { NativeAppEventEmitter } from "react-native";
 import Banner from "../Components/Banner";
 import { View, Text, StyleSheet, Image } from "react-native";
 import StandardButton from "../Components/StandardButton";
+import Colors from "../Constants/Colors";
 
-export const MainScreen = ({ navigation }) => {
+export default MainScreen = ({ navigation }) => {
   const handleActionHostParty = () => {
     navigation.navigate("HostPartyScreen");
   };
@@ -24,10 +25,12 @@ export const MainScreen = ({ navigation }) => {
     </View>
   );
 };
-export default MainScreen;
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    backgroundColor: Colors.secondary,
+    flex: 1,
+  },
   conentContainer: {
     alignItems: "center",
     justifyContent: "center",

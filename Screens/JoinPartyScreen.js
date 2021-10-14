@@ -2,8 +2,9 @@ import React from "react";
 import Banner from "../Components/Banner";
 import { View, Text, StyleSheet, Image, TextInput } from "react-native";
 import StandardButton from "../Components/StandardButton";
+import Colors from "../Constants/Colors";
 
-export const JoinPartyScreen = ({ navigation }) => {
+export default JoinPartyScreen = ({ navigation }) => {
   const [text, onChangeText] = React.useState("Game PIN");
   const handleAction = () => {
     navigation.navigate("GuestScreen");
@@ -21,7 +22,6 @@ export const JoinPartyScreen = ({ navigation }) => {
     </View>
   );
 };
-export default JoinPartyScreen;
 
 const styles = StyleSheet.create({
   container: { alignItems: "center" },
