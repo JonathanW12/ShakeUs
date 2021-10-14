@@ -3,14 +3,17 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 export default StandardButton = (props) => {
   return (
-    <View style={styles.container}>
+    <View style={{ ...styles.container, ...props.style }}>
       <TouchableOpacity onPress={props.action}>
-        <Text style={styles.buttonText}>{props.title}</Text>
+        <Text style={{ ...styles.buttonText, ...props.textStyle }}>
+          {props.title}
+        </Text>
       </TouchableOpacity>
     </View>
   );
 };
 
+//all styles are default and can be overridden with props
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "blue",

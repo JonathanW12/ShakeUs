@@ -12,9 +12,21 @@ export default Banner = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: 70,
+    justifyContent: "flex-start",
+    flexDirection: "row",
+    alignItems: "center",
+    height: 90,
     paddingTop: 25,
+    paddingLeft: 20,
     backgroundColor: Colors.primary,
+    elevation: 10,
+    shadowColor: "black",
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
   },
   titleText: {
     fontSize: 24,

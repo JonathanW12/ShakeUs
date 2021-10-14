@@ -11,7 +11,7 @@ export default JoinPartyScreen = ({ navigation }) => {
   };
   return (
     <View style={styles.container}>
-      <Banner title="Join a Party" />
+      <Banner title="Join Party" />
 
       <TextInput
         style={styles.inputField}
