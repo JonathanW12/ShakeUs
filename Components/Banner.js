@@ -1,10 +1,21 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Colors from "../Constants/Colors";
+import { Icon } from "react-native-elements";
 
 export default Banner = (props) => {
   return (
     <View style={styles.container}>
+      <View style={{ marginRight: 20 }}>
+        <Icon
+          name={props.iconName}
+          //icons can be found on https://oblador.github.io/react-native-vector-icons/
+          type="feather"
+          color="white"
+          onPress={props.onIconPress}
+        />
+      </View>
+
       <Text style={styles.titleText}>{props.title}</Text>
     </View>
   );

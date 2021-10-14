@@ -7,7 +7,13 @@ import Colors from "../Constants/Colors";
 export default HostPartyScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Banner title="Host Party" />
+      <Banner
+        title="Host Party"
+        iconName="arrow-left"
+        onIconPress={() => {
+          navigation.navigate("MainScreen");
+        }}
+      />
       <View>
         <StandardButton
           title="Settings 1"

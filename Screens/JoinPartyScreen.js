@@ -11,7 +11,14 @@ export default JoinPartyScreen = ({ navigation }) => {
   };
   return (
     <View style={styles.container}>
-      <Banner title="Join Party" />
+      <Banner
+        title="Join Party"
+        iconName="arrow-left"
+        onIconPress={() => {
+          navigation.navigate("MainScreen");
+          console.log("buh");
+        }}
+      />
       <Input placeholder="Enter Party Code" maxLength={9} />
 
       <StandardButton

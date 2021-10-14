@@ -16,7 +16,6 @@ export default MainScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Banner title="ShakeUs" />
       <View style={styles.contentContainer}>
         <Image source={require("../Constants/ShakeUsLogo.png")} />
         <StandardButton
