@@ -3,13 +3,14 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 export default StandardButton = (props) => {
   return (
-    <View style={{ ...styles.container, ...props.style }}>
-      <TouchableOpacity onPress={props.action}>
-        <Text style={{ ...styles.buttonText, ...props.textStyle }}>
-          {props.title}
-        </Text>
-      </TouchableOpacity>
-    </View>
+    <TouchableOpacity
+      onPress={props.action}
+      style={{ ...styles.container, ...props.style }}
+    >
+      <Text style={{ ...styles.buttonText, ...props.textStyle }}>
+        {props.title}
+      </Text>
+    </TouchableOpacity>
   );
 };
 
@@ -17,12 +18,20 @@ export default StandardButton = (props) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "blue",
-    height: 50,
+    height: 65,
+    width: "90%",
     justifyContent: "center",
-    padding: 20,
-    borderRadius: 10,
+    borderRadius: 4,
     margin: 2,
     alignSelf: "center",
+    elevation: 10,
+    shadowColor: "black",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
   },
   buttonText: {
     fontSize: 24,

@@ -17,10 +17,20 @@ export default MainScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Banner title="ShakeUs" />
-      <View style={styles.conentContainer}>
+      <View style={styles.contentContainer}>
         <Image source={require("../Constants/ShakeUsLogo.png")} />
-        <StandardButton title="Host Party" action={handleActionHostParty} />
-        <StandardButton title="Join Party" action={handleActionJoinParty} />
+        <StandardButton
+          textStyle={styles.buttonTextStyle}
+          style={{ ...styles.button, backgroundColor: Colors.primary }}
+          title="Host Party"
+          action={handleActionHostParty}
+        />
+        <StandardButton
+          textStyle={styles.buttonTextStyle}
+          style={{ ...styles.button, backgroundColor: Colors.tertiary }}
+          title="Join Party"
+          action={handleActionJoinParty}
+        />
       </View>
     </View>
   );
@@ -31,9 +41,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.secondary,
     flex: 1,
   },
-  conentContainer: {
+  contentContainer: {
     alignItems: "center",
     justifyContent: "center",
   },
-  button: { fontSize: 24, marginTop: 10 },
+  button: { width: "90%", height: 65 },
+  buttonTextStyle: {
+    fontSize: 20,
+  },
 });

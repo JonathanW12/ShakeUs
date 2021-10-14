@@ -1,6 +1,7 @@
 import React from "react";
 import Banner from "../Components/Banner";
 import { View, Text, StyleSheet, Image } from "react-native";
+import Colors from "../Constants/Colors";
 
 export default GuestScreen = ({ navigation }) => {
   return (
