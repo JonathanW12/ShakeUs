@@ -1,13 +1,19 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import shadow from "../Constants/ShadowCSS";
 
 export default SmallButton = (props) => {
   return (
     <TouchableOpacity
       onPress={props.action}
-      style={{ ...styles.container, ...props.style }}
+      style={{ ...styles.container, ...props.style, ...shadow.standardShadow }}
     >
-      <Text style={{ ...styles.buttonText, ...props.textStyle }}>
+      <Text
+        style={{
+          ...styles.buttonText,
+          ...props.textStyle,
+        }}
+      >
         {props.title}
       </Text>
     </TouchableOpacity>
@@ -21,19 +27,10 @@ const styles = StyleSheet.create({
     width: "50%",
     justifyContent: "center",
     borderRadius: 4,
-    margin: 2,
     alignSelf: "center",
-    elevation: 10,
-    shadowColor: "black",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
   },
   buttonText: {
-    fontSize: 15,
+    fontSize: 18,
     color: "white",
     textAlign: "center",
   },

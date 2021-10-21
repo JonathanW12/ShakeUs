@@ -1,8 +1,9 @@
 import React from "react";
 import Banner from "../Components/Banner";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, Dimensions } from "react-native";
 import Colors from "../Constants/Colors";
 import SmallButton from "../Components/SmallButton";
+import ShadowCSS from "../Constants/ShadowCSS";
 
 export default GuestScreen = ({ navigation }) => {
   return (
@@ -14,14 +15,28 @@ export default GuestScreen = ({ navigation }) => {
           navigation.navigate("JoinPartyScreen");
         }}
       />
-      <Text>Current Activity</Text>
-      <View style={styles.challengeContainer}>
-        <Text>Party Title</Text>
-        <Text>ShakeUs dares you to implement the css :))))))</Text>
-        <SmallButton
-          style={{ ...styles.button, backgroundColor: Colors.secondary }}
-          title="Game Rules"
-        />
+      <Text style={styles.currentActivity}>Current Activity</Text>
+      <View
+        style={{ ...ShadowCSS.standardShadow, ...styles.challengeContainer }}
+      >
+        <View>
+          <Text style={styles.partyTitle}>Party Title</Text>
+          <View style={styles.whiteLine}></View>
+        </View>
+        <Text style={styles.guestMesssage}>
+          ShakeUs dares you to implement the css :))))))
+        </Text>
+        <View>
+          <View style={styles.whiteLine}></View>
+          <SmallButton
+            style={{ ...styles.button, backgroundColor: Colors.secondary }}
+            title="Game Rules"
+          />
+        </View>
+      </View>
+      <View style={styles.lowerContainer}>
+        <Text style={styles.nextActivity}>Next Activity At</Text>
+        <Text style={styles.timeStamp}>21:30</Text>
       </View>
     </View>
   );
@@ -29,26 +44,61 @@ export default GuestScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: { backgroundColor: Colors.secondary, flex: 1 },
-  guestMesssage: {
-    fontSize: 24,
+  currentActivity: {
+    color: "white",
+    textAlign: "center",
+    fontSize: 22,
+    margin: 15,
   },
-  button: { width: "60%", height: 40 },
+  guestMesssage: {
+    fontSize: 18,
+    color: "white",
+    margin: 15,
+    textAlign: "center",
+  },
+  button: { width: "60%", height: 40, marginBottom: 10, marginTop: 5 },
   challengeContainer: {
     width: "90%",
-    padding: 10,
+    height: "40%",
+    padding: 5,
     backgroundColor: Colors.primary,
-    justifyContent: "center",
+    justifyContent: "space-between",
     borderRadius: 4,
-    margin: 2,
     alignSelf: "center",
-    elevation: 10,
-    shadowColor: "black",
     marginBottom: 20,
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
+  },
+  partyTitle: {
+    fontSize: 22,
+    alignSelf: "center",
+    paddingTop: 5,
+    paddingBottom: 5,
+    color: "white",
+  },
+  whiteLine: {
+    width: "80%",
+    height: 2,
+    backgroundColor: "white",
+    alignSelf: "center",
+  },
+  lowerContainer: {
+    justifyContent: "flex-end",
+    flex: 1,
+  },
+  nextActivity: {
+    backgroundColor: "#CC9300",
+    width: "100%",
+    height: Dimensions.get("screen").height * 0.05,
+    textAlign: "center",
+    textAlignVertical: "center",
+    color: "white",
+  },
+  timeStamp: {
+    backgroundColor: Colors.primary,
+    width: "100%",
+    height: Dimensions.get("screen").height * 0.1,
+    textAlign: "center",
+    color: "white",
+    fontSize: 30,
+    textAlignVertical: "center",
   },
 });

@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import StandardButton from "../Components/StandardButton";
 import Colors from "../Constants/Colors";
+import StandardInput from "../Components/StandardInput";
 
 export default JoinPartyScreen = ({ navigation }) => {
   const handleAction = () => {
@@ -29,16 +30,8 @@ export default JoinPartyScreen = ({ navigation }) => {
         style={styles.logo}
       />
       <View style={styles.lowerContainer}>
-        <TextInput
-          placeholder="Enter Name"
-          maxLength={20}
-          style={styles.inputFields}
-        />
-        <TextInput
-          placeholder="Enter Party Code"
-          maxLength={9}
-          style={styles.inputFields}
-        />
+        <StandardInput placeholder="Enter Name" maxLength={20} />
+        <StandardInput placeholder="Enter Party Code" maxLength={9} />
 
         <StandardButton
           style={styles.button}
@@ -54,25 +47,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.secondary,
     flex: 1,
-  },
-  inputFields: {
-    backgroundColor: "white",
-    borderRadius: 4,
-    width: "90%",
-    height: 65,
-    margin: 2,
-    alignSelf: "center",
-    elevation: 10,
-    shadowColor: "black",
-    marginBottom: 20,
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
-    textAlign: "center",
-    fontSize: 18,
   },
   button: {
     width: "90%",

@@ -1,11 +1,12 @@
 import { View, Text, StyleSheet, TextInput } from "react-native";
 import React from "react";
+import ShadowCSS from "../Constants/ShadowCSS";
 
-export default Input = (props) => {
+export default StandardInput = (props) => {
   const [text, onChangeText] = React.useState(null);
 
   return (
-    <View style={styles.container}>
+    <View style={{ ...styles.container, ...ShadowCSS.standardShadow }}>
       <TextInput
         style={styles.inputField}
         onChangeText={onChangeText}
@@ -29,13 +30,5 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "white",
     borderRadius: 4,
-    elevation: 10,
-    shadowColor: "black",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
   },
 });
