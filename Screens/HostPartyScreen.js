@@ -1,13 +1,18 @@
-import React from "react";
+import React, {useState, useEffect} from 'react'
 import Banner from "../Components/Banner";
-import { View, Text, StyleSheet, Image, Pressable } from "react-native";
+import { View, Text, StyleSheet, Image, Pressable, SafeAreaView } from "react-native";
 import StandardButton from "../Components/StandardButton";
 import Colors from "../Constants/Colors";
+import CustomCarousel from "../Components/CustomCarusel";
+import Pagination from '../Components/Pagination';
 
 export default HostPartyScreen = ({ navigation }) => {
+const [index, setIndex] = useState(0)
+  
   const handleActionStartParty = () => {
     navigation.navigate("MainScreen");
   };
+
   return (
     <View style={styles.container}>
       <Banner
@@ -20,28 +25,10 @@ export default HostPartyScreen = ({ navigation }) => {
       <View style={styles.contentWrapper} >
         <Text style={styles.header1}>Select Activity Pack</Text>
         <View style={[styles.activityWrapper,]}>
-          <View style={[styles.activityCarousel,]}>
-            <View style={[styles.whiteBorderBottom, ]}>
-              <Text style={styles.activityHeader}>The Wild West</Text>
-              <Text style={styles.activityCount}>18 Activites</Text>
-            </View>
-            <View style={[styles.whiteBorderBottom]}>
-              <Text style={styles.activityPackDescription}>Get to know your fellow cowboys and cowgirls in this western themed activity pack. Yeehaw!</Text>
-            </View>
-            <View style={{alignItems:"center"}}>
-              <Pressable style={styles.button} onPress={() => {console.log('Button Pressed!')}}>
-                <Text style={styles.text}>Customize Pack</Text>
-              </Pressable>
-            </View>
-
-          </View>
-          <View style={styles.activityCarouselDots}>
-            <Image source={require('../assets/orangeDot.png')}/>
-            <Image source={require('../assets/orangeDot.png')}/>
-            <Image source={require('../assets/orangeDot.png')}/>
-            <Image source={require('../assets/orangeDot.png')}/>
-            <Image source={require('../assets/orangeDot.png')}/>
-          </View>
+          
+        <CustomCarousel setIndex={setIndex}></CustomCarousel>
+        <Pagination index={index}/>
+        
         </View>
         <View style={styles.timeWrapper}>
 
@@ -130,12 +117,6 @@ const styles = StyleSheet.create({
     borderTopWidth:1,
     borderLeftWidth:1,
     borderRightWidth:1,
-  },
-
-  activityCarouselDots:{
-    flexDirection: "row",
-    justifyContent: "space-around",
-    width: '50%',
   },
   whiteBorderBottom: {
     borderBottomWidth:1,
