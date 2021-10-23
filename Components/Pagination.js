@@ -1,17 +1,25 @@
 import React from 'react'
 import { View, Text, Image, StyleSheet } from 'react-native'
+import Carousel, {Pagination} from 'react-native-snap-carousel'
+import activityPackages from '../Constants/Packages'
+import Colors from '../Constants/Colors'
 
 export default function pagination({index}) {
-    console.log('from pagination page'+index)
-
+    
     return (
-        <View style={styles.activityCarouselDots}>
-            <Image source={require('../assets/orangeDot.png')}/>
-            <Image source={require('../assets/orangeDot.png')}/>
-            <Image source={require('../assets/orangeDot.png')}/>
-            <Image source={require('../assets/orangeDot.png')}/>
-            <Image source={require('../assets/orangeDot.png')}/>
-        </View>
+        <View style={[{ }]}>
+            <View style={styles.activityCarouselDots}>
+                <Pagination
+                    containerStyle={{}}
+                    dotStyle={{backgroundColor: Colors.primary, width: 10, height: 10, borderRadius: 25}}
+                    inactiveDotOpacity={0.4}
+                    inactiveDotScale={0.7}
+                    activeDotIndex={ index }
+                    dotsLength={activityPackages.length}
+                />
+            </View>
+         </View>
+
     )
 }
 

@@ -1,15 +1,17 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { Text, View, SafeAreaView, StyleSheet, Pressable } from 'react-native';
 import Colors from '../Constants/Colors';
-import exampleItems from '../Constants/Packages';
+import activityPackages from '../Constants/Packages';
 import Carousel from 'react-native-snap-carousel';
+import Pagination from './Pagination';
+ 
 
 const CustomCarousel = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [carouselItems, setCarouselItems] = useState(exampleItems);
+  const [carouselItems, setCarouselItems] = useState(activityPackages);
   const ref = useRef(null);
 
-  console.log(activeIndex);
+  
 
   const renderItem = useCallback(({ item, index }) => (
         <View style={[styles.activityCarousel,]}>
@@ -21,7 +23,17 @@ const CustomCarousel = () => {
                 <Text style={styles.activityPackDescription}>{item.description} </Text>
             </View>
             <View style={{alignItems:"center"}}>
-                <Pressable style={styles.button} onPress={() => {console.log('Button Pressed!')}}>
+                <Pressable 
+                  //style={styles.button} 
+                  
+                  style={({pressed}) => [
+                    {
+                      
+                      backgroundColor: pressed ? 'rgba(18, 150, 179, 0.2)' : Colors.secondary,
+                    },
+                    styles.button,
+                  ]}
+                  onPress={() => {console.log('Button Pressed!')}}>
                     <Text style={styles.text}>Customize Pack</Text>
                 </Pressable>
             </View>
@@ -41,7 +53,11 @@ const CustomCarousel = () => {
           onSnapToItem={(index) => setActiveIndex(index)}
         />
       </View>
+      <View style={{alignItems: 'center'}}>
+        <Pagination index={activeIndex}/>
+      </View>
     </SafeAreaView>
+    
   );
 };
 
@@ -102,7 +118,7 @@ const styles = StyleSheet.create({
       paddingHorizontal: 32,
       borderRadius: 4,
       elevation: 3,
-      backgroundColor: Colors.secondary,
+      //backgroundColor: Colors.secondary,
       width: 200,
       marginTop: 20,
     },

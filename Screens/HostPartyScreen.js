@@ -27,7 +27,6 @@ const [index, setIndex] = useState(0)
         <View style={[styles.activityWrapper,]}>
           
         <CustomCarousel setIndex={setIndex}></CustomCarousel>
-        <Pagination index={index}/>
         
         </View>
         <View style={styles.timeWrapper}>
@@ -100,7 +99,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
     width: '100%',
-    minHeight: 300,
+    minHeight: 335,
     
   },
   activityCarousel:{
@@ -183,7 +182,6 @@ const styles = StyleSheet.create({
   // CLOCK 
   timeWrapper:{
     flexDirection: "row",
-    marginTop: 20,
     justifyContent: "space-between",
     width: '90%',
 
