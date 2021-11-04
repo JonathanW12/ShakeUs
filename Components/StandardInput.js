@@ -3,10 +3,16 @@ import React from "react";
 import ShadowCSS from "../Constants/ShadowCSS";
 
 export default StandardInput = (props) => {
-  const [text, onChangeText] = React.useState(null);
+  const [text, onChangeText] = React.useState(true ? props.value : null);
 
   return (
-    <View style={{ ...styles.container, ...ShadowCSS.standardShadow }}>
+    <View
+      style={{
+        ...styles.container,
+        ...ShadowCSS.standardShadow,
+        ...props.style,
+      }}
+    >
       <TextInput
         style={styles.inputField}
         onChangeText={onChangeText}

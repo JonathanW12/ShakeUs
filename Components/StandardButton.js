@@ -6,11 +6,18 @@ export default StandardButton = (props) => {
   return (
     <TouchableOpacity
       onPress={props.action}
-      style={{
-        ...shadow.standardShadow,
-        ...props.style,
-        ...styles.container,
-      }}
+      style={
+        props.shadow == null || props.shadow == true
+          ? {
+              ...shadow.standardShadow,
+              ...styles.container,
+              ...props.style,
+            }
+          : {
+              ...styles.container,
+              ...props.style,
+            }
+      }
     >
       <Text style={{ ...styles.buttonText, ...props.textStyle }}>
         {props.title}
@@ -25,7 +32,6 @@ const styles = StyleSheet.create({
     width: "90%",
     justifyContent: "center",
     alignSelf: "center",
-    marginBottom: 20,
   },
   buttonText: {
     fontSize: 24,
