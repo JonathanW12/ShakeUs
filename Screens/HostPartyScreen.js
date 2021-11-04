@@ -13,11 +13,10 @@ import Colors from "../Constants/Colors";
 import CustomCarousel from "../Components/CustomCarusel";
 import Pagination from "../Components/Pagination";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import ActivityService from "../Components/Services/ActivityService";
 
 export default HostPartyScreen = ({ navigation }) => {
   const [index, setIndex] = useState(0);
-  const [startTime, setStartTime] = useState(new Date().getHours() % 24);
-
   const handleActionStartParty = () => {
     navigation.navigate("MainScreen");
   };
@@ -25,7 +24,7 @@ export default HostPartyScreen = ({ navigation }) => {
   const [date, setDate] = useState(new Date(new Date().getTime() + 3600000));
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(true);
-
+  const [selectedActivityPack, setSelectedActivtyPack] = useState();
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShow(Platform.OS === "ios");
