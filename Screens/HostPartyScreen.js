@@ -23,7 +23,7 @@ export default HostPartyScreen = ({ navigation }) => {
 
   const [date, setDate] = useState(new Date(new Date().getTime() + 3600000));
   const [mode, setMode] = useState("date");
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
   const [selectedActivityPack, setSelectedActivtyPack] = useState();
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -43,7 +43,10 @@ export default HostPartyScreen = ({ navigation }) => {
       <View style={styles.contentWrapper}>
         <Text style={styles.header1}>Select Activity Pack</Text>
         <View style={[styles.activityWrapper]}>
-          <CustomCarousel setIndex={setIndex}></CustomCarousel>
+          <CustomCarousel
+            navigation={navigation}
+            setIndex={setIndex}
+          ></CustomCarousel>
         </View>
         <View style={styles.timeWrapper}>
           <View style={styles.timeBox}>

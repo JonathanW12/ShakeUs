@@ -1,10 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Banner from "../Components/Banner";
-import { View, Text, StyleSheet, FlatList, useState } from "react-native";
+import { View, Text, StyleSheet, FlatList } from "react-native";
 import ActivityService from "../Components/Services/ActivityService";
 
 export default CustomizePackScreen = ({ navigation }) => {
-  const [activityPack, setActivityPack] = useState(ActivityService.currentPack);
+  const [activities, setActivities] = useState([]);
+
+  useEffect(() => {
+    let activities = [];
+    ActivityService.currentPack.activities.forEach((id) => {
+      ActivityService.getActivityById(id);
+      console.log("bob");
+    });
+
+    //.forEach((activityId) => {
+    //console.log(activityId);
+    //activities.push(ActivityService.getActivityById(activityId));
+    //});
+    setActivities(activities);
+  }, []);
+
+  const renderItem = (item) => {
+    <View>
+      <Text>{item}</Text>
+    </View>;
+  };
 
   return (
     <View style={styles.container}>
@@ -16,9 +36,9 @@ export default CustomizePackScreen = ({ navigation }) => {
         }}
       />
       <FlatList
-        data={DATA}
+        data={activities}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item}
       />
     </View>
   );

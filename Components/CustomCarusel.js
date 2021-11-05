@@ -14,6 +14,8 @@ const CustomCarousel = (props) => {
   useEffect(() => {
     ActivityService.getActivityPackTemplates().then((activityPacks) => {
       setCarouselItems(activityPacks);
+      console.log("current pack: " + activityPacks[0]);
+      ActivityService.currentPack = activityPacks[0];
     });
   }, []);
 
@@ -42,7 +44,7 @@ const CustomCarousel = (props) => {
               styles.button,
             ]}
             onPress={() => {
-              props.navigateTo("CustomizePackScreen");
+              props.navigation.navigate("CustomizePackScreen");
             }}
           >
             <Text style={styles.text}>Customize Pack</Text>
