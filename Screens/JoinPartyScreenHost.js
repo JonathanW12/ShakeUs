@@ -12,9 +12,9 @@ import StandardButton from "../Components/StandardButton";
 import Colors from "../Constants/Colors";
 import StandardInput from "../Components/StandardInput";
 
-export default JoinPartyScreen = ({ navigation }) => {
+export default JoinPartyScreenHost = ({ navigation }) => {
   const handleAction = () => {
-    navigation.navigate("GuestScreen");
+    navigation.navigate("HostPartyScreen");
   };
   return (
     <View style={styles.container}>
@@ -25,11 +25,10 @@ export default JoinPartyScreen = ({ navigation }) => {
       />
       <View style={styles.lowerContainer}>
         <StandardInput placeholder="Enter Name" maxLength={20} />
-        <StandardInput placeholder="Enter Party Code" maxLength={9} />
 
         <StandardButton
           style={styles.button}
-          title="Join Party"
+          title="Register as Host"
           action={handleAction}
         />
       </View>

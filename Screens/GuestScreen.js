@@ -8,13 +8,7 @@ import ShadowCSS from "../Constants/ShadowCSS";
 export default GuestScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Banner
-        title="Guest Screen"
-        iconName="menu"
-        onIconPress={() => {
-          navigation.navigate("JoinPartyScreen");
-        }}
-      />
+      <Banner title="Guest Screen" />
       <Text style={styles.currentActivity}>Current Activity</Text>
       <View
         style={{ ...ShadowCSS.standardShadow, ...styles.challengeContainer }}

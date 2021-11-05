@@ -28,13 +28,7 @@ export default CustomizePackScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Banner
-        title="Customize Pack"
-        iconName="arrow-left"
-        onIconPress={() => {
-          navigation.navigate("HostPartyScreen");
-        }}
-      />
+      <Banner title="Customize Pack" />
       <FlatList
         data={activities}
         renderItem={renderItem}

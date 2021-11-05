@@ -8,7 +8,7 @@ import Colors from "../Constants/Colors";
 
 export default MainScreen = ({ navigation }) => {
   const handleActionHostParty = () => {
-    navigation.navigate("HostPartyScreen");
+    navigation.navigate("JoinPartyScreenHost");
   };
   const handleActionJoinParty = () => {
     navigation.navigate("JoinPartyScreen");
@@ -40,6 +40,7 @@ export default MainScreen = ({ navigation }) => {
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {

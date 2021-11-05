@@ -33,13 +33,7 @@ export default HostPartyScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Banner
-        title="Host Party"
-        iconName="arrow-left"
-        onIconPress={() => {
-          navigation.navigate("MainScreen");
-        }}
-      />
+      <Banner title="Host Party" />
       <View style={styles.contentWrapper}>
         <Text style={styles.header1}>Select Activity Pack</Text>
         <View style={[styles.activityWrapper]}>
