@@ -4,18 +4,26 @@ import Colors from "../Constants/Colors";
 import activityPackages from "../Constants/Packages";
 import Carousel from "react-native-snap-carousel";
 import Pagination from "./Pagination";
-import ActivityService from "./Services/ActivityService";
+import ActivityPackService from "./Services/ActivityPackService";
 import { useLinkProps } from "@react-navigation/native";
 
 const CustomCarousel = (props) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [carouselItems, setCarouselItems] = useState([]);
+  const [personalActivityPackIds, setPersonalActivityPackIds] = useState([
+    "b40bd330-98e9-429e-871c-7064ae410b54",
+  ]);
   const ref = useRef(null);
   useEffect(() => {
-    ActivityService.getActivityPackTemplates().then((activityPacks) => {
-      setCarouselItems(activityPacks);
-      console.log("current pack: " + activityPacks[0]);
-      ActivityService.currentPack = activityPacks[0];
+    let fetchedPacks = [];
+    ActivityPackService.getActivityPackTemplates().then((activityPacks) => {
+      fetchedPacks.push(...activityPacks);
+      ActivityPackService.currentPack = fetchedPacks[0];
+    });
+    personalActivityPackIds.forEach(async (id) => {
+      await ActivityPackService.getActivityPack(id).then((activityPack) => {
+        setCarouselItems([...fetchedPacks, activityPack]);
+      });
     });
   }, []);
 
@@ -69,7 +77,11 @@ const CustomCarousel = (props) => {
           renderItem={renderItem}
           onSnapToItem={(index) => {
             setActiveIndex(index);
-            ActivityService.currentPack = carouselItems[index];
+
+            ActivityPackService.currentPack = carouselItems[index];
+            console.log(
+              "currentpack: " + ActivityPackService.currentPack.title
+            );
           }}
         />
       </View>
