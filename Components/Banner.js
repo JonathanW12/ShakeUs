@@ -51,6 +51,7 @@ export default Banner = (props) => {
               <TouchableOpacity
                 onPress={() => {
                   setModalVisible(!modalVisible);
+                  navigation.navigate("ParticipantsScreen");
                 }}
                 style={styles.menuItem}
               >
@@ -58,7 +59,7 @@ export default Banner = (props) => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate("CustomizePackScreen");
+                  setModalVisible(!modalVisible);
                 }}
                 style={styles.menuItem}
               >
@@ -67,6 +68,7 @@ export default Banner = (props) => {
             </View>
             <TouchableOpacity
               onPress={() => {
+                setModalVisible(!modalVisible);
                 navigation.navigate("MainScreen");
               }}
               style={styles.footer}

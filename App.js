@@ -11,6 +11,7 @@ import GuestScreen from "./Screens/GuestScreen";
 import PartyInformationScreen from "./Screens/PartyInformationScreen";
 import CustomizePackScreen from "./Screens/CustomizePackScreen";
 import JoinPartyScreenHost from "./Screens/JoinPartyScreenHost";
+import ParticipantsScreen from "./Screens/ParticipantsScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -52,6 +53,11 @@ export default function App() {
         <Stack.Screen
           name="JoinPartyScreenHost"
           component={JoinPartyScreenHost}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ParticipantsScreen"
+          component={ParticipantsScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
