@@ -51,12 +51,14 @@ export default class ActivityPackService {
       {
         method: "POST",
         headers: {
-          Accept: "application/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ activityPackId, activityId }),
       }
-    ).then(async (res) => {
-      return await res.json();
+    ).then((res) => {
+      if (res.ok) {
+        console.log("activity added to pack");
+      }
     });
   }
 

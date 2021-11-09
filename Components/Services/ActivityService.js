@@ -1,11 +1,17 @@
 export default class ActivityService {
   static createActivity(title, description, startTime) {
+    console.log(title, description, startTime);
     return fetch("https://shakeus.herokuapp.com:443/activity/", {
       method: "POST",
       headers: {
         Accept: "application/json",
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ title, description, startTime }),
+      body: JSON.stringify({
+        title: title,
+        description: description,
+        startTime: startTime,
+      }),
     }).then(async (res) => {
       return await res.json();
     });

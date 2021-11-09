@@ -15,8 +15,8 @@ export default StandardInput = (props) => {
     >
       <TextInput
         style={styles.inputField}
-        onChangeText={onChangeText}
-        value={text}
+        onChangeText={props.onChangeText}
+        value={props.value}
         placeholder={props.placeholder}
         maxLength={props.maxLength}
       />

@@ -21,9 +21,13 @@ const CustomCarousel = (props) => {
       ActivityPackService.currentPack = fetchedPacks[0];
     });
     personalActivityPackIds.forEach(async (id) => {
-      await ActivityPackService.getActivityPack(id).then((activityPack) => {
-        setCarouselItems([...fetchedPacks, activityPack]);
-      });
+      await ActivityPackService.getActivityPack(id)
+        .then((activityPack) => {
+          setCarouselItems([...fetchedPacks, activityPack]);
+        })
+        .catch((error) => {
+          setCarouselItems([...fetchedPacks]);
+        });
     });
   }, []);
 
