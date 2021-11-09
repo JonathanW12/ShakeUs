@@ -90,7 +90,7 @@ const CustomCarousel = (props) => {
         />
       </View>
       <View style={{ alignItems: "center" }}>
-        <Pagination index={activeIndex} />
+        <Pagination length={carouselItems.length} index={activeIndex} />
       </View>
     </SafeAreaView>
   );
