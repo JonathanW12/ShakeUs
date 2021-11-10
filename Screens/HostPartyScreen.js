@@ -14,11 +14,42 @@ import CustomCarousel from "../Components/CustomCarusel";
 import Pagination from "../Components/Pagination";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import ActivityService from "../Components/Services/ActivityService";
+import GuestService from "../Components/Services/GuestService";
+import ActivityPackService from "../Components/Services/ActivityPackService";
+import PartyService from "../Components/Services/PartyService";
 
 export default HostPartyScreen = ({ navigation }) => {
+  const hostName = GuestService.hostName;
   const [index, setIndex] = useState(0);
+
+  async function createTheParty(){
+    const response = await PartyService.createParty(
+      ActivityPackService.currentPack._id,
+      hostName,
+    )
+    const result = await response.json();
+    
+    PartyService.currentHostedParty = result.partyId;
+    PartyService.hostID = result.hostId;
+
+    console.log(PartyService.currentHostedParty);
+    console.log(PartyService.hostID);
+    
+  }
+
   const handleActionStartParty = () => {
-    navigation.navigate("MainScreen");
+    if(hostName != '' && ActivityPackService.currentPack != null){
+
+      console.log(hostName);
+      console.log(ActivityPackService.currentPack);
+
+      createTheParty();
+
+      //PartyService.createParty(currentPack._id,hostName);
+      //navigation.navigate("MainScreen");
+    }else {
+
+    }
   };
 
   const [date, setDate] = useState(new Date(new Date().getTime() + 3600000));
@@ -31,11 +62,13 @@ export default HostPartyScreen = ({ navigation }) => {
     setDate(currentDate);
   };
 
+
   return (
     <View style={styles.container}>
       <Banner title="Host Party" />
       <View style={styles.contentWrapper}>
         <Text style={styles.header1}>Select Activity Pack</Text>
+        <Text style={styles.centerText}>{hostName} </Text>
         <View style={[styles.activityWrapper]}>
           <CustomCarousel
             navigation={navigation}
