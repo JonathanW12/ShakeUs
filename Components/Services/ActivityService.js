@@ -1,31 +1,71 @@
 export default class ActivityService {
-  static currentPack;
-
-  static getActivityPackTemplates() {
-    return fetch("https://shakeus.herokuapp.com:443/activity-pack/templates", {
-      method: "GET",
+  static createActivity(title, description, startTime) {
+    console.log(title, description, startTime);
+    return fetch("https://shakeus.herokuapp.com:443/activity/", {
+      method: "POST",
       headers: {
         Accept: "application/json",
+        "Content-Type": "application/json",
       },
+      body: JSON.stringify({
+        title: title,
+        description: description,
+        startTime: startTime,
+      }),
     }).then(async (res) => {
       return await res.json();
     });
   }
 
   static getActivityById(id) {
-    return fetch("https://shakeus.herokuapp.com:443/activity", {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-      },
-      body: JSON.stringify({ activityId: id }),
-    })
+    return fetch("https://shakeus.herokuapp.com:443/activity/" + id)
       .then(async (res) => {
         return await res.json();
       })
-      .then((activity) => {
-        console.log(activity);
-        return activity;
+      .then((obj) => {
+        console.log(obj);
+        return obj;
       });
+  }
+
+  static getActivityTemplates() {
+    return fetch("https://shakeus.herokuapp.com:443/activity/templates").then(
+      async (res) => {
+        return await res.json();
+      }
+    );
+  }
+
+  static getNextActivity(partyId, userId) {
+    return fetch(
+      "https://shakeus.herokuapp.com:443/activity/next/" +
+        partyId +
+        "/" +
+        userId
+    ).then(async (res) => {
+      return await res.json();
+    });
+  }
+
+  static patchActivity(activityId, newTitle, newDescription, newStartTime) {
+    patchedActivity = { activityId };
+    if (newTitle != undefined) {
+      patchedActivity.newTitle = newTitle;
+    }
+    if (newDescription != undefined) {
+      patchedActivity.newDescription = newDescription;
+    }
+    if (newDescription != undefined) {
+      patchedActivity.newDescription = newDescription;
+    }
+    return fetch("https://shakeus.herokuapp.com:443/activity", {
+      method: "PATCH",
+      headers: {
+        Accept: "application/json",
+      },
+      body: JSON.stringify(patchedActivity),
+    }).then(async (res) => {
+      return await res.json();
+    });
   }
 }
