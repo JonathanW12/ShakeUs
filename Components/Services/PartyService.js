@@ -1,4 +1,4 @@
-export default class PartService {
+export default class PartyService {
   static createParty(activtyPackId, hostName) {
     return fetch("https://shakeus.herokuapp.com:443/party", {
       method: "POST",
@@ -82,16 +82,21 @@ export default class PartService {
     });
   }
 
-  static joinParty(partyId, guestName) {
-    return fetch("https://shakeus.herokuapp.com:443/party/join", {
+  static async joinParty(partyId, guestName) {
+    console.log(
+      "test2: " + JSON.stringify({ partyId: partyId, guestName: guestName })
+    );
+    let guestId = await fetch("https://shakeus.herokuapp.com:443/party/join", {
       method: "POST",
       headers: {
         Accept: "application/json",
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ partyId, guestName }),
-    }).then(async (res) => {
-      return await res.json();
+      body: JSON.stringify({ partyId: partyId, guestName: guestName }),
     });
+    let response = await guestId.json();
+    await console.log("res2: " + response);
+    return response;
   }
   static leaveParty(partyId, userId) {
     return fetch("https://shakeus.herokuapp.com:443/party/leave", {
