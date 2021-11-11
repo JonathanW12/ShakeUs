@@ -20,38 +20,51 @@ export default ParticipantsScreen = ({ navigation }) => {
     { id: 1, title: "mr.anders", host: true },
     { id: 2, title: "neo", host: null },
     { id: 3, title: "jack black" },
-    { id: 4, title: "mr.anders" },
-    { id: 21, title: "neo" },
-    { id: 312, title: "jack black" },
-    { id: 13, title: "mr.anders" },
-    { id: 232, title: "neo" },
-    { id: 34, title: "jack black" },
-    { id: 16, title: "mr.anders" },
-    { id: 27, title: "neo" },
-    { id: 38, title: "jack black" },
   ];
   const [participantsList, setParticipantsList] = useState(DUMMYDATA);
 
   const renderPerson = ({ item }) => {
     return <PersonBlock title={item.title} host={item.host} />;
   };
-  const joinParty = async () => {
-    let response = await PartyService.joinParty("lmfxqey", "test123");
-    let guestId = await response.json();
-    console.log("guesId999:" + guestId);
-    return guestId;
+  const joinParty = () => {
+    let response = PartyService.joinParty("p4iq9d5", "luke skywalker");
+    let response2 = JSON.stringify(response);
+    return response;
   };
-  const getPlayers = async () => {
-    console.log("testr1w3");
-    let response = await GuestService.getAllGuests("lmfxqey", "123");
-    let guests = await response.json();
-    console.log("guests: " + guests.json());
+
+  const getAllGuests = async () => {
+    let newGuestList = [];
+    //let userId = get...
+    //let partyId = getpart...
+    let response = await GuestService.getAllGuests(
+      "p4iq9d5",
+      "10e8d353-e328-44f1-ae31-223902c4a48e"
+    );
+    //THIS cant be the right way.. wtf ??
+    let res2 = JSON.parse(JSON.stringify(response));
+    for (let host of res2.hosts) {
+      newGuestList.push({ id: host._id, title: host.name, host: true });
+    }
+    for (let guest of res2.guests) {
+      newGuestList.push({ id: guest._id, title: guest.name });
+    }
+    setParticipantsList(newGuestList);
+    newGuestList = [];
   };
+
+  const getPartyTheme = async () => {
+    //let userId = get...
+    //let partyId = get...
+    //let activityId = PartyService.getPartyPackId(userId,partyId)
+    //ActivityPackService.getActivity(activityId)
+  };
+
+  getAllGuests();
   return (
     <View style={styles.container}>
       <Banner title="Participants" isBack={true} />
       <Button title="join test123" onPress={joinParty} />
-      <Button title="get guests" onPress={getPlayers} />
+      <Button title="get guests" onPress={getAllGuests} />
       <View style={styles.innerContainer}>
         <Text style={styles.partyTitle}>{partyTitle}</Text>
 

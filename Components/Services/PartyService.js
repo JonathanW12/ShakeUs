@@ -83,9 +83,6 @@ export default class PartyService {
   }
 
   static async joinParty(partyId, guestName) {
-    console.log(
-      "test2: " + JSON.stringify({ partyId: partyId, guestName: guestName })
-    );
     let guestId = await fetch("https://shakeus.herokuapp.com:443/party/join", {
       method: "POST",
       headers: {
@@ -95,9 +92,9 @@ export default class PartyService {
       body: JSON.stringify({ partyId: partyId, guestName: guestName }),
     });
     let response = await guestId.json();
-    await console.log("res2: " + response);
     return response;
   }
+
   static leaveParty(partyId, userId) {
     return fetch("https://shakeus.herokuapp.com:443/party/leave", {
       method: "POST",
