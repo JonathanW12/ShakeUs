@@ -4,43 +4,39 @@ import StandardInput from "../Components/StandardInput";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Colors from "../Constants/Colors";
 
-export default ActivityManager = (props) => {
+export default ActivityScheduler = (props) => {
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShow(Platform.OS === "ios");
     setDate(currentDate);
   };
-  const [title, setTitle] = useState("");
+  const [interval, setInterval] = useState(1);
   const [description, setDescription] = useState("");
   const [date, setDate] = useState(new Date(new Date().getTime() + 3600000));
   const [show, setShow] = useState(false);
 
-  const handleTitleChange = (input) => {
-    setTitle(input);
+  const handleIntervalChange = (intervalChange) => {
+    let newInterval = interval + intervalChange;
+    if (newInterval < 1) {
+      setInterval(1);
+    } else {
+      setInterval(newInterval);
+    }
   };
-  const handleDescriptionChange = (input) => {
-    setDescription(input);
-  };
-  const handleAddActivity = () => {
-    props.handleActivitySet({ title, description, startTime: date.getTime() });
+  const setSchedule = () => {
+    props.handleActivityScheduler(date.getTime(), interval);
   };
 
   return (
-    <View style={{ height: 300, backgroundColor: Colors.secondary }}>
-      <Text>Title</Text>
-      <StandardInput
-        style={styles.input}
-        value={title}
-        onChangeText={handleTitleChange}
-        placeholder={"title"}
-      />
-      <Text>Description</Text>
-      <StandardInput
-        style={styles.input}
-        value={description}
-        placeholder={"description"}
-        onChangeText={handleDescriptionChange}
-      />
+    <View
+      style={{
+        height: 300,
+        backgroundColor: Colors.secondary,
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <View style={styles.timeWrapper}>
         <View style={styles.timeBox}>
           <Text style={styles.timeBoxHeader}>Start Time</Text>
@@ -79,15 +75,54 @@ export default ActivityManager = (props) => {
             />
           )}
         </View>
-        <SmallButton
-          title={"Add New Activity"}
-          style={styles.button}
-          action={() => {
-            handleAddActivity();
-            props.onSubmit();
-          }}
-        />
       </View>
+      <View style={{ flexDirection: "column", alignItems: "center" }}>
+        <Text
+          style={{
+            fontSize: 22,
+            backgroundColor: Colors.primary,
+            height: 40,
+            fontWeight: "bold",
+          }}
+        >
+          Activity Interval
+        </Text>
+        <View
+          style={{ flexDirection: "row", width: "auto", alignItems: "center" }}
+        >
+          <SmallButton
+            title={"+5 min"}
+            style={styles.button}
+            action={() => {
+              handleIntervalChange(5);
+            }}
+          />
+          <Text
+            style={{
+              fontSize: 20,
+              backgroundColor: Colors.primary,
+              height: 40,
+            }}
+          >
+            {interval + " min"}
+          </Text>
+          <SmallButton
+            title={"-5 min"}
+            style={styles.button}
+            action={() => {
+              handleIntervalChange(-5);
+            }}
+          />
+        </View>
+      </View>
+      <SmallButton
+        title={"Set Schedule"}
+        style={{ ...styles.button, width: 150 }}
+        action={() => {
+          setSchedule();
+          props.onSubmit();
+        }}
+      />
     </View>
   );
 };
@@ -101,6 +136,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     width: "90%",
+    marginBottom: 20,
   },
   timeBox: {
     width: "45%",
@@ -142,4 +178,5 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     height: 60,
   },
+  button: { width: 55 },
 });

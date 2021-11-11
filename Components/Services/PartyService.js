@@ -1,4 +1,6 @@
 export default class PartService {
+  static partyId;
+
   static createParty(activtyPackId, hostName) {
     return fetch("https://shakeus.herokuapp.com:443/party", {
       method: "POST",

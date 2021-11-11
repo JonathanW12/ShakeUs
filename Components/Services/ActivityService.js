@@ -1,6 +1,5 @@
 export default class ActivityService {
   static createActivity(title, description, startTime) {
-    console.log(title, description, startTime);
     return fetch("https://shakeus.herokuapp.com:443/activity/", {
       method: "POST",
       headers: {
@@ -23,7 +22,6 @@ export default class ActivityService {
         return await res.json();
       })
       .then((obj) => {
-        console.log(obj);
         return obj;
       });
   }
@@ -48,24 +46,24 @@ export default class ActivityService {
   }
 
   static patchActivity(activityId, newTitle, newDescription, newStartTime) {
-    patchedActivity = { activityId };
-    if (newTitle != undefined) {
-      patchedActivity.newTitle = newTitle;
-    }
-    if (newDescription != undefined) {
-      patchedActivity.newDescription = newDescription;
-    }
-    if (newDescription != undefined) {
-      patchedActivity.newDescription = newDescription;
-    }
     return fetch("https://shakeus.herokuapp.com:443/activity", {
       method: "PATCH",
       headers: {
         Accept: "application/json",
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(patchedActivity),
+      body: JSON.stringify({
+        activityId: activityId,
+        newTitle: newTitle,
+        newDescription: newDescription,
+        newStartTime: newStartTime,
+      }),
     }).then(async (res) => {
-      return await res.json();
+      if (res.ok) {
+        console.log(res.status);
+      } else {
+        console.log(res.status);
+      }
     });
   }
 }

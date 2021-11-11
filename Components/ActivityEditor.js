@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Modal,
+  TouchableWithoutFeedback,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import StandardInput from "../Components/StandardInput";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Colors from "../Constants/Colors";
@@ -10,9 +19,11 @@ export default ActivityManager = (props) => {
     setShow(Platform.OS === "ios");
     setDate(currentDate);
   };
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [date, setDate] = useState(new Date(new Date().getTime() + 3600000));
+  const [title, setTitle] = useState(props.selectedActivity.title);
+  const [description, setDescription] = useState(
+    props.selectedActivity.description
+  );
+  const [date, setDate] = useState(new Date(props.selectedActivity.startTime));
   const [show, setShow] = useState(false);
 
   const handleTitleChange = (input) => {
@@ -22,7 +33,12 @@ export default ActivityManager = (props) => {
     setDescription(input);
   };
   const handleAddActivity = () => {
-    props.handleActivitySet({ title, description, startTime: date.getTime() });
+    props.handleActivitySet({
+      _id: props.selectedActivity._id,
+      title,
+      description,
+      startTime: date.getTime(),
+    });
   };
 
   return (
@@ -80,7 +96,7 @@ export default ActivityManager = (props) => {
           )}
         </View>
         <SmallButton
-          title={"Add New Activity"}
+          title={"Update Activity"}
           style={styles.button}
           action={() => {
             handleAddActivity();

@@ -57,7 +57,6 @@ export default class ActivityPackService {
       }
     ).then((res) => {
       if (res.ok) {
-        console.log("activity added to pack");
       }
     });
   }

@@ -83,9 +83,6 @@ const CustomCarousel = (props) => {
             setActiveIndex(index);
 
             ActivityPackService.currentPack = carouselItems[index];
-            console.log(
-              "currentpack: " + ActivityPackService.currentPack.title
-            );
           }}
         />
       </View>
