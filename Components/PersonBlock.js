@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import shadow from "../Constants/ShadowCSS";
 import Colors from "../Constants/Colors";
+import { Icon } from "react-native-elements";
 
 export default PersonBlock = (props) => {
   return (
@@ -27,7 +28,14 @@ export default PersonBlock = (props) => {
         </TouchableOpacity>
       </View>
       <View style={styles.boxRight}>
-        <Text>{String(props.showX)}</Text>
+        <Icon
+          name={"menu"}
+          type="feather"
+          color="white"
+          onPress={() => {
+            setModalVisible(true);
+          }}
+        />
       </View>
     </View>
   );
