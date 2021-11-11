@@ -65,7 +65,18 @@ export default CustomizePackScreen = ({ navigation }) => {
     setActivities(newActivities);
   };
 
-  const deleteActivity = async () => {};
+  const deleteActivity = async (id) => {
+    await ActivityService.deleteActivity(id);
+    await ActivityPackService.removeActivityFromPack(
+      ActivityPackService.currentPack._id,
+      id
+    );
+    const tempActivities = [...activities];
+    const newActivities = tempActivities.filter((a) => {
+      return a._id != id;
+    });
+    setActivities(newActivities);
+  };
 
   return (
     <View style={styles.container}>
@@ -122,6 +133,7 @@ export default CustomizePackScreen = ({ navigation }) => {
         <ActivityEditor
           selectedActivity={selectedActivity}
           handleActivitySet={updateActivity}
+          handleDelete={deleteActivity}
           onSubmit={() => {
             setShowActivityEditor(false);
           }}

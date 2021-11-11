@@ -103,6 +103,14 @@ export default ActivityManager = (props) => {
             props.onSubmit();
           }}
         />
+        <SmallButton
+          title={"Delete Activity"}
+          style={{ ...styles.button, backgroundColor: Colors.warn }}
+          action={() => {
+            props.handleDelete(props.selectedActivity._id);
+            props.onSubmit();
+          }}
+        />
       </View>
     </View>
   );

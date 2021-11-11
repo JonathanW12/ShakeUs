@@ -26,6 +26,19 @@ export default class ActivityService {
       });
   }
 
+  static deleteActivity(id) {
+    return fetch("https://shakeus.herokuapp.com:443/activity/" + id, {
+      method: "PATCH",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ activityId: id }),
+    }).then(async (res) => {
+      console.log("deleted status: " + res.status);
+    });
+  }
+
   static getActivityTemplates() {
     return fetch("https://shakeus.herokuapp.com:443/activity/templates").then(
       async (res) => {
