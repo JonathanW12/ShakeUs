@@ -7,6 +7,7 @@ import {
   Image,
   Pressable,
   SafeAreaView,
+  Alert
 } from "react-native";
 import StandardButton from "../Components/StandardButton";
 import Colors from "../Constants/Colors";
@@ -28,29 +29,46 @@ export default HostPartyScreen = ({ navigation }) => {
       hostName,
     )
     const result = await response.json();
-    
     PartyService.currentHostedParty = result.partyId;
     PartyService.hostID = result.hostId;
-
-    console.log(PartyService.currentHostedParty);
-    console.log(PartyService.hostID);
-    
+    /*
+    console.log(result.partyId);
+    console.log(result.hostId);
+    console.log(ActivityPackService.currentPack);
+    */
+    navigation.navigate("PartyInformationScreen");
   }
 
   const handleActionStartParty = () => {
     if(hostName != '' && ActivityPackService.currentPack != null){
 
-      console.log(hostName);
-      console.log(ActivityPackService.currentPack);
-
-      createTheParty();
-
-      //PartyService.createParty(currentPack._id,hostName);
-      //navigation.navigate("MainScreen");
+      createTwoButtonAlert();
+      
     }else {
-
+      if(hostName == ''){
+        console.log("Missing hostname");
+      } else if (ActivityPackService.currentPack == null){
+        console.log("No currentPack");
+      }else {
+        console.log("Missing hostname and currentPack");
+      }
     }
   };
+
+  const createTwoButtonAlert = () =>
+    Alert.alert(
+      "Confirmation",
+      `Create party: ${ActivityPackService.currentPack.title}`,
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "OK", onPress: () => createTheParty() }
+      ]
+    );
+  
 
   const [date, setDate] = useState(new Date(new Date().getTime() + 3600000));
   const [mode, setMode] = useState("date");

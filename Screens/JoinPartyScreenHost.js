@@ -16,7 +16,6 @@ import GuestService from "../Components/Services/GuestService";
 export default JoinPartyScreenHost = ({ navigation }) => {
   const [hostName, sethostName] = React.useState('');
   const [placeHolderText, setplaceHolderText] = useState('Enter Name');
-  const [placeHolderColor, setplaceHolderColor] = useState("#999");
   const handleAction = () => {
     if(hostName != ''){
       GuestService.hostName = hostName;

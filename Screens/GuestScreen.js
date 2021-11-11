@@ -1,11 +1,22 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Banner from "../Components/Banner";
 import { View, Text, StyleSheet, Image, Dimensions } from "react-native";
 import Colors from "../Constants/Colors";
 import SmallButton from "../Components/SmallButton";
 import ShadowCSS from "../Constants/ShadowCSS";
+import ActivityPackService from "../Components/Services/ActivityPackService";
+import PartyService from "../Components/Services/PartyService";
 
 export default GuestScreen = ({ navigation }) => {
+  
+  async function load(){
+   
+  }
+
+  useEffect(() => {
+    load();
+  });
+
   return (
     <View style={styles.container}>
       <Banner title="Guest Screen" />
