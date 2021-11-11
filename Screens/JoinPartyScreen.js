@@ -22,9 +22,12 @@ export default JoinPartyScreen = ({ navigation }) => {
   const [partyCodePlaceholder, setpartyCodePlaceholder] = useState('Enter Party Code')
   
   const onSucces = (res) => {
-    console.log(res);
+    //console.log(res);
     GuestService.guestId = res.newGuest._id;
     GuestService.guestList = res.guests;
+    PartyService.partyId = partyCode;
+
+    console.log(partyCode);
 
     if(GuestService.guestId != null && GuestService.guestList != null){
       navigation.navigate("GuestScreen");

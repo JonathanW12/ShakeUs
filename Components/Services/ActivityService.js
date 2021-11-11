@@ -36,6 +36,7 @@ export default class ActivityService {
     );
   }
 
+  
   static getNextActivity(partyId, userId) {
     return fetch(
       "https://shakeus.herokuapp.com:443/activity/next/" +
@@ -68,4 +69,23 @@ export default class ActivityService {
       return await res.json();
     });
   }
+
+  // Perfer these, can remove if you dont like
+  static async getNextActivityNico(partyId, userId){
+    const response = await fetch(
+      "https://shakeus.herokuapp.com:443/activity/next/" +
+        partyId +
+        "/" +
+        userId
+    );
+    return response.json();
+  }
+
+  static async getAllActivities(activityPackId){
+    const response = await fetch(
+      "https://shakeus.herokuapp.com:443/activity/get-all/" + activityPackId
+    );
+    return response.json();
+  }
+
 }

@@ -36,9 +36,10 @@ static hostId = null;
           Accept: "application/json",
         },
       }
-    ).then(async (res) => {
-      return await res.json();
-    });
+    )
+    //.then(async (res) => {
+    //  return await res.json();
+    //});
   }
   static patchParty(partyId, primaryHostId, newActivtyPackId, newPrimary) {
     partyPatch = { partyId, primaryHostId };

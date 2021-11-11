@@ -28,13 +28,14 @@ export default PartyInformationScreen = ({ navigation }) => {
     } else {
       console.log("No activityPack");
     }
+
   }
 
   useEffect(() => {
 
     load();
 
-  });
+  },[]);
 
   if(activityPackage != null){
     return (
