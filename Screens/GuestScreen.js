@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import Banner from "../Components/Banner";
-import { View, Text, StyleSheet, Image, Dimensions } from "react-native";
+import { View, Text, StyleSheet, Image, Dimensions, ActivityIndicator } from "react-native";
 import Colors from "../Constants/Colors";
 import SmallButton from "../Components/SmallButton";
 import ShadowCSS from "../Constants/ShadowCSS";
@@ -8,6 +8,8 @@ import ActivityPackService from "../Components/Services/ActivityPackService";
 import PartyService from "../Components/Services/PartyService";
 
 export default GuestScreen = ({ navigation }) => {
+  const [activityPackage, setactivityPackage] = useState(null);
+  const [currentActivity, setcurrentActivity] = useState(null);
   
   async function load(){
    
@@ -17,34 +19,46 @@ export default GuestScreen = ({ navigation }) => {
     load();
   });
 
-  return (
-    <View style={styles.container}>
-      <Banner title="Guest Screen" />
-      <Text style={styles.currentActivity}>Current Activity</Text>
-      <View
-        style={{ ...ShadowCSS.standardShadow, ...styles.challengeContainer }}
-      >
-        <View>
-          <Text style={styles.partyTitle}>Party Title</Text>
-          <View style={styles.whiteLine}></View>
+  if (activityPackage != null) {
+    return (
+      <View style={styles.container}>
+        <Banner title="Guest Screen" />
+        <Text style={styles.currentActivity}>Current Activity</Text>
+        <View
+          style={{ ...ShadowCSS.standardShadow, ...styles.challengeContainer }}
+        >
+          <View>
+            <Text style={styles.partyTitle}>Party Title</Text>
+            <View style={styles.whiteLine}></View>
+          </View>
+          <Text style={styles.guestMesssage}>
+            ShakeUs dares you to implement the css :))))))
+          </Text>
+          <View>
+            <View style={styles.whiteLine}></View>
+            <SmallButton
+              style={{ ...styles.button, backgroundColor: Colors.secondary }}
+              title="Game Rules"
+            />
+          </View>
         </View>
-        <Text style={styles.guestMesssage}>
-          ShakeUs dares you to implement the css :))))))
-        </Text>
-        <View>
-          <View style={styles.whiteLine}></View>
-          <SmallButton
-            style={{ ...styles.button, backgroundColor: Colors.secondary }}
-            title="Game Rules"
-          />
+        <View style={styles.lowerContainer}>
+          <Text style={styles.nextActivity}>Next Activity At</Text>
+          <Text style={styles.timeStamp}>21:30</Text>
         </View>
       </View>
-      <View style={styles.lowerContainer}>
-        <Text style={styles.nextActivity}>Next Activity At</Text>
-        <Text style={styles.timeStamp}>21:30</Text>
+    );
+  } else {
+    return (
+      <View style={styles.container}>
+        <Banner title="Party Information" />
+        <View style={styles.loadingIcon}>
+          <ActivityIndicator size={52} color={Colors.primary}/>
+        </View>
       </View>
-    </View>
-  );
+    );
+  }
+  
 };
 
 const styles = StyleSheet.create({

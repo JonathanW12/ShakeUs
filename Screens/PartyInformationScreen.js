@@ -7,8 +7,6 @@ import ActivityPackService from "../Components/Services/ActivityPackService";
 
 export default PartyInformationScreen = ({ navigation }) => {
   const [activityPackage, setactivityPackage] = useState(null);
-  console.log("Activity pack is:");
-  console.log(activityPackage);
   const [participantCount, setparticipantCount] = useState(0);
   const [activityCount, setactivityCount] = useState(0);
 
@@ -24,6 +22,9 @@ export default PartyInformationScreen = ({ navigation }) => {
   function load(){
     if(ActivityPackService.currentPack != null){
       setactivityPackage(ActivityPackService.currentPack);
+      setactivityCount(
+        ActivityPackService.currentPack.activities.length
+      )
     } else {
       console.log("No activityPack");
     }

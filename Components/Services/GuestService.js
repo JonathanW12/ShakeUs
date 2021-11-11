@@ -1,5 +1,7 @@
 export default class GuestService {
 static hostName = null;
+static guestId = null;
+static guestList = null;
 
   static getGuest(guestId) {
     return fetch("https://shakeus.herokuapp.com:443/guest/" + guestId, {

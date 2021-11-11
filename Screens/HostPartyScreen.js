@@ -29,13 +29,13 @@ export default HostPartyScreen = ({ navigation }) => {
       hostName,
     )
     const result = await response.json();
-    PartyService.currentHostedParty = result.partyId;
-    PartyService.hostID = result.hostId;
-    /*
+    PartyService.partyId = result.partyId;
+    PartyService.hostId = result.hostId;
+    
     console.log(result.partyId);
-    console.log(result.hostId);
-    console.log(ActivityPackService.currentPack);
-    */
+    //console.log(result.hostId);
+    //console.log(ActivityPackService.currentPack);
+    
     navigation.navigate("PartyInformationScreen");
   }
 
