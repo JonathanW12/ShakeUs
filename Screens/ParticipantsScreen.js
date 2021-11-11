@@ -6,8 +6,7 @@ import {
   StyleSheet,
   Image,
   FlatList,
-  ScrollView,
-  Button,
+  TouchableOpacity,
 } from "react-native";
 import Colors from "../Constants/Colors";
 import PersonBlock from "../Components/PersonBlock";
@@ -15,78 +14,105 @@ import GuestService from "../Components/Services/GuestService";
 import PartyService from "../Components/Services/PartyService";
 
 export default ParticipantsScreen = ({ navigation }) => {
+  //CAHNGE THE DEFAULT TO: ActivityPackService.packTitle
+  //"wild wild west" is only for visibility
   const [partyTitle, setPartytitle] = useState("Wild wild west");
-  const DUMMYDATA = [
-    { id: 1, title: "mr.anders", host: true },
-    { id: 2, title: "neo", host: null },
-    { id: 3, title: "jack black" },
-  ];
-  const [participantsList, setParticipantsList] = useState(DUMMYDATA);
+  //CAHNGE THE DEFAULT TO: GuestService.isHost
+  //True is only for visibility
+  const [isHost, setIsHost] = useState(true);
+  const [participantsList, setParticipantsList] = useState();
+  const [isRemoving, setIsRemoving] = useState(false);
 
   const renderPerson = ({ item }) => {
-    return <PersonBlock title={item.title} host={item.host} />;
-  };
-  const joinParty = () => {
-    let response = PartyService.joinParty("p4iq9d5", "luke skywalker");
-    let response2 = JSON.stringify(response);
-    return response;
+    return (
+      <PersonBlock title={item.title} host={item.host} showX={item.showX} />
+    );
   };
 
   const getAllGuests = async () => {
     let newGuestList = [];
-    //let userId = get...
-    //let partyId = getpart...
+    //CHANGE TO:
+    //GuestService.guestId
+    //PartyService.partyId
     let response = await GuestService.getAllGuests(
       "p4iq9d5",
       "10e8d353-e328-44f1-ae31-223902c4a48e"
     );
-    //THIS cant be the right way.. wtf ??
-    let res2 = JSON.parse(JSON.stringify(response));
-    for (let host of res2.hosts) {
-      newGuestList.push({ id: host._id, title: host.name, host: true });
+    response = JSON.parse(JSON.stringify(response));
+    for (let host of response.hosts) {
+      newGuestList.push({
+        id: host._id,
+        title: host.name,
+        host: true,
+        showX: isRemoving,
+      });
     }
-    for (let guest of res2.guests) {
-      newGuestList.push({ id: guest._id, title: guest.name });
+    for (let guest of response.guests) {
+      newGuestList.push({
+        id: guest._id,
+        title: guest.name,
+        showX: isRemoving,
+      });
     }
     setParticipantsList(newGuestList);
     newGuestList = [];
   };
 
-  const getPartyTheme = async () => {
-    //let userId = get...
-    //let partyId = get...
-    //let activityId = PartyService.getPartyPackId(userId,partyId)
-    //ActivityPackService.getActivity(activityId)
-  };
-
   getAllGuests();
   return (
     <View style={styles.container}>
-      <Banner title="Participants" isBack={true} />
-      <Button title="join test123" onPress={joinParty} />
-      <Button title="get guests" onPress={getAllGuests} />
-      <View style={styles.innerContainer}>
+      <View>
+        <Banner title="Participants" isBack={true} />
         <Text style={styles.partyTitle}>{partyTitle}</Text>
-
+      </View>
+      <View style={styles.innerContainer}>
         <FlatList
           data={participantsList}
           renderItem={renderPerson}
           keyExtractor={(item) => item.id}
         />
       </View>
+      <View style={styles.lowerContainer}>
+        <TouchableOpacity
+          onPress={() => {
+            setIsRemoving(!isRemoving);
+          }}
+        >
+          <Text style={styles.removeGuests}>Remove Guests</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: Colors.secondary, flex: 1 },
+  container: {
+    backgroundColor: Colors.secondary,
+    flex: 1,
+    justifyContent: "space-between",
+  },
   innerContainer: {
     alignSelf: "center",
+    height: "63%",
   },
   partyTitle: {
     fontSize: 24,
     color: "white",
     alignSelf: "center",
     padding: 10,
+  },
+  lowerContainer: {
+    alignSelf: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: Colors.tertiary,
+    height: "10%",
+    width: "80%",
+    marginBottom: 5,
+    borderRadius: 4,
+  },
+  removeGuests: {
+    fontSize: 24,
+    color: "white",
   },
 });

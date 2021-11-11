@@ -11,18 +11,25 @@ import Colors from "../Constants/Colors";
 
 export default PersonBlock = (props) => {
   return (
-    <TouchableOpacity
-      onPress={props.action}
+    <View
       style={[
         styles.container,
         shadow.standardShadow,
         props.host && styles.hostBorder,
       ]}
     >
-      <Text style={{ ...styles.buttonText, ...props.textStyle }}>
-        {props.title}
-      </Text>
-    </TouchableOpacity>
+      <View style={styles.boxLeft}></View>
+      <View style={styles.boxCenter}>
+        <TouchableOpacity onPress={props.action}>
+          <Text style={{ ...styles.buttonText, ...props.textStyle }}>
+            {props.title}
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.boxRight}>
+        <Text>{String(props.showX)}</Text>
+      </View>
+    </View>
   );
 };
 
@@ -33,6 +40,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get("screen").width * 0.8,
     justifyContent: "center",
     alignSelf: "center",
+    flexDirection: "row",
   },
   buttonText: {
     fontSize: 24,
@@ -42,5 +50,14 @@ const styles = StyleSheet.create({
   hostBorder: {
     borderColor: "black",
     borderWidth: 3,
+  },
+  boxRight: {
+    flex: 1,
+  },
+  boxCenter: {
+    flex: 3,
+  },
+  boxLeft: {
+    flex: 1,
   },
 });

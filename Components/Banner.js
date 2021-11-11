@@ -10,10 +10,14 @@ import {
 import Colors from "../Constants/Colors";
 import { Icon } from "react-native-elements";
 import { useNavigation } from "@react-navigation/core";
+import GuestService from "./Services/GuestService";
 
 export default Banner = (props) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
+  //CAHNGE THE DEFAULT TO: GuestService.isHost
+  //True is only for visibility
+  const [isHost, setIsHost] = useState(true);
 
   const backSymbol = () => {
     return (
@@ -57,14 +61,16 @@ export default Banner = (props) => {
               >
                 <Text style={styles.participantsText}>Participants</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  setModalVisible(!modalVisible);
-                }}
-                style={styles.menuItem}
-              >
-                <Text style={styles.participantsText}>Manage Activities</Text>
-              </TouchableOpacity>
+              {isHost && (
+                <TouchableOpacity
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                  }}
+                  style={styles.menuItem}
+                >
+                  <Text style={styles.participantsText}>Manage Activities</Text>
+                </TouchableOpacity>
+              )}
             </View>
             <TouchableOpacity
               onPress={() => {

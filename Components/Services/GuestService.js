@@ -1,4 +1,7 @@
 export default class GuestService {
+  static guestId;
+  static isHost;
+
   static getGuest(guestId) {
     return fetch("https://shakeus.herokuapp.com:443/guest/" + guestId, {
       method: "GET",
@@ -21,19 +24,19 @@ export default class GuestService {
     });
   }
   static async getAllGuests(partyId, guestId) {
-    let url = "https://shakeus.herokuapp.com:443/guest/get-all/" + partyId + "/" + guestId;
-    console.log("url: "+url)
-    let response = await fetch(
-      url,
-      {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-        },
-      }
-    );
+    let url =
+      "https://shakeus.herokuapp.com:443/guest/get-all/" +
+      partyId +
+      "/" +
+      guestId;
+    console.log("url: " + url);
+    let response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+    });
     let allGuests = await response.json();
-    //console.log(JSON.stringify(allGuests))
     return allGuests;
   }
 }
