@@ -4,12 +4,14 @@ import { View, Text, StyleSheet, Image, Dimensions, ActivityIndicator } from "re
 import Colors from "../Constants/Colors";
 import ShadowCSS from "../Constants/ShadowCSS";
 import ActivityPackService from "../Components/Services/ActivityPackService";
+import PartyService from "../Components/Services/PartyService";
+import GuestService from "../Components/Services/GuestService";
 
 export default PartyInformationScreen = ({ navigation }) => {
   const [activityPackage, setactivityPackage] = useState(null);
   const [participantCount, setparticipantCount] = useState(0);
   const [activityCount, setactivityCount] = useState(0);
-
+  
 
   const navigateToParticipants = () => {
     navigation.navigate("ParticipantsScreen");
@@ -17,7 +19,16 @@ export default PartyInformationScreen = ({ navigation }) => {
   const navigateToGuestScreen = () => {
     navigation.navigate("GuestScreen");
   }
-  
+  async function getPartyInformation(){
+    const response = await PartyService.getParty(
+      PartyService.partyId,
+      GuestService.guestId,
+    )
+    await response.json()
+    .then(res => setparticipantCount(res.guests.length))
+    .catch(err => console.error(err));
+    
+  }
 
   function load(){
     if(ActivityPackService.currentPack != null){
@@ -28,6 +39,8 @@ export default PartyInformationScreen = ({ navigation }) => {
     } else {
       console.log("No activityPack");
     }
+
+    getPartyInformation();
 
   }
 
@@ -47,10 +60,13 @@ export default PartyInformationScreen = ({ navigation }) => {
         style={{ ...ShadowCSS.standardShadow, ...styles.challengeContainer,}}>
         <View>
           <Text style={styles.partyTitle}>Package: {activityPackage.title}</Text>
+          
         </View>
         
         <View>
           <View style={styles.whiteLine}></View>
+          <Text style={styles.partyTitle}>Party Code:</Text>
+          <Text style={styles.partyCode}>{PartyService.partyId}</Text>
           <Text style={styles.partyTitle}>Activities: {activityCount} </Text>
           <SmallButton
             style={{ ...styles.button, backgroundColor: Colors.secondary }}
@@ -107,7 +123,7 @@ const styles = StyleSheet.create({
   button: { width: "60%", height: 40, marginBottom: 10, marginTop: 5 },
   challengeContainer: {
     width: "90%",
-    height: "40%",
+    height: "55%",
     padding: 5,
     backgroundColor: Colors.primary,
     justifyContent: "space-between",
@@ -152,6 +168,15 @@ const styles = StyleSheet.create({
   loadingIcon: {
     flex: 1,
     justifyContent: "center",
+    alignItems: "center",
+  },
+  partyCode: {
+    color: Colors.secondary,
+    alignSelf: "center",
+    fontSize: 25,
+    fontWeight: "bold",
+    justifyContent: "center",
+    alignContent: "center",
     alignItems: "center",
   }
 });

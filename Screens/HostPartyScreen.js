@@ -31,6 +31,7 @@ export default HostPartyScreen = ({ navigation }) => {
     const result = await response.json();
     PartyService.partyId = result.partyId;
     PartyService.hostId = result.hostId;
+    GuestService.guestId = result.hostId;
     
     console.log(result.partyId);
     //console.log(result.hostId);
@@ -86,7 +87,6 @@ export default HostPartyScreen = ({ navigation }) => {
       <Banner title="Host Party" />
       <View style={styles.contentWrapper}>
         <Text style={styles.header1}>Select Activity Pack</Text>
-        <Text style={styles.centerText}>{hostName} </Text>
         <View style={[styles.activityWrapper]}>
           <CustomCarousel
             navigation={navigation}
