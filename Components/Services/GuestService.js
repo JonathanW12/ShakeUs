@@ -24,19 +24,18 @@ export default class GuestService {
     });
   }
   static async getAllGuests(partyId, guestId) {
+    //console.log("being called")
     let url =
       "https://shakeus.herokuapp.com:443/guest/get-all/" +
       partyId +
       "/" +
       guestId;
-    console.log("url: " + url);
     let response = await fetch(url, {
       method: "GET",
       headers: {
         Accept: "application/json",
       },
     });
-    let allGuests = await response.json();
-    return allGuests;
+    return response.json();
   }
 }

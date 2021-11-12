@@ -10,7 +10,6 @@ import {
 import Colors from "../Constants/Colors";
 import { Icon } from "react-native-elements";
 import { useNavigation } from "@react-navigation/core";
-import GuestService from "./Services/GuestService";
 
 export default Banner = (props) => {
   const navigation = useNavigation();
@@ -61,10 +60,11 @@ export default Banner = (props) => {
               >
                 <Text style={styles.participantsText}>Participants</Text>
               </TouchableOpacity>
-              {isHost && (
+              {isHost == true && (
                 <TouchableOpacity
                   onPress={() => {
                     setModalVisible(!modalVisible);
+                    navigation.navigate("CustomizePackScreen");
                   }}
                   style={styles.menuItem}
                 >

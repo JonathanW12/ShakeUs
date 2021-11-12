@@ -9,6 +9,7 @@ import {
 import shadow from "../Constants/ShadowCSS";
 import Colors from "../Constants/Colors";
 import { Icon } from "react-native-elements";
+import PartyService from "./Services/PartyService";
 
 export default PersonBlock = (props) => {
   return (
@@ -28,14 +29,26 @@ export default PersonBlock = (props) => {
         </TouchableOpacity>
       </View>
       <View style={styles.boxRight}>
-        <Icon
-          name={"menu"}
-          type="feather"
-          color="white"
-          onPress={() => {
-            setModalVisible(true);
-          }}
-        />
+        {props.showX === true && (
+          <Icon
+            name="user-x"
+            type="feather"
+            color="red"
+            onPress={() => {
+              PartyService.removeGuestFromParty(
+                PartyService.partyId,
+                PartyService.hostId,
+                props.id
+              )
+                .then((res) => {
+                  if (res.status === 200) {
+                    //person removed
+                  }
+                })
+                .catch((err) => console.error(err));
+            }}
+          />
+        )}
       </View>
     </View>
   );
@@ -61,9 +74,11 @@ const styles = StyleSheet.create({
   },
   boxRight: {
     flex: 1,
+    justifyContent: "center",
   },
   boxCenter: {
     flex: 3,
+    justifyContent: "center",
   },
   boxLeft: {
     flex: 1,

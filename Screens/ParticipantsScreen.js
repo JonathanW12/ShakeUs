@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Banner from "../Components/Banner";
 import {
   View,
@@ -20,23 +20,35 @@ export default ParticipantsScreen = ({ navigation }) => {
   //CAHNGE THE DEFAULT TO: GuestService.isHost
   //True is only for visibility
   const [isHost, setIsHost] = useState(true);
-  const [participantsList, setParticipantsList] = useState();
-  const [isRemoving, setIsRemoving] = useState(false);
+  const [participantsList, setParticipantsList] = useState([]);
+  const [isRemoving, setIsRemoving] = useState();
+  useEffect(() => {
+    participantsList.forEach((participant, index) => {
+      participant.showX = isRemoving;
+    });
+  }, [isRemoving]);
+  useEffect(() => {
+    updateGuests();
+  }, []);
 
   const renderPerson = ({ item }) => {
+    if (item.host === true) {
+      return <PersonBlock title={item.title} host={item.host} id={item.id} />;
+    }
     return (
-      <PersonBlock title={item.title} host={item.host} showX={item.showX} />
+      <PersonBlock
+        title={item.title}
+        host={item.host}
+        showX={item.showX}
+        id={item.id}
+      />
     );
   };
-
-  const getAllGuests = async () => {
+  const updateGuests = async () => {
     let newGuestList = [];
-    //CHANGE TO:
-    //GuestService.guestId
-    //PartyService.partyId
     let response = await GuestService.getAllGuests(
-      "p4iq9d5",
-      "10e8d353-e328-44f1-ae31-223902c4a48e"
+      PartyService.partyId,
+      PartyService.hostId
     );
     response = JSON.parse(JSON.stringify(response));
     for (let host of response.hosts) {
@@ -44,7 +56,6 @@ export default ParticipantsScreen = ({ navigation }) => {
         id: host._id,
         title: host.name,
         host: true,
-        showX: isRemoving,
       });
     }
     for (let guest of response.guests) {
@@ -55,10 +66,8 @@ export default ParticipantsScreen = ({ navigation }) => {
       });
     }
     setParticipantsList(newGuestList);
-    newGuestList = [];
   };
 
-  getAllGuests();
   return (
     <View style={styles.container}>
       <View>
@@ -73,6 +82,13 @@ export default ParticipantsScreen = ({ navigation }) => {
         />
       </View>
       <View style={styles.lowerContainer}>
+        <TouchableOpacity
+          onPress={() => {
+            updateGuests();
+          }}
+        >
+          <Text style={styles.temporary}>Temporary Update</Text>
+        </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
             setIsRemoving(!isRemoving);
@@ -114,5 +130,9 @@ const styles = StyleSheet.create({
   removeGuests: {
     fontSize: 24,
     color: "white",
+  },
+  temporary: {
+    fontSize: 12,
+    color: "red",
   },
 });
