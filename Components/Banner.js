@@ -14,6 +14,9 @@ import { useNavigation } from "@react-navigation/core";
 export default Banner = (props) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
+  //CAHNGE THE DEFAULT TO: GuestService.isHost
+  //True is only for visibility
+  const [isHost, setIsHost] = useState(true);
 
   const backSymbol = () => {
     return (
@@ -57,14 +60,17 @@ export default Banner = (props) => {
               >
                 <Text style={styles.participantsText}>Participants</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  setModalVisible(!modalVisible);
-                }}
-                style={styles.menuItem}
-              >
-                <Text style={styles.participantsText}>Manage Activities</Text>
-              </TouchableOpacity>
+              {isHost == true && (
+                <TouchableOpacity
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                    navigation.navigate("CustomizePackScreen");
+                  }}
+                  style={styles.menuItem}
+                >
+                  <Text style={styles.participantsText}>Manage Activities</Text>
+                </TouchableOpacity>
+              )}
             </View>
             <TouchableOpacity
               onPress={() => {

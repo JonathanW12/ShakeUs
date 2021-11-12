@@ -1,6 +1,6 @@
-export default class PartService {
-  static partyId;
-
+export default class PartyService {
+  static partyId = "6vw657v";
+  static hostId = "a5f1f842-0fd6-4469-a5e8-05be14c88dea";
   static createParty(activtyPackId, hostName) {
     return fetch("https://shakeus.herokuapp.com:443/party", {
       method: "POST",
@@ -72,29 +72,38 @@ export default class PartService {
       return await res.json();
     });
   }
-  static removeGuestFromParty(partyId, hostId, removedGuestId) {
-    return fetch("https://shakeus.herokuapp.com:443/party/remove-guest", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-      },
-      body: JSON.stringify({ partyId, hostId, removedGuestId }),
-    }).then(async (res) => {
-      return await res.json();
-    });
+  static async removeGuestFromParty(partyId, hostId, removedGuestId) {
+    const response = await fetch(
+      "https://shakeus.herokuapp.com:443/party/remove-guest",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          partyId: partyId,
+          hostId: hostId,
+          removedGuestId: removedGuestId,
+        }),
+      }
+    );
+    return response;
   }
 
-  static joinParty(partyId, guestName) {
-    return fetch("https://shakeus.herokuapp.com:443/party/join", {
+  static async joinParty(partyId, guestName) {
+    let guestId = await fetch("https://shakeus.herokuapp.com:443/party/join", {
       method: "POST",
       headers: {
         Accept: "application/json",
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ partyId, guestName }),
-    }).then(async (res) => {
-      return await res.json();
+      body: JSON.stringify({ partyId: partyId, guestName: guestName }),
     });
+    let response = await guestId.json();
+    return response;
   }
+
   static leaveParty(partyId, userId) {
     return fetch("https://shakeus.herokuapp.com:443/party/leave", {
       method: "POST",
