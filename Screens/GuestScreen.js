@@ -1,39 +1,115 @@
-import React from "react";
+import React, {useEffect, useState, useContext} from "react";
 import Banner from "../Components/Banner";
-import { View, Text, StyleSheet, Image, Dimensions } from "react-native";
+import { View, Text, StyleSheet, Image, Dimensions, ActivityIndicator, Alert } from "react-native";
 import Colors from "../Constants/Colors";
 import SmallButton from "../Components/SmallButton";
 import ShadowCSS from "../Constants/ShadowCSS";
+import ActivityPackService from "../Components/Services/ActivityPackService";
+import PartyService from "../Components/Services/PartyService";
+import GuestService from "../Components/Services/GuestService";
+import ActivityService from "../Components/Services/ActivityService";
+import {SocketContext} from "../Components/SocketContext";
 
 export default GuestScreen = ({ navigation }) => {
-  return (
-    <View style={styles.container}>
-      <Banner title="Guest Screen" />
-      <Text style={styles.currentActivity}>Current Activity</Text>
-      <View
-        style={{ ...ShadowCSS.standardShadow, ...styles.challengeContainer }}
-      >
-        <View>
-          <Text style={styles.partyTitle}>Party Title</Text>
-          <View style={styles.whiteLine}></View>
+  const [activityPackage, setactivityPackage] = useState(null);
+  const [allActivities, setallActivities] = useState(null);
+  const [currentActivity, setcurrentActivity] = useState(null);
+  const [nextActivity, setnextActivity] = useState(null);
+  const [ready, setready] = useState(false);
+  const socket = useContext(SocketContext);
+
+  const unixToHours = (unix) => {
+    let unix_timestamp = unix
+    let date = new Date(unix_timestamp * 1000);
+    let hours = date.getHours();
+    var minutes = "0" + date.getMinutes();
+    //var seconds = "0" + date.getSeconds();
+    return hours + ':' + minutes.substr(-2);
+  }
+
+  const onSucces = (res) => {
+    
+    ActivityPackService.getActivityPack(res.activityPackId)
+    .then((res1) => {
+      setactivityPackage(res1)
+    })
+    .catch(() => Alert.alert("Could not get the activitypackage"));
+
+    ActivityService.getAllActivities(res.activityPackId)
+    .then((res2) => {
+      setallActivities(res2)
+      setcurrentActivity(res2[0])
+      setnextActivity(res2[1])
+      setready(true);
+    })
+    .catch(() => Alert.alert("Could not get all activities"));
+    
+    ActivityService.getNextActivityNico(PartyService.partyId,GuestService.guestId)
+    .then((res3) => setnextActivity(res3))
+    .catch(() => Alert.alert("Could not get next activity"));
+    
+  }
+
+  async function getPartyInformation(){
+    const response = await PartyService.getParty(
+      PartyService.partyId,
+      GuestService.guestId,
+    )
+    const result = await response.json()
+    .then(res => onSucces(res))
+    .catch(err => console.error(err));
+    
+  }
+
+  useEffect(() => {
+    console.log("THIS IS FROM THE GUESTSCREEN");
+    //console.log(socket);
+   // const { socket } = props;
+            if(socket.connected) {
+                console.log("Connected");
+            }
+
+    getPartyInformation();
+
+  },[]);
+
+  if (ready) {
+    return (
+      <View style={styles.container}>
+        <Banner title="Guest Screen" />
+        <Text style={styles.currentActivity}>Current Activity</Text>
+        <View
+          style={{ ...ShadowCSS.standardShadow, ...styles.challengeContainer }}
+        >
+          <View>
+            <Text style={styles.partyTitle}>{currentActivity.title}</Text>
+            <View style={styles.whiteLine}></View>
+            <Text style={styles.partyTitle}>Started at:<Text style={styles.blueText}>{unixToHours(currentActivity.startTime)}</Text></Text>
+          </View>
+          <Text style={styles.guestMesssage}>
+            {currentActivity.description}
+          </Text>
+          <View>
+            
+          </View>
         </View>
-        <Text style={styles.guestMesssage}>
-          ShakeUs dares you to implement the css :))))))
-        </Text>
-        <View>
-          <View style={styles.whiteLine}></View>
-          <SmallButton
-            style={{ ...styles.button, backgroundColor: Colors.secondary }}
-            title="Game Rules"
-          />
+        <View style={styles.lowerContainer}>
+          <Text style={styles.nextActivity}>Next Activity At</Text>
+          <Text style={styles.timeStamp}>{unixToHours(nextActivity.startTime)}</Text>
         </View>
       </View>
-      <View style={styles.lowerContainer}>
-        <Text style={styles.nextActivity}>Next Activity At</Text>
-        <Text style={styles.timeStamp}>21:30</Text>
+    );
+  } else {
+    return (
+      <View style={styles.container}>
+        <Banner title="Guest Screen" />
+        <View style={styles.loadingIcon}>
+          <ActivityIndicator size={52} color={Colors.primary}/>
+        </View>
       </View>
-    </View>
-  );
+    );
+  }
+  
 };
 
 const styles = StyleSheet.create({
@@ -91,8 +167,17 @@ const styles = StyleSheet.create({
     width: "100%",
     height: Dimensions.get("screen").height * 0.1,
     textAlign: "center",
-    color: "white",
-    fontSize: 30,
+    color: Colors.secondary,
+    fontSize: 35,
     textAlignVertical: "center",
   },
+  loadingIcon: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  blueText: {
+    color: Colors.secondary,
+    fontSize: 35,
+  }
 });

@@ -69,7 +69,7 @@ const CustomCarousel = (props) => {
 
   return (
     <SafeAreaView
-      style={{ flex: 1, backgroundColor: Colors.secondary, paddingTop: 10 }}
+      style={{ flex: 1, backgroundColor: Colors.secondary, paddingTop: 5 }}
     >
       <View style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}>
         <Carousel
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     backgroundColor: Colors.primary,
-    padding: 15,
+    padding: 10,
     justifyContent: "center",
   },
   activityCarouselDots: {

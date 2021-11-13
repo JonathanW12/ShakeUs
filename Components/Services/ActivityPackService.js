@@ -19,12 +19,24 @@ export default class ActivityPackService {
       return await res.json();
     });
   }
+  /*
   static getActivityPack(activityPackId) {
     return fetch(
       "https://shakeus.herokuapp.com:443/activity-pack/" + activityPackId
-    ).then(async (res) => {
-      return await res.json();
+    ).then((res) => {
+       if(res.ok){
+         return res.json();
+       }
+    }).then((json) => {
+      return json
     });
+  }
+  */
+  static async getActivityPack(activityPackId){
+    const response = await fetch(
+      "https://shakeus.herokuapp.com:443/activity-pack/" + activityPackId
+    );
+    return response.json();
   }
 
   static patchActivityPack(activityPackId, newTitle, newDescription) {

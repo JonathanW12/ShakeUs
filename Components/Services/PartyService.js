@@ -1,19 +1,35 @@
-export default class PartyService {
-  static partyId = "6vw657v";
-  static hostId = "a5f1f842-0fd6-4469-a5e8-05be14c88dea";
-  static createParty(activtyPackId, hostName) {
-    return fetch("https://shakeus.herokuapp.com:443/party", {
+
+export default class PartService {
+static partyId = null;
+static hostId = null;
+  
+  static createParty(activtyPackId, hostName, notificationToken) {
+    console.log(activtyPackId);
+    console.log(hostName);
+    console.log(notificationToken);
+      return fetch("https://shakeus.herokuapp.com:443/party", {
       method: "POST",
       headers: {
         Accept: "application/json",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         activityPackId: activtyPackId,
         hostName: hostName,
+        hostNotificationToken: notificationToken,
       }),
-    }).then(async (res) => {
-      return await res.json();
-    });
+    })
+    /*
+    .then((response) => response.json())
+    .then(data => {
+      return data
+    })
+    .catch(err => console.error(err));
+    //}).then(async (res) => {
+    //  return res.json();
+    //});
+    */
+
   }
 
   static getParty(partyId, guestId) {
@@ -25,9 +41,10 @@ export default class PartyService {
           Accept: "application/json",
         },
       }
-    ).then(async (res) => {
-      return await res.json();
-    });
+    )
+    //.then(async (res) => {
+    //  return await res.json();
+    //});
   }
   static patchParty(partyId, primaryHostId, newActivtyPackId, newPrimary) {
     partyPatch = { partyId, primaryHostId };
@@ -91,17 +108,15 @@ export default class PartyService {
     return response;
   }
 
-  static async joinParty(partyId, guestName) {
-    let guestId = await fetch("https://shakeus.herokuapp.com:443/party/join", {
+  static joinParty(partyId, guestName, guestNotificationToken) {
+    return fetch("https://shakeus.herokuapp.com:443/party/join", {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ partyId: partyId, guestName: guestName }),
-    });
-    let response = await guestId.json();
-    return response;
+      body: JSON.stringify({ partyId, guestName, guestNotificationToken }),
+    })
   }
 
   static leaveParty(partyId, userId) {
@@ -109,10 +124,11 @@ export default class PartyService {
       method: "POST",
       headers: {
         Accept: "application/json",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ partyId, userId }),
     }).then(async (res) => {
-      return await res.json();
+      return res.json();
     });
   }
   static deleteParty(partyId, primaryHostId) {

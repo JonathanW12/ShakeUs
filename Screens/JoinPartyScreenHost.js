@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import Banner from "../Components/Banner";
 import {
   Dimensions,
@@ -11,10 +11,20 @@ import {
 import StandardButton from "../Components/StandardButton";
 import Colors from "../Constants/Colors";
 import StandardInput from "../Components/StandardInput";
+import GuestService from "../Components/Services/GuestService";
 
 export default JoinPartyScreenHost = ({ navigation }) => {
+  const [hostName, sethostName] = React.useState('');
+  const [placeHolderText, setplaceHolderText] = useState('Enter Name');
   const handleAction = () => {
-    navigation.navigate("HostPartyScreen");
+    if(hostName != ''){
+      GuestService.hostName = hostName;
+      navigation.navigate("HostPartyScreen");
+    } else {
+      setplaceHolderText("Name is missing!");
+    };
+
+    
   };
   return (
     <View style={styles.container}>
@@ -24,7 +34,12 @@ export default JoinPartyScreenHost = ({ navigation }) => {
         style={styles.logo}
       />
       <View style={styles.lowerContainer}>
-        <StandardInput placeholder="Enter Name" maxLength={20} />
+        <StandardInput 
+        placeholder={placeHolderText}
+        maxLength={20} 
+        onChangeText={text => sethostName(text)
+        }
+        />
 
         <StandardButton
           style={styles.button}
@@ -54,7 +69,7 @@ const styles = StyleSheet.create({
     marginTop: "10%",
   },
   lowerContainer: {
-    justifyContent: "flex-end",
+    justifyContent: "center",
     alignItems: "center",
     flex: 1,
   },

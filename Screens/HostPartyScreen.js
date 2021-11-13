@@ -7,6 +7,7 @@ import {
   Image,
   Pressable,
   SafeAreaView,
+  Alert
 } from "react-native";
 import StandardButton from "../Components/StandardButton";
 import Colors from "../Constants/Colors";
@@ -14,12 +15,69 @@ import CustomCarousel from "../Components/CustomCarusel";
 import Pagination from "../Components/Pagination";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import ActivityService from "../Components/Services/ActivityService";
+import GuestService from "../Components/Services/GuestService";
+import ActivityPackService from "../Components/Services/ActivityPackService";
+import PartyService from "../Components/Services/PartyService";
 
 export default HostPartyScreen = ({ navigation }) => {
   const [index, setIndex] = useState(0);
+
+  
+
+  async function createTheParty(){
+    console.log(ActivityPackService.currentPack);
+    console.log(ActivityPackService.currentPack.id);
+    console.log(GuestService.hostName);
+    console.log(GuestService.guestNotificationToken);
+
+    const response = await PartyService.createParty(
+      ActivityPackService.currentPack._id,
+      GuestService.hostName,
+      GuestService.guestNotificationToken
+    )
+    const result = await response.json();
+
+    PartyService.partyId = result.partyId;
+    PartyService.hostId = result.hostId;
+    GuestService.guestId = result.hostId;
+    
+    console.log(result.partyId);
+    //console.log(result.hostId);
+    //console.log(ActivityPackService.currentPack);
+    
+    navigation.navigate("PartyInformationScreen");
+  }
+
   const handleActionStartParty = () => {
-    navigation.navigate("MainScreen");
+    if(GuestService.hostName != '' && ActivityPackService.currentPack != null){
+
+      createTwoButtonAlert();
+      
+    }else {
+      if(hostName == ''){
+        console.log("Missing hostname");
+      } else if (ActivityPackService.currentPack == null){
+        console.log("No currentPack");
+      }else {
+        console.log("Missing hostname and currentPack");
+      }
+    }
   };
+
+  const createTwoButtonAlert = () =>
+    Alert.alert(
+      "Confirmation",
+      `Create party: ${ActivityPackService.currentPack.title}`,
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "OK", onPress: () => createTheParty() }
+      ]
+    );
+  
 
   const [date, setDate] = useState(new Date(new Date().getTime() + 3600000));
   const [mode, setMode] = useState("date");
@@ -30,6 +88,7 @@ export default HostPartyScreen = ({ navigation }) => {
     setShow(Platform.OS === "ios");
     setDate(currentDate);
   };
+
 
   return (
     <View style={styles.container}>
