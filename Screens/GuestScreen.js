@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useContext} from "react";
 import Banner from "../Components/Banner";
 import { View, Text, StyleSheet, Image, Dimensions, ActivityIndicator, Alert } from "react-native";
 import Colors from "../Constants/Colors";
@@ -8,6 +8,7 @@ import ActivityPackService from "../Components/Services/ActivityPackService";
 import PartyService from "../Components/Services/PartyService";
 import GuestService from "../Components/Services/GuestService";
 import ActivityService from "../Components/Services/ActivityService";
+import {SocketContext} from "../Components/SocketContext";
 
 export default GuestScreen = ({ navigation }) => {
   const [activityPackage, setactivityPackage] = useState(null);
@@ -15,6 +16,7 @@ export default GuestScreen = ({ navigation }) => {
   const [currentActivity, setcurrentActivity] = useState(null);
   const [nextActivity, setnextActivity] = useState(null);
   const [ready, setready] = useState(false);
+  const socket = useContext(SocketContext);
 
   const unixToHours = (unix) => {
     let unix_timestamp = unix
@@ -60,7 +62,15 @@ export default GuestScreen = ({ navigation }) => {
   }
 
   useEffect(() => {
+    console.log("THIS IS FROM THE GUESTSCREEN");
+    //console.log(socket);
+   // const { socket } = props;
+            if(socket.connected) {
+                console.log("Connected");
+            }
+
     getPartyInformation();
+
   },[]);
 
   if (ready) {

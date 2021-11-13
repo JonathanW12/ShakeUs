@@ -20,15 +20,23 @@ import ActivityPackService from "../Components/Services/ActivityPackService";
 import PartyService from "../Components/Services/PartyService";
 
 export default HostPartyScreen = ({ navigation }) => {
-  const hostName = GuestService.hostName;
   const [index, setIndex] = useState(0);
 
+  
+
   async function createTheParty(){
+    console.log(ActivityPackService.currentPack);
+    console.log(ActivityPackService.currentPack.id);
+  console.log(GuestService.hostName);
+  console.log(GuestService.guestNotificationToken);
+
     const response = await PartyService.createParty(
       ActivityPackService.currentPack._id,
-      hostName,
+      GuestService.hostName,
+      GuestService.guestNotificationToken
     )
     const result = await response.json();
+
     PartyService.partyId = result.partyId;
     PartyService.hostId = result.hostId;
     GuestService.guestId = result.hostId;
@@ -41,7 +49,7 @@ export default HostPartyScreen = ({ navigation }) => {
   }
 
   const handleActionStartParty = () => {
-    if(hostName != '' && ActivityPackService.currentPack != null){
+    if(GuestService.hostName != '' && ActivityPackService.currentPack != null){
 
       createTwoButtonAlert();
       

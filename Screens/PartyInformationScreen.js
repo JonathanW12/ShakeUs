@@ -12,13 +12,6 @@ export default PartyInformationScreen = ({ navigation }) => {
   const [participantCount, setparticipantCount] = useState(0);
   const [activityCount, setactivityCount] = useState(0);
   
-
-  const navigateToParticipants = () => {
-    navigation.navigate("ParticipantsScreen");
-  }
-  const navigateToGuestScreen = () => {
-    navigation.navigate("GuestScreen");
-  }
   async function getPartyInformation(){
     const response = await PartyService.getParty(
       PartyService.partyId,
@@ -60,13 +53,15 @@ export default PartyInformationScreen = ({ navigation }) => {
         style={{ ...ShadowCSS.standardShadow, ...styles.challengeContainer,}}>
         <View>
           <Text style={styles.partyTitle}>Package: {activityPackage.title}</Text>
-          
+          <View style={styles.container_horizontal}>
+            <Text style={styles.partyTitle}>Party Code:</Text>
+            <Text style={styles.partyCode}>{PartyService.partyId}</Text>
+          </View>
         </View>
         
         <View>
           <View style={styles.whiteLine}></View>
-          <Text style={styles.partyTitle}>Party Code:</Text>
-          <Text style={styles.partyCode}>{PartyService.partyId}</Text>
+          
           <Text style={styles.partyTitle}>Activities: {activityCount} </Text>
           <SmallButton
             style={{ ...styles.button, backgroundColor: Colors.secondary }}
@@ -178,5 +173,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignContent: "center",
     alignItems: "center",
+  },
+  container_horizontal: {
+    flexDirection: "row",
+    
   }
 });

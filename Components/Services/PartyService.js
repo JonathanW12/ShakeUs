@@ -2,7 +2,10 @@ export default class PartService {
 static partyId = null;
 static hostId = null;
   
-  static createParty(activtyPackId, hostName) {
+  static createParty(activtyPackId, hostName, notificationToken) {
+    console.log(activtyPackId);
+    console.log(hostName);
+    console.log(notificationToken);
       return fetch("https://shakeus.herokuapp.com:443/party", {
       method: "POST",
       headers: {
@@ -12,6 +15,7 @@ static hostId = null;
       body: JSON.stringify({
         activityPackId: activtyPackId,
         hostName: hostName,
+        hostNotificationToken: notificationToken,
       }),
     })
     /*

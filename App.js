@@ -1,3 +1,4 @@
+// exe819m
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect, useRef } from "react";
 import { StyleSheet, Platform, Text, View } from "react-native";
@@ -16,6 +17,10 @@ import ParticipantsScreen from "./Screens/ParticipantsScreen";
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 
+import io from 'socket.io-client';
+import {SocketProvider} from './Components/SocketContext';
+import GuestService from "./Components/Services/GuestService";
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -23,7 +28,7 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 });
-
+const SocketContext = React.createContext(null);
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -31,8 +36,25 @@ export default function App() {
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
+  const [socket, setsocket] = useState(null);
+
+  const connectSocket = () => {
+    try{
+        console.log("connecting to socket");
+        setsocket({
+            socket: io.connect("https://shakeus.herokuapp.com/", {
+                transports: ['websocket'],
+                reconnectionAttempts: 15
+            })
+        });
+    }catch(err){
+        console.log(err);
+    }
+}
 
   useEffect(() => {
+    connectSocket();  
+
     registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 
     // This listener is fired whenever a notification is received while the app is foregrounded
@@ -53,51 +75,53 @@ export default function App() {
   }, []);
 
   return (
-    <NavigationContainer>
-      <StatusBar />
-      <Stack.Navigator>
-        <Stack.Screen
-          name="MainScreen"
-          component={MainScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="HostPartyScreen"
-          component={HostPartyScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="JoinPartyScreen"
-          component={JoinPartyScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="GuestScreen"
-          component={GuestScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="PartyInformationScreen"
-          component={PartyInformationScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="CustomizePackScreen"
-          component={CustomizePackScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="JoinPartyScreenHost"
-          component={JoinPartyScreenHost}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="ParticipantsScreen"
-          component={ParticipantsScreen}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <SocketProvider socket={socket}>
+      <NavigationContainer>
+        <StatusBar />
+        <Stack.Navigator>
+          <Stack.Screen
+            name="MainScreen"
+            component={MainScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="HostPartyScreen"
+            component={HostPartyScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="JoinPartyScreen"
+            component={JoinPartyScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="GuestScreen"
+            component={GuestScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="PartyInformationScreen"
+            component={PartyInformationScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="CustomizePackScreen"
+            component={CustomizePackScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="JoinPartyScreenHost"
+            component={JoinPartyScreenHost}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="ParticipantsScreen"
+            component={ParticipantsScreen}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SocketProvider>
   );
 }
 
@@ -136,7 +160,7 @@ async function registerForPushNotificationsAsync() {
       return;
     }
     token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log(token);
+    GuestService.guestNotificationToken = token;
   } else {
     alert('Must use physical device for Push Notifications');
   }
