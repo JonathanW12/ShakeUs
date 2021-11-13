@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     marginTop: "10%",
   },
   lowerContainer: {
-    justifyContent: "flex-end",
+    justifyContent: "center",
     alignItems: "center",
     flex: 1,
   },

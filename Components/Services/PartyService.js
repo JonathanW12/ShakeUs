@@ -100,14 +100,14 @@ static hostId = null;
     });
   }
 
-  static joinParty(partyId, guestName) {
+  static joinParty(partyId, guestName, guestNotificationToken) {
     return fetch("https://shakeus.herokuapp.com:443/party/join", {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ partyId, guestName }),
+      body: JSON.stringify({ partyId, guestName, guestNotificationToken }),
     })
     
     //.then(async (res) => {

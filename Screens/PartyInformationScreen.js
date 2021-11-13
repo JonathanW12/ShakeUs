@@ -53,15 +53,24 @@ export default PartyInformationScreen = ({ navigation }) => {
         style={{ ...ShadowCSS.standardShadow, ...styles.challengeContainer,}}>
         <View>
           <Text style={styles.partyTitle}>Package: {activityPackage.title}</Text>
+          <View style={styles.whiteLine}></View>
+
           <View style={styles.container_horizontal}>
-            <Text style={styles.partyTitle}>Party Code:</Text>
+            <Text style={styles.partyCodeLabel}>Code:</Text>
             <Text style={styles.partyCode}>{PartyService.partyId}</Text>
           </View>
+
+          <View style={{...styles.whiteLine, marginBottom: 20}}></View>
+
         </View>
         
         <View>
-          <View style={styles.whiteLine}></View>
-          
+          <SmallButton
+            style={{ ...styles.button, backgroundColor: Colors.secondary, }}
+            title="Customize Party"
+            action={() => {navigation.navigate("CustomizePackScreen")}}
+          />
+
           <Text style={styles.partyTitle}>Activities: {activityCount} </Text>
           <SmallButton
             style={{ ...styles.button, backgroundColor: Colors.secondary }}
@@ -97,6 +106,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.secondary,
     flex: 1,
+    justifyContent: "center",
   },
   innerWrapper: {
     flex: 1,
@@ -118,7 +128,6 @@ const styles = StyleSheet.create({
   button: { width: "60%", height: 40, marginBottom: 10, marginTop: 5 },
   challengeContainer: {
     width: "90%",
-    height: "55%",
     padding: 5,
     backgroundColor: Colors.primary,
     justifyContent: "space-between",
@@ -127,7 +136,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   partyTitle: {
-    fontSize: 22,
+    fontSize: 26,
     alignSelf: "center",
     paddingTop: 5,
     paddingBottom: 5,
@@ -170,12 +179,25 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontSize: 25,
     fontWeight: "bold",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignContent: "center",
     alignItems: "center",
+    backgroundColor: "white",
+    borderRadius: 5,
+    paddingLeft: 7,
+    paddingRight: 7
+  },
+  partyCodeLabel: {
+    fontSize: 20,
+    color: Colors.secondary,
+    paddingLeft: 20,
+
   },
   container_horizontal: {
     flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: 25,
+    marginBottom: 25,
     
   }
 });

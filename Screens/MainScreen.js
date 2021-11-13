@@ -21,10 +21,10 @@ export default MainScreen = ({ navigation }) => {
 
   useEffect(() => {
    sethostId(PartyService.hostId);
-  }, [])
+  }, [hostId])
 
 
-  if(PartyService.hostId == null){
+  if(PartyService.hostId != null){
     return (
 
       <View style={styles.container}>

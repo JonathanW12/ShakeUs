@@ -27,8 +27,8 @@ export default HostPartyScreen = ({ navigation }) => {
   async function createTheParty(){
     console.log(ActivityPackService.currentPack);
     console.log(ActivityPackService.currentPack.id);
-  console.log(GuestService.hostName);
-  console.log(GuestService.guestNotificationToken);
+    console.log(GuestService.hostName);
+    console.log(GuestService.guestNotificationToken);
 
     const response = await PartyService.createParty(
       ActivityPackService.currentPack._id,

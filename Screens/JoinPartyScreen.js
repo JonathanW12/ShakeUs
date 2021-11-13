@@ -41,6 +41,7 @@ export default JoinPartyScreen = ({ navigation }) => {
     const response = await PartyService.joinParty(
       partyCode,
       guestName,
+      GuestService.guestNotificationToken
     )
     const result = await response.json()
     .then(res => onSucces(res))
@@ -51,6 +52,9 @@ export default JoinPartyScreen = ({ navigation }) => {
   const handleAction = () => {
     if(guestName != '' && partyCode != ''){
       //Do magic to join party
+      console.log(partyCode);
+      console.log(guestName);
+      console.log(GuestService.guestNotificationToken);
       joinParty();
     } else {
       if(guestName == ''){
@@ -108,7 +112,7 @@ const styles = StyleSheet.create({
     marginTop: "10%",
   },
   lowerContainer: {
-    justifyContent: "flex-end",
+    justifyContent: "center",
     alignItems: "center",
     flex: 1,
   },
