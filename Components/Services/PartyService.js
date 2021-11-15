@@ -1,145 +1,177 @@
-
 export default class PartService {
-static partyId = null;
-static hostId = null;
-  
-  static createParty(activtyPackId, hostName, notificationToken) {
-    console.log(activtyPackId);
-    console.log(hostName);
-    console.log(notificationToken);
-      return fetch("https://shakeus.herokuapp.com:443/party", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        activityPackId: activtyPackId,
-        hostName: hostName,
-        hostNotificationToken: notificationToken,
-      }),
-    })
-    /*
-    .then((response) => response.json())
-    .then(data => {
-      return data
-    })
-    .catch(err => console.error(err));
-    //}).then(async (res) => {
-    //  return res.json();
-    //});
-    */
+    static partyId = null;
+    static hostId = null;
 
-  }
+    static async createParty(activtyPackId, hostName, notificationToken) {
+        const res = await fetch('https://shakeus.herokuapp.com:443/party', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                activityPackId: activtyPackId,
+                hostName: hostName,
+                hostNotificationToken: notificationToken,
+            }),
+        });
 
-  static getParty(partyId, guestId) {
-    return fetch(
-      "https://shakeus.herokuapp.com:443/party/" + partyId + "/" + guestId,
-      {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-        },
-      }
-    )
-    //.then(async (res) => {
-    //  return await res.json();
-    //});
-  }
-  static patchParty(partyId, primaryHostId, newActivtyPackId, newPrimary) {
-    partyPatch = { partyId, primaryHostId };
-    if (newActivityPackId != undefined) {
-      partyPatch.newActivityPackId = newActivtyPackId;
+        if (res.ok) {
+            return await res.json();
+        }
+
+        return null;
     }
-    if (newPrimary != undefined) {
-      partyPatch.newPrimary = newPrimary;
+
+    static async getParty(partyId, guestId) {
+        const res = await fetch(
+            `https://shakeus.herokuapp.com:443/party/${partyId}/${guestId}`,
+            {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                },
+            }
+        );
+
+        if (res.ok) {
+            return await res.json();
+        }
+
+        return null;
     }
-    return fetch(
-      "https://shakeus.herokuapp.com:443/party/" + partyId + "/" + guestId,
-      {
-        method: "PATCH",
-        headers: {
-          Accept: "application/json",
-        },
-      }
-    ).then(async (res) => {
-      return await res.json();
-    });
-  }
-  static addHostToParty(partyId, hostId, newHostId) {
-    return fetch("https://shakeus.herokuapp.com:443/party/add-host", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-      },
-      body: JSON.stringify({ partyId, hostId, newHostId }),
-    }).then(async (res) => {
-      return await res.json();
-    });
-  }
 
-  static removeHostFromParty(partyId, primaryHostId, removedHostId) {
-    return fetch("https://shakeus.herokuapp.com:443/party/remove-host", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-      },
-      body: JSON.stringify({ partyId, primaryHostId, removedHostId }),
-    }).then(async (res) => {
-      return await res.json();
-    });
-  }
-  static async removeGuestFromParty(partyId, hostId, removedGuestId) {
-    const response = await fetch(
-      "https://shakeus.herokuapp.com:443/party/remove-guest",
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({
-          partyId: partyId,
-          hostId: hostId,
-          removedGuestId: removedGuestId,
-        }),
-      }
-    );
-    return response;
-  }
+    static async patchParty(
+        partyId,
+        primaryHostId,
+        newActivityPackId,
+        newPrimary
+    ) {
+        partyPatch = { partyId, primaryHostId };
 
-  static joinParty(partyId, guestName, guestNotificationToken) {
-    return fetch("https://shakeus.herokuapp.com:443/party/join", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ partyId, guestName, guestNotificationToken }),
-    })
-  }
+        if (newActivityPackId) {
+            partyPatch.newActivityPackId = newActivityPackId;
+        }
+        if (newPrimary) {
+            partyPatch.newPrimary = newPrimary;
+        }
 
-  static leaveParty(partyId, userId) {
-    return fetch("https://shakeus.herokuapp.com:443/party/leave", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ partyId, userId }),
-    }).then(async (res) => {
-      return res.json();
-    });
-  }
-  static deleteParty(partyId, primaryHostId) {
-    return fetch("https://shakeus.herokuapp.com:443/party", {
-      method: "DELETE",
-      headers: {
-        Accept: "application/json",
-      },
-      body: JSON.stringify({ partyId, primaryHostId }),
-    }).then(async (res) => {
-      return await res.json();
-    });
-  }
+        const res = await fetch(
+            `https://shakeus.herokuapp.com:443/party/${partyId}/${guestId}`,
+            {
+                method: 'PATCH',
+                headers: {
+                    Accept: 'application/json',
+                },
+                body: JSON.stringify(partyPatch),
+            }
+        );
+
+        if (res.ok) {
+            return await res.json();
+        }
+
+        return null;
+    }
+
+    static async addHostToParty(partyId, hostId, newHostId) {
+        const res = await fetch(
+            'https://shakeus.herokuapp.com:443/party/add-host',
+            {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                },
+                body: JSON.stringify({ partyId, hostId, newHostId }),
+            }
+        );
+
+        return res.ok;
+    }
+
+    static async removeHostFromParty(partyId, primaryHostId, removedHostId) {
+        const res = await fetch(
+            'https://shakeus.herokuapp.com:443/party/remove-host',
+            {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                },
+                body: JSON.stringify({ partyId, primaryHostId, removedHostId }),
+            }
+        );
+
+        return res.ok;
+    }
+    static async removeGuestFromParty(partyId, hostId, removedGuestId) {
+        const res = await fetch(
+            'https://shakeus.herokuapp.com:443/party/remove-guest',
+            {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json',
+                },
+                body: JSON.stringify({
+                    partyId: partyId,
+                    hostId: hostId,
+                    removedGuestId: removedGuestId,
+                }),
+            }
+        );
+
+        return res.ok;
+    }
+
+    static async joinParty(partyId, guestName, guestNotificationToken) {
+        const res = await fetch(
+            'https://shakeus.herokuapp.com:443/party/join',
+            {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    partyId,
+                    guestName,
+                    guestNotificationToken,
+                }),
+            }
+        );
+
+        if (res.ok) {
+            return await res.json();
+        }
+
+        return null;
+    }
+
+    static async leaveParty(partyId, userId) {
+        const res = await fetch(
+            'https://shakeus.herokuapp.com:443/party/leave',
+            {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ partyId, userId }),
+            }
+        );
+
+        return res.ok;
+    }
+
+    static async deleteParty(partyId, primaryHostId) {
+        const res = await fetch('https://shakeus.herokuapp.com:443/party', {
+            method: 'DELETE',
+            headers: {
+                Accept: 'application/json',
+            },
+            body: JSON.stringify({ partyId, primaryHostId }),
+        });
+
+        return res.ok;
+    }
 }
