@@ -37,7 +37,10 @@ export default ActivityContainer = (props) => {
                 <Text style={styles.activityTitle}>
                     {(function () {
                         const time = new Date(props.item.startTime);
-                        return `${time.getHours()}:${time
+                        return `${time
+                            .getHours()
+                            .toString()
+                            .padStart(2, '0')}:${time
                             .getMinutes()
                             .toString()
                             .padStart(2, '0')} | `;

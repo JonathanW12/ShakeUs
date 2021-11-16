@@ -20,6 +20,7 @@ import * as Notifications from 'expo-notifications';
 import io from 'socket.io-client';
 import { SocketProvider } from './Components/SocketContext';
 import GuestService from './Components/Services/GuestService';
+import ActivityFormScreen from './Screens/ActivityFormScreen';
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -116,6 +117,11 @@ export default function App() {
                     <Stack.Screen
                         name="CustomizePackScreen"
                         component={CustomizePackScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="ActivityFormScreen"
+                        component={ActivityFormScreen}
                         options={{ headerShown: false }}
                     />
                     <Stack.Screen

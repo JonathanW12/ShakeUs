@@ -31,51 +31,25 @@ export default CustomizePackScreen = ({ navigation }) => {
         }
     };
 
-    const createActivity = async (activity) => {
-        const res = await ActivityService.createActivity(
-            activity.title,
-            activity.description,
-            activity.startTime
-        );
-
-        if (res) {
-            activity._id = res.activityId;
-            setActivities([...activities, activity]);
-
-            await ActivityPackService.addActivityToPack(
-                ActivityPackService.currentPack._id,
-                res.activityId
-            );
-        } else {
-            throw new Error('Failed to create activity');
-        }
+    const createActivity = async () => {
+        navigation.navigate('ActivityFormScreen', {
+            newActivity: true,
+            activityId: '',
+            activityTitle: '',
+            activityDescription: '',
+            activityStartTime: '',
+        });
     };
 
     const updateSelectedActivity = async (activity) => {
         if (selectedActivity) {
-            const currentActivities = [...activities];
-
-            const res = await ActivityService.patchActivity(
-                activity._id,
-                activity.title,
-                activity.description,
-                activity.startTime
-            );
-
-            if (res) {
-                const newActivities = currentActivities.filter((a) => {
-                    return a._id != activity._id;
-                });
-
-                newActivities.push(activity);
-                newActivities.sort((a1, a2) => {
-                    return a1.startTime - a2.startTime;
-                });
-
-                setActivities(newActivities);
-            } else {
-                throw new Error('Failed to update activity');
-            }
+            navigation.navigate('ActivityFormScreen', {
+                newActivity: false,
+                activityId: selectedActivity._id,
+                activityTitle: selectedActivity.title,
+                activityDescription: selectedActivity.description,
+                activityStartTime: selectedActivity.startTime,
+            });
         }
     };
 
@@ -135,5 +109,6 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'space-between',
         backgroundColor: Colors.secondary,
+        paddingBottom: 80,
     },
 });

@@ -4,11 +4,11 @@ import Colors from './../../Constants/Colors';
 
 export default CustomizeToolBar = (props) => {
     const onAdd = () => {
-        console.log('add');
+        props.onAdd();
     };
 
     const onEdit = () => {
-        console.log('edit');
+        props.onEdit();
     };
 
     const onDelete = () => {

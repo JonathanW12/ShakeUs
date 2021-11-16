@@ -1,6 +1,6 @@
 export default class ActivityService {
     static async createActivity(title, description, startTime) {
-        return fetch('https://shakeus.herokuapp.com:443/activity/', {
+        const res = await fetch('https://shakeus.herokuapp.com:443/activity/', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -11,34 +11,34 @@ export default class ActivityService {
                 description: description,
                 startTime: startTime,
             }),
-        }).then(async (res) => {
-            if (res) {
-                return await res.json();
-            }
-
-            return null;
         });
+
+        if (res.ok) {
+            return await res.json();
+        }
+
+        return null;
     }
 
     static async getActivityById(id) {
-        return fetch('https://shakeus.herokuapp.com:443/activity/' + id).then(
-            async (res) => {
-                if (res) {
-                    return await res.json();
-                }
-
-                return null;
-            }
+        const res = await fetch(
+            'https://shakeus.herokuapp.com:443/activity/' + id
         );
+
+        if (res.ok) {
+            return await res.json();
+        }
+
+        return null;
     }
 
     static async getAllActivitiesByActivityPackId(activityPackId) {
-        const response = await fetch(
+        const res = await fetch(
             `https://shakeus.herokuapp.com:443/activity/get-all/${activityPackId}`
         );
 
-        if (response.ok) {
-            return await response.json();
+        if (res.ok) {
+            return await res.json();
         } else {
             console.log('Failed to load activities from: ' + activityPackId);
         }
@@ -60,30 +60,30 @@ export default class ActivityService {
     }
 
     static async getActivityTemplates() {
-        return fetch(
+        const res = await fetch(
             'https://shakeus.herokuapp.com:443/activity/templates'
-        ).then(async (res) => {
-            if (res) {
-                return await res.json();
-            }
+        );
 
-            return null;
-        });
+        if (res.ok) {
+            return await res.json();
+        }
+
+        return null;
     }
 
     static async getNextActivity(partyId, userId) {
-        return fetch(
+        const res = await fetch(
             'https://shakeus.herokuapp.com:443/activity/next/' +
                 partyId +
                 '/' +
                 userId
-        ).then(async (res) => {
-            if (res) {
-                return await res.json();
-            }
+        );
 
-            return null;
-        });
+        if (res.ok) {
+            return await res.json();
+        }
+
+        return null;
     }
 
     static async patchActivity(
@@ -92,7 +92,7 @@ export default class ActivityService {
         newDescription,
         newStartTime
     ) {
-        return fetch('https://shakeus.herokuapp.com:443/activity', {
+        const res = await fetch('https://shakeus.herokuapp.com:443/activity', {
             method: 'PATCH',
             headers: {
                 Accept: 'application/json',
@@ -102,15 +102,11 @@ export default class ActivityService {
                 activityId: activityId,
                 newTitle: newTitle,
                 newDescription: newDescription,
-                newStartTime: newStartTime,
+                newStartTime: +newStartTime,
             }),
-        }).then((res) => {
-            if (res.ok) {
-                return true;
-            }
-
-            return false;
         });
+
+        return res.ok;
     }
 
     // Perfer these, can remove if you dont like
