@@ -47,17 +47,14 @@ export default class ActivityService {
     }
 
     static async deleteActivity(id) {
-        const res = await fetch(
-            'https://shakeus.herokuapp.com:443/activity/' + id,
-            {
-                method: 'PATCH',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ activityId: id }),
-            }
-        );
+        const res = await fetch('https://shakeus.herokuapp.com:443/activity', {
+            method: 'DELETE',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ activityId: id }),
+        });
 
         return res.ok;
     }

@@ -20,64 +20,74 @@ export default class ActivityPackService {
         }
     }
 
-    static getActivityPackTemplates() {
-        return fetch(
+    static async getActivityPackTemplates() {
+        const res = await fetch(
             'https://shakeus.herokuapp.com:443/activity-pack/templates'
-        ).then(async (res) => {
-            return await res.json();
-        });
-    }
-    static createActivityPack(title, description) {
-        return fetch('https://shakeus.herokuapp.com:443/activity-pack/', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-            },
-            body: JSON.stringify({ title, description }),
-        }).then(async (res) => {
-            return await res.json();
-        });
-    }
-    /*
-  static getActivityPack(activityPackId) {
-    return fetch(
-      "https://shakeus.herokuapp.com:443/activity-pack/" + activityPackId
-    ).then((res) => {
-       if(res.ok){
-         return res.json();
-       }
-    }).then((json) => {
-      return json
-    });
-  }
-  */
-    static async getActivityPack(activityPackId) {
-        const response = await fetch(
-            'https://shakeus.herokuapp.com:443/activity-pack/' + activityPackId
         );
-        return response.json();
+
+        if (res.ok) {
+            return await res.json();
+        }
+
+        return null;
     }
 
-    static patchActivityPack(activityPackId, newTitle, newDescription) {
+    static async createActivityPack(title, description) {
+        const res = await fetch(
+            'https://shakeus.herokuapp.com:443/activity-pack/',
+            {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                },
+                body: JSON.stringify({ title, description }),
+            }
+        );
+
+        if (res.ok) {
+            return await res.json();
+        }
+
+        return null;
+    }
+
+    static async getActivityPack(activityPackId) {
+        const res = await fetch(
+            'https://shakeus.herokuapp.com:443/activity-pack/' + activityPackId
+        );
+        return await res.json();
+    }
+
+    static async patchActivityPack(activityPackId, newTitle, newDescription) {
         let patchedActivityPack = { activityPackId };
-        if ((newTitle = !undefined)) {
+
+        if (newTitle) {
             patchedActivityPack.newTitle = newTitle;
         }
-        if ((newDescription = !undefined)) {
+        if (newDescription) {
             patchedActivityPack.newDescription = newDescription;
         }
-        return fetch('https://shakeus.herokuapp.com:443/activity-pack/', {
-            method: 'PATCH',
-            headers: {
-                Accept: 'application/json',
-            },
-            body: JSON.stringify(patchedActivityPack),
-        }).then(async (res) => {
+
+        const res = await fetch(
+            'https://shakeus.herokuapp.com:443/activity-pack/',
+            {
+                method: 'PATCH',
+                headers: {
+                    Accept: 'application/json',
+                },
+                body: JSON.stringify(patchedActivityPack),
+            }
+        );
+
+        if (res.ok) {
             return await res.json();
-        });
+        }
+
+        return null;
     }
-    static addActivityToPack(activityPackId, activityId) {
-        return fetch(
+
+    static async addActivityToPack(activityPackId, activityId) {
+        const res = await fetch(
             'https://shakeus.herokuapp.com:443/activity-pack/add-activity',
             {
                 method: 'POST',
@@ -86,14 +96,13 @@ export default class ActivityPackService {
                 },
                 body: JSON.stringify({ activityPackId, activityId }),
             }
-        ).then((res) => {
-            if (res.ok) {
-            }
-        });
+        );
+
+        return res.ok;
     }
 
-    static removeActivityFromPack(activityPackId, activityId) {
-        return fetch(
+    static async removeActivityFromPack(activityPackId, activityId) {
+        const res = await fetch(
             'https://shakeus.herokuapp.com:443/activity-pack/remove-activity',
             {
                 method: 'POST',
@@ -103,20 +112,29 @@ export default class ActivityPackService {
                 },
                 body: JSON.stringify({ activityPackId, activityId }),
             }
-        ).then(async (res) => {
-            console.log('remove activity from pack status: ' + res.status);
-        });
+        );
+
+        return res.ok;
     }
 
-    static deleteActivityPack(activityPackId, activityId) {
-        return fetch('https://shakeus.herokuapp.com:443/activity-pack', {
-            method: 'DELETE',
-            headers: {
-                Accept: 'application/json',
-            },
-            body: JSON.stringify({ activityPackId }),
-        }).then(async (res) => {
+    static async deleteActivityPack(activityPackId, activityId) {
+        const res = await fetch(
+            'https://shakeus.herokuapp.com:443/activity-pack',
+            {
+                method: 'DELETE',
+                headers: {
+                    Accept: 'application/json',
+                },
+                body: JSON.stringify({ activityPackId }),
+            }
+        ).then(async (res) => {
             return await res.json();
         });
+
+        if (res.ok) {
+            return await res.json();
+        }
+
+        return null;
     }
 }

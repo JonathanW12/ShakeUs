@@ -1,24 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import Banner from '../Components/Banner';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList } from 'react-native';
 import ActivityPackService from '../Components/Services/ActivityPackService';
 import ActivityService from '../Components/Services/ActivityService';
 import Colors from '../Constants/Colors';
-import StandardButton from '../Components/StandardButton';
-import ActivityManager from '../Components/ActivityManager';
-import ActivityScheduler from '../Components/ActivityScheduler';
-import ActivityEditor from '../Components/ActivityEditor';
+import ActivityContainer from '../Components/CustomizePackScreenComponents/ActivityContainer';
+import CustomizeToolBar from './../Components/CustomizePackScreenComponents/CustomizeToolBar';
 
 export default CustomizePackScreen = ({ navigation }) => {
     const [activities, setActivities] = useState([]);
-    const [showActivityManager, setShowActivityManager] = useState(false);
-    const [showActivityScheduler, setShowActivityScheduler] = useState(false);
-    const [showActivityEditor, setShowActivityEditor] = useState(false);
     const [selectedActivity, setSelectedActivity] = useState(null);
 
     useEffect(() => {
         loadAllActivities(ActivityPackService.currentPack._id);
     }, []);
+
+    const onSelectActivity = (activity) => {
+        setSelectedActivity(activity);
+    };
 
     const loadAllActivities = async (activityPackId) => {
         const res = await ActivityService.getAllActivitiesByActivityPackId(
@@ -52,47 +51,53 @@ export default CustomizePackScreen = ({ navigation }) => {
         }
     };
 
-    const updateActivity = async (activity) => {
-        const currentActivities = [...activities];
+    const updateSelectedActivity = async (activity) => {
+        if (selectedActivity) {
+            const currentActivities = [...activities];
 
-        const res = await ActivityService.patchActivity(
-            activity._id,
-            activity.title,
-            activity.description,
-            activity.startTime
-        );
+            const res = await ActivityService.patchActivity(
+                activity._id,
+                activity.title,
+                activity.description,
+                activity.startTime
+            );
 
-        if (res) {
-            const newActivities = currentActivities.filter((a) => {
-                return a._id != activity._id;
-            });
+            if (res) {
+                const newActivities = currentActivities.filter((a) => {
+                    return a._id != activity._id;
+                });
 
-            newActivities.push(activity);
-            newActivities.sort((a1, a2) => {
-                return a1.startTime - a2.startTime;
-            });
+                newActivities.push(activity);
+                newActivities.sort((a1, a2) => {
+                    return a1.startTime - a2.startTime;
+                });
 
-            setActivities(newActivities);
-        } else {
-            throw new Error('Failed to update activity');
+                setActivities(newActivities);
+            } else {
+                throw new Error('Failed to update activity');
+            }
         }
     };
 
-    const deleteActivity = async (id) => {
-        const deleteRes = await ActivityService.deleteActivity(id);
-        const removeRes = await ActivityPackService.removeActivityFromPack(
-            ActivityPackService.currentPack._id,
-            id
-        );
+    const deleteSelectedActivity = async () => {
+        if (selectedActivity) {
+            const deleteRes = await ActivityService.deleteActivity(
+                selectedActivity._id
+            );
+            const removeRes = await ActivityPackService.removeActivityFromPack(
+                ActivityPackService.currentPack._id,
+                selectedActivity._id
+            );
 
-        if (deleteRes && removeRes) {
-            const currentActivities = [...activities];
-            const newActivities = currentActivities.filter((a) => {
-                return a._id != id;
-            });
-            setActivities(newActivities);
-        } else {
-            throw new Error('Failed to delete activity');
+            if (deleteRes && removeRes) {
+                const currentActivities = [...activities];
+                const newActivities = currentActivities.filter((a) => {
+                    return a._id != selectedActivity._id;
+                });
+                setActivities(newActivities);
+            } else {
+                throw new Error('Failed to delete activity');
+            }
         }
     };
 
@@ -101,115 +106,25 @@ export default CustomizePackScreen = ({ navigation }) => {
             <Banner title="Customize Pack" />
             <FlatList
                 data={activities}
-                renderItem={({ item }) => {
-                    return (
-                        <View style={styles.activityContainer}>
-                            <Text>{item.title}</Text>
-                            <Text>
-                                {(function () {
-                                    const time = new Date(item.startTime);
-                                    return (
-                                        time.getDate() +
-                                        '/' +
-                                        time.getMonth() +
-                                        1 +
-                                        '/' +
-                                        time.getFullYear() +
-                                        '/' +
-                                        time.getHours() +
-                                        ':' +
-                                        time.getMinutes()
-                                    );
-                                })()}
-                            </Text>
-                            <Text>{item.description}</Text>
-                            <StandardButton
-                                action={() => {
-                                    setSelectedActivity(item);
-                                    setShowActivityManager(false);
-                                    setShowActivityScheduler(false);
-                                    setShowActivityEditor(true);
-                                }}
-                                title={'EDIT'}
-                            ></StandardButton>
-                        </View>
-                    );
-                }}
                 keyExtractor={(item) => {
                     return item._id.toString();
                 }}
-            />
-            {showActivityManager && (
-                <ActivityManager
-                    handleActivitySet={createActivity}
-                    onSubmit={() => {
-                        setShowActivityManager(false);
-                    }}
-                />
-            )}
-            {showActivityEditor && (
-                <ActivityEditor
-                    selectedActivity={selectedActivity}
-                    handleActivitySet={updateActivity}
-                    handleDelete={deleteActivity}
-                    onSubmit={() => {
-                        setShowActivityEditor(false);
-                    }}
-                />
-            )}
-            {showActivityScheduler && (
-                <ActivityScheduler
-                    handleActivityScheduler={async (startTime, interval) => {
-                        const newActivities = [];
-                        for (let i = 0; i < activities.length; i++) {
-                            let patchedActivity = activities[i];
-                            patchedActivity.startTime =
-                                startTime + i * interval * 60 * 1000;
-                            await ActivityService.patchActivity(
-                                patchedActivity._id,
-                                patchedActivity.title,
-                                patchedActivity.description,
-                                patchedActivity.startTime
-                            );
-                            newActivities.push(patchedActivity);
+                renderItem={({ item, index }) => (
+                    <ActivityContainer
+                        item={item}
+                        activity={activities[index]}
+                        selectActivity={onSelectActivity}
+                        selectedActivityId={
+                            selectedActivity ? selectedActivity._id : null
                         }
-                        setActivities(newActivities);
-                    }}
-                    onSubmit={() => {
-                        setShowActivityManager(false);
-                    }}
-                />
-            )}
-            <View style={styles.bottomToolbar}>
-                <View style={styles.buttonContainer}>
-                    <SmallButton
-                        title={'New Actvitiy'}
-                        style={styles.button}
-                        action={() => {
-                            setShowActivityScheduler(false);
-                            setShowActivityManager(!showActivityManager);
-                        }}
-                    />
-                    <SmallButton
-                        title={'Edit Schedule'}
-                        style={styles.button}
-                        action={() => {
-                            setShowActivityManager(false);
-                            setShowActivityScheduler(false);
-                            setShowActivityEditor(true);
-                        }}
-                    />
-                    <SmallButton
-                        title={'Postpone Activities'}
-                        style={styles.button}
-                        action={() => {
-                            setShowActivityManager(false);
-                            setShowActivityEditor(false);
-                            setShowActivityScheduler(!showActivityScheduler);
-                        }}
-                    />
-                </View>
-            </View>
+                    ></ActivityContainer>
+                )}
+            />
+            <CustomizeToolBar
+                onDelete={deleteSelectedActivity}
+                onEdit={updateSelectedActivity}
+                onAdd={createActivity}
+            ></CustomizeToolBar>
         </View>
     );
 };
@@ -219,32 +134,6 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'space-between',
-    },
-    activityContainer: {
-        flex: 1,
         backgroundColor: Colors.secondary,
-        height: 100,
-        margin: 3,
-    },
-    bottomToolbar: {
-        height: 100,
-        backgroundColor: Colors.tertiary,
-        paddingBottom: '10%',
-    },
-    button: {
-        backgroundColor: Colors.primary,
-        width: 80,
-        height: 60,
-    },
-    buttonContainer: {
-        height: '100%',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-around',
-    },
-    modalContainer: {
-        height: 200,
-        width: 200,
-        backgroundColor: Colors.primary,
     },
 });
