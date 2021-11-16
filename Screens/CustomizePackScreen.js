@@ -13,7 +13,7 @@ export default CustomizePackScreen = ({ navigation }) => {
 
     useEffect(() => {
         loadAllActivities(ActivityPackService.currentPack._id);
-    }, []);
+    }, [activities]);
 
     const onSelectActivity = (activity) => {
         setSelectedActivity(activity);
