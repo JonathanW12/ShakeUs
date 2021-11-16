@@ -1,44 +1,62 @@
 export default class GuestService {
-static isHost = null;
-static hostName = null;
-static guestId = null;
-static guestList = null;
-static guestNotificationToken = null;
+    static isHost = null;
+    static hostName = null;
+    static guestId = null;
+    static guestList = null;
+    static guestNotificationToken = null;
 
-  static getGuest(guestId) {
-    return fetch("https://shakeus.herokuapp.com:443/guest/" + guestId, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-      },
-    }).then(async (res) => {
-      return await res.json();
-    });
-  }
-  static patchGuest(guestId, newName) {
-    return fetch("https://shakeus.herokuapp.com:443/guest/" + guestId, {
-      method: "PATCH",
-      headers: {
-        Accept: "application/json",
-      },
-      body: JSON.stringify({ guestId, newName }),
-    }).then(async (res) => {
-      return await res.json();
-    });
-  }
-  static async getAllGuests(partyId, guestId) {
-    //console.log("being called")
-    let url =
-      "https://shakeus.herokuapp.com:443/guest/get-all/" +
-      partyId +
-      "/" +
-      guestId;
-    let response = await fetch(url, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-      },
-    });
-    return response.json();
-  }
+    static async getGuest(guestId) {
+        const res = await fetch(
+            'https://shakeus.herokuapp.com:443/guest/' + guestId,
+            {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                },
+            }
+        );
+
+        if (res.ok) {
+            return await res.json();
+        }
+
+        return null;
+    }
+
+    static async patchGuest(guestId, newName) {
+        const res = await fetch(
+            'https://shakeus.herokuapp.com:443/guest/' + guestId,
+            {
+                method: 'PATCH',
+                headers: {
+                    Accept: 'application/json',
+                },
+                body: JSON.stringify({ guestId, newName }),
+            }
+        );
+
+        if (res) {
+            return await res.json();
+        }
+
+        return null;
+    }
+
+    static async getAllGuests(partyId, guestId) {
+        const response = await fetch(
+            `https://shakeus.herokuapp.com:443/guest/get-all/${partyId}/${guestId}`,
+            {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                },
+            }
+        );
+
+        if (response.ok) {
+            return await response.json();
+        }
+
+        return null;
+    }
 }
