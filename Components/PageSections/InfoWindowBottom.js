@@ -20,6 +20,8 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.primary,
         width: '100%',
         height: 140,
+        position: "absolute",
+        bottom: 0,
     },
     Title: {
         backgroundColor: Colors.primaryDark,
