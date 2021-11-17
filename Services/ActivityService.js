@@ -132,7 +132,7 @@ export default class ActivityService {
         );
 
         if (res.ok) {
-            return await response.json();
+            return await res.json();
         }
 
         return null;
