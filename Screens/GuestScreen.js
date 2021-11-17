@@ -15,9 +15,11 @@ import ActivityPackService from '../Services/ActivityPackService';
 import PartyService from '../Services/PartyService';
 import GuestService from '../Services/GuestService';
 import ActivityService from '../Services/ActivityService';
+import ActivityStartTime from '../Components/UI/ActivityStartTime';
 import { SocketContext } from '../Context/SocketContext';
 import { PartyContext } from './../Context/PartyContext';
 import { UserContext } from '../Context/UserContext';
+import InfoWindowBottom from '../Components/PageSections/InfoWindowBottom';
 
 export default GuestScreen = ({ navigation }) => {
     const [activityPackage, setactivityPackage] = useState(null);
@@ -32,18 +34,18 @@ export default GuestScreen = ({ navigation }) => {
     const unixToHours = (unix) => {
         let unix_timestamp = unix;
         let date = new Date(unix_timestamp * 1000);
-        let hours = date.getHours();
-        var minutes = '0' + date.getMinutes();
+        let hours = date.getHours().toString().padStart(2,"0");
+        var minutes = date.getMinutes().toString().padStart(2,"0");
         //var seconds = "0" + date.getSeconds();
-        return hours + ':' + minutes.substr(-2);
+        return hours + ':' + minutes;
     };
+    
     const getPartyInformation = async () => {
         // Fetch party to get activityPackId
         const partyResult = await PartyService.getParty(
             partyContext.getPartyId(),
             userContext.getUserId()
         )
-        console.log(partyResult)
         // Continue if party exists
         if(partyResult) {
     
@@ -125,16 +127,8 @@ export default GuestScreen = ({ navigation }) => {
                         </Text>
                         <View style={styles.whiteLine}></View>
                         <Text style={styles.partyTitle}>
-                            Started at:
-                            <Text style={styles.blueText}>
-                                {() => {
-                                    if (currentActivity != null) {
-                                        unixToHours(currentActivity.startTime);
-                                    } else {
-                                        // Do nothing
-                                    }
-                                }}
-                            </Text>
+                            
+                                <ActivityStartTime activity={currentActivity} style={{...styles.blueText, flex: 1, justifyContent: 'center', alignItems: 'center'}} />
                         </Text>
                     </View>
                     <Text style={styles.guestMesssage}>
@@ -142,18 +136,13 @@ export default GuestScreen = ({ navigation }) => {
                     </Text>
                     <View></View>
                 </View>
-                <View style={styles.lowerContainer}>
-                    <Text style={styles.nextActivity}>Next Activity At</Text>
-                    <Text style={styles.timeStamp}>
-                        {() => {
-                            if (nextActivity != null) {
-                                unixToHours(nextActivity.startTime);
-                            } else {
-                                // Do nothing
-                            }
-                        }}
-                    </Text>
-                </View>
+
+                    {nextActivity
+                        ? <InfoWindowBottom title={"Next activity starting at:"} content={unixToHours(nextActivity.startTime)} />
+                        : <InfoWindowBottom title={"Next activity starting at:"} content={"No more"} />
+                    }
+
+                
             </View>
         );
     } else {
