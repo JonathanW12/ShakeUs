@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Banner from '../Components/PageSections/Banner';
 import { View, Text, StyleSheet, Alert } from 'react-native';
 import StandardButton from '../Components/UI/StandardButton';
@@ -8,37 +8,48 @@ import GuestService from '../Services/GuestService';
 import ActivityPackService from '../Services/ActivityPackService';
 import PartyService from '../Services/PartyService';
 import TimeSelector from '../Components/UI/TimeSelector';
+import { PartyContext } from './../Context/PartyContext';
+import { UserContext } from '../Context/UserContext';
 
 export default HostPartyScreen = ({ navigation }) => {
     const [index, setIndex] = useState(0);
+    const partyContext = useContext(PartyContext);
+    const userContext = useContext(UserContext);
 
     async function createTheParty() {
         const res = await PartyService.createParty(
-            ActivityPackService.currentPack._id,
-            GuestService.hostName,
-            GuestService.guestNotificationToken
+            partyContext.getActivityPack()._id,
+            partyContext.getPrimaryHost().name,
+            userContext.getNotificationToken()
         );
 
         if (res) {
-            PartyService.partyId = res.partyId;
-            PartyService.hostId = res.hostId;
-            GuestService.guestId = res.hostId;
+            partyContext.setPartyId(res.partyId);
+            partyContext.setPrimaryHost({
+                id: res.hostId,
+                name: partyContext.getPrimaryHost().name,
+            });
+
+            userContext.setUserId(res.hostId);
 
             const party = await PartyService.getParty(
-                PartyService.partyId,
+                partyContext.getPartyId(),
                 res.hostId
             );
 
             console.log(party);
 
             if (party) {
-                await ActivityPackService.updateCurrentPack(
-                    party.activityPackId
-                );
+                const updatedActivity =
+                    await ActivityPackService.updateCurrentPack(
+                        party.activityPackId
+                    );
 
-                console.log(
-                    'Activity Pack: ' + ActivityPackService.currentPack
-                );
+                if (updatedActivity) {
+                    partyContext.setActivityPack(updatedActivity);
+                }
+
+                console.log('Activity Pack: ' + partyContext.getActivityPack());
             }
 
             navigation.navigate('PartyInformationScreen');
@@ -46,17 +57,20 @@ export default HostPartyScreen = ({ navigation }) => {
     }
 
     const handleActionStartParty = () => {
-        if (GuestService.hostName && ActivityPackService.currentPack) {
+        if (
+            partyContext.getPrimaryHost().name &&
+            partyContext.getActivityPack()
+        ) {
             createTwoButtonAlert();
         } else {
-            throw new Error('Missing hostname and / or currentPack');
+            throw new Error('Missing hostname and / or activity pack');
         }
     };
 
     const createTwoButtonAlert = () =>
         Alert.alert(
             'Confirmation',
-            `Create party: ${ActivityPackService.currentPack.title}`,
+            `Create party: ${partyContext.getActivityPack().title}`,
             [
                 {
                     text: 'Cancel',

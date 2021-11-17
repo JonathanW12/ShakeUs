@@ -1,7 +1,6 @@
 // exe819m
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Platform, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -14,12 +13,12 @@ import CustomizePackScreen from './Screens/CustomizePackScreen';
 import JoinPartyScreenHost from './Screens/JoinPartyScreenHost';
 import ParticipantsScreen from './Screens/ParticipantsScreen';
 
-import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 
 import { SocketProvider, socket } from './Context/SocketContext';
-import GuestService from './Services/GuestService';
 import ActivityFormScreen from './Screens/ActivityFormScreen';
+import PartyProvider from './Context/PartyContext';
+import { UserProvider } from './Context/UserContext';
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -31,150 +30,89 @@ Notifications.setNotificationHandler({
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [expoPushToken, setExpoPushToken] = useState('');
-  const [notification, setNotification] = useState(false);
-  const notificationListener = useRef();
-  const responseListener = useRef();
+    const [notification, setNotification] = useState(false);
+    const notificationListener = useRef();
+    const responseListener = useRef();
 
-  useEffect(() => {
-    
-    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+    useEffect(() => {
+        // This listener is fired whenever a notification is received while the app is foregrounded
+        notificationListener.current =
+            Notifications.addNotificationReceivedListener((notification) => {
+                setNotification(notification);
+            });
 
-    // This listener is fired whenever a notification is received while the app is foregrounded
-    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      setNotification(notification);
-      
-    });
+        // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+        responseListener.current =
+            Notifications.addNotificationResponseReceivedListener(
+                (response) => {}
+            );
 
-    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-    });
+        return () => {
+            Notifications.removeNotificationSubscription(
+                notificationListener.current
+            );
+            Notifications.removeNotificationSubscription(
+                responseListener.current
+            );
+        };
+    }, []);
 
-    return () => {
-      Notifications.removeNotificationSubscription(notificationListener.current);
-      Notifications.removeNotificationSubscription(responseListener.current);
-    };
-
-    
-  }, []);
-
-  
-  
-
-  return (
-   <SocketProvider socket={socket}>
-      <NavigationContainer>
-        <StatusBar />
-        <Stack.Navigator>
-          <Stack.Screen
-            name="MainScreen"
-            component={MainScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="HostPartyScreen"
-            component={HostPartyScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="JoinPartyScreen"
-            component={JoinPartyScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="GuestScreen"
-            component={GuestScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="PartyInformationScreen"
-            component={PartyInformationScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="CustomizePackScreen"
-            component={CustomizePackScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="ActivityFormScreen"
-            component={ActivityFormScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="JoinPartyScreenHost"
-            component={JoinPartyScreenHost}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="ParticipantsScreen"
-            component={ParticipantsScreen}
-            options={{ headerShown: false }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-  </SocketProvider>
-  );
+    return (
+        <SocketProvider socket={socket}>
+            <PartyProvider>
+                <UserProvider>
+                    <NavigationContainer>
+                        <StatusBar />
+                        <Stack.Navigator>
+                            <Stack.Screen
+                                name="MainScreen"
+                                component={MainScreen}
+                                options={{ headerShown: false }}
+                            />
+                            <Stack.Screen
+                                name="HostPartyScreen"
+                                component={HostPartyScreen}
+                                options={{ headerShown: false }}
+                            />
+                            <Stack.Screen
+                                name="JoinPartyScreen"
+                                component={JoinPartyScreen}
+                                options={{ headerShown: false }}
+                            />
+                            <Stack.Screen
+                                name="GuestScreen"
+                                component={GuestScreen}
+                                options={{ headerShown: false }}
+                            />
+                            <Stack.Screen
+                                name="PartyInformationScreen"
+                                component={PartyInformationScreen}
+                                options={{ headerShown: false }}
+                            />
+                            <Stack.Screen
+                                name="CustomizePackScreen"
+                                component={CustomizePackScreen}
+                                options={{ headerShown: false }}
+                            />
+                            <Stack.Screen
+                                name="ActivityFormScreen"
+                                component={ActivityFormScreen}
+                                options={{ headerShown: false }}
+                            />
+                            <Stack.Screen
+                                name="JoinPartyScreenHost"
+                                component={JoinPartyScreenHost}
+                                options={{ headerShown: false }}
+                            />
+                            <Stack.Screen
+                                name="ParticipantsScreen"
+                                component={ParticipantsScreen}
+                                options={{ headerShown: false }}
+                            />
+                        </Stack.Navigator>
+                    </NavigationContainer>
+                </UserProvider>
+            </PartyProvider>
+        </SocketProvider>
+    );
 }
-
-// Can use this function below, OR use Expo's Push Notification Tool-> https://expo.dev/notifications
-async function sendPushNotification(expoPushToken) {
-    const message = {
-        to: expoPushToken,
-        sound: 'default',
-        title: 'Original Title',
-        body: 'And here is the body!',
-        data: { someData: 'goes here' },
-    };
-
-    await fetch('https://exp.host/--/api/v2/push/send', {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'Accept-encoding': 'gzip, deflate',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(message),
-    });
-}
-
-async function registerForPushNotificationsAsync() {
-    let token;
-    if (Constants.isDevice) {
-        const { status: existingStatus } =
-            await Notifications.getPermissionsAsync();
-        let finalStatus = existingStatus;
-        if (existingStatus !== 'granted') {
-            const { status } = await Notifications.requestPermissionsAsync();
-            finalStatus = status;
-        }
-        if (finalStatus !== 'granted') {
-            alert('Failed to get push token for push notification!');
-            return;
-        }
-        token = (await Notifications.getExpoPushTokenAsync()).data;
-        GuestService.guestNotificationToken = token;
-    } else {
-        alert('Must use physical device for Push Notifications');
-    }
-
-    if (Platform.OS === 'android') {
-        Notifications.setNotificationChannelAsync('default', {
-            name: 'default',
-            importance: Notifications.AndroidImportance.MAX,
-            vibrationPattern: [0, 250, 250, 250],
-            lightColor: '#FF231F7C',
-        });
-    }
-
-    return token;
-}
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-});

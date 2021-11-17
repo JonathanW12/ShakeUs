@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Banner from '../Components/PageSections/Banner';
 import {
     View,
@@ -14,11 +14,15 @@ import PartyService from '../Services/PartyService';
 import GuestService from '../Services/GuestService';
 import InfoWindowBottom from '../Components/PageSections/InfoWindowBottom';
 import SmallButton from './../Components/UI/SmallButton';
+import { PartyContext } from './../Context/PartyContext';
+import { UserContext } from '../Context/UserContext';
 
 export default PartyInformationScreen = ({ navigation }) => {
     const [activityPackage, setactivityPackage] = useState(null);
     const [participantCount, setparticipantCount] = useState(0);
     const [activityCount, setactivityCount] = useState(0);
+    const partyContext = useContext(PartyContext);
+    const userContext = useContext(UserContext);
 
     useEffect(() => {
         load();
@@ -26,8 +30,8 @@ export default PartyInformationScreen = ({ navigation }) => {
 
     async function getPartyInformation() {
         const res = await PartyService.getParty(
-            PartyService.partyId,
-            GuestService.guestId
+            partyContext.getPartyId(),
+            userContext.getUserId()
         );
 
         if (res) {
@@ -38,9 +42,9 @@ export default PartyInformationScreen = ({ navigation }) => {
     }
 
     function load() {
-        if (ActivityPackService.currentPack) {
-            setactivityPackage(ActivityPackService.currentPack);
-            setactivityCount(ActivityPackService.currentPack.activities.length);
+        if (partyContext.getActivityPack()) {
+            setactivityPackage(partyContext.getActivityPack());
+            setactivityCount(partyContext.getActivityPack().activities.length);
         } else {
             console.log('No activityPack');
         }
@@ -94,7 +98,7 @@ export default PartyInformationScreen = ({ navigation }) => {
 
                 <InfoWindowBottom
                     title="Party Code"
-                    content={PartyService.partyId}
+                    content={partyContext.getPartyId()}
                 ></InfoWindowBottom>
             </View>
         );

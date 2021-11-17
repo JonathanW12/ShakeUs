@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Banner from '../Components/PageSections/Banner';
 import { View, StyleSheet, FlatList } from 'react-native';
 import ActivityPackService from '../Services/ActivityPackService';
@@ -6,14 +6,16 @@ import ActivityService from '../Services/ActivityService';
 import Colors from '../Constants/Colors';
 import ActivityContainer from '../Components/CustomizePackScreenComponents/ActivityContainer';
 import CustomizeToolBar from './../Components/CustomizePackScreenComponents/CustomizeToolBar';
+import { PartyContext } from './../Context/PartyContext';
 
 export default CustomizePackScreen = ({ navigation }) => {
     const [activities, setActivities] = useState([]);
     const [selectedActivity, setSelectedActivity] = useState(null);
+    const partyContext = useContext(PartyContext);
 
     useEffect(() => {
-        loadAllActivities(ActivityPackService.currentPack._id);
-    }, [activities]);
+        loadAllActivities(partyContext.getActivityPack()._id);
+    }, []);
 
     const onSelectActivity = (activity) => {
         setSelectedActivity(activity);
@@ -59,7 +61,8 @@ export default CustomizePackScreen = ({ navigation }) => {
                 selectedActivity._id
             );
             const removeRes = await ActivityPackService.removeActivityFromPack(
-                ActivityPackService.currentPack._id,
+                partyContext.getActivityPack()._id,
+                //ActivityPackService.currentPack._id,
                 selectedActivity._id
             );
 

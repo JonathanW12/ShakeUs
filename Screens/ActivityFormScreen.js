@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Banner from '../Components/PageSections/Banner';
 import Colors from './../Constants/Colors';
@@ -7,6 +7,7 @@ import { TextInput } from 'react-native';
 import TimeSelector from './../Components/UI/TimeSelector';
 import ActivityService from '../Services/ActivityService';
 import ActivityPackService from '../Services/ActivityPackService';
+import { PartyContext } from './../Context/PartyContext';
 
 export default ActivityFormScreen = ({ route, navigation }) => {
     const [title, setTitle] = useState(
@@ -18,6 +19,7 @@ export default ActivityFormScreen = ({ route, navigation }) => {
     const timeSelectorRef = useRef(null);
 
     const { newActivity, activityId, activityStartTime } = route.params;
+    const partyContext = useContext(PartyContext);
 
     const submit = async () => {
         const activity = {
@@ -53,7 +55,8 @@ export default ActivityFormScreen = ({ route, navigation }) => {
             activity._id = res.activityId;
 
             const addRes = ActivityPackService.addActivityToPack(
-                ActivityPackService.currentPack._id,
+                partyContext.getActivityPack()._id,
+                // ActivityPackService.currentPack._id,
                 res.activityId
             );
 

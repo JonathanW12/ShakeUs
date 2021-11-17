@@ -1,10 +1,4 @@
 export default class GuestService {
-    static isHost = null;
-    static hostName = null;
-    static guestId = null;
-    static guestList = null;
-    static guestNotificationToken = null;
-
     static async getGuest(guestId) {
         const res = await fetch(
             'https://shakeus.herokuapp.com:443/guest/' + guestId,

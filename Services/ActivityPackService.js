@@ -1,6 +1,4 @@
 export default class ActivityPackService {
-    static currentPack;
-
     static async updateCurrentPack(activityPackId) {
         const res = await fetch(
             `https://shakeus.herokuapp.com:443/activity-pack/${activityPackId}`
@@ -16,8 +14,10 @@ export default class ActivityPackService {
                 activities: data.activities,
             };
 
-            ActivityPackService.currentPack = activityPack;
+            return activityPack;
         }
+
+        return null;
     }
 
     static async getActivityPackTemplates() {

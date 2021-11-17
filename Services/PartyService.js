@@ -1,7 +1,4 @@
 export default class PartService {
-    static partyId = null;
-    static hostId = null;
-
     static async createParty(activtyPackId, hostName, notificationToken) {
         const res = await fetch('https://shakeus.herokuapp.com:443/party', {
             method: 'POST',
