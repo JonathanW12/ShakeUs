@@ -21,6 +21,7 @@ export default JoinPartyScreen = ({ navigation }) => {
     const onSucces = (res) => {
         userContext.setUserId(res.newGuest._id);
         partyContext.setGuests(res.guests);
+        partyContext.setHosts(res.hosts);
         partyContext.setPartyId(partyCode);
 
         console.log(partyCode);
