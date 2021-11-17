@@ -17,8 +17,7 @@ import ParticipantsScreen from "./Screens/ParticipantsScreen";
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 
-import io from 'socket.io-client';
-import {SocketProvider} from './Components/SocketContext';
+import {SocketProvider, socket} from './Components/SocketContext';
 import GuestService from "./Components/Services/GuestService";
 
 Notifications.setNotificationHandler({
@@ -28,7 +27,6 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 });
-const SocketContext = React.createContext(null);
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -36,25 +34,9 @@ export default function App() {
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
-  const [socket, setsocket] = useState(null);
-
-  const connectSocket = () => {
-    try{
-        console.log("connecting to socket");
-        setsocket({
-            socket: io.connect("https://shakeus.herokuapp.com/", {
-                transports: ['websocket'],
-                reconnectionAttempts: 15
-            })
-        });
-    }catch(err){
-        console.log(err);
-    }
-}
 
   useEffect(() => {
-    connectSocket();  
-
+    
     registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 
     // This listener is fired whenever a notification is received while the app is foregrounded
@@ -65,17 +47,21 @@ export default function App() {
 
     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log(response);
     });
 
     return () => {
       Notifications.removeNotificationSubscription(notificationListener.current);
       Notifications.removeNotificationSubscription(responseListener.current);
     };
+
+    
   }, []);
 
+  
+  
+
   return (
-    <SocketProvider socket={socket}>
+   <SocketProvider socket={socket}>
       <NavigationContainer>
         <StatusBar />
         <Stack.Navigator>
@@ -121,7 +107,7 @@ export default function App() {
           />
         </Stack.Navigator>
       </NavigationContainer>
-    </SocketProvider>
+  </SocketProvider>
   );
 }
 

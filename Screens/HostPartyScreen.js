@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Banner from "../Components/Banner";
 import {
   View,
@@ -18,10 +18,11 @@ import ActivityService from "../Components/Services/ActivityService";
 import GuestService from "../Components/Services/GuestService";
 import ActivityPackService from "../Components/Services/ActivityPackService";
 import PartyService from "../Components/Services/PartyService";
+import { SocketContext } from "../Components/SocketContext";
 
 export default HostPartyScreen = ({ navigation }) => {
   const [index, setIndex] = useState(0);
-
+  const socket = useContext(SocketContext);
   
 
   async function createTheParty(){
@@ -89,6 +90,18 @@ export default HostPartyScreen = ({ navigation }) => {
     setDate(currentDate);
   };
 
+  useEffect(() => {
+    console.log(socket.id);
+    socket.emit("HEJ","ad");
+
+    socket.on("Davs", (payload) => {
+      console.log(payload);
+    })
+
+    return () => {
+      // Clean
+    }
+  }, [socket])
 
   return (
     <View style={styles.container}>

@@ -8,6 +8,26 @@ import ActivityPackService from "./Services/ActivityPackService";
 import { useLinkProps } from "@react-navigation/native";
 
 const CustomCarousel = (props) => {
+  /*
+  <View style={{ alignItems: "center" }}>
+          <Pressable
+            style={({ pressed }) => [
+              {
+                backgroundColor: pressed
+                  ? "rgba(18, 150, 179, 0.2)"
+                  : Colors.secondary,
+              },
+              styles.button,
+            ]}
+            onPress={() => {
+              props.navigation.navigate("CustomizePackScreen");
+            }}
+          >
+            <Text style={styles.text}>Customize Pack</Text>
+          </Pressable>
+        </View>
+  */
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [carouselItems, setCarouselItems] = useState([]);
   const [personalActivityPackIds, setPersonalActivityPackIds] = useState([
@@ -34,33 +54,14 @@ const CustomCarousel = (props) => {
   const renderItem = useCallback(
     ({ item, index }) => (
       <View style={[styles.activityCarousel]}>
-        <View style={[styles.whiteBorderBottom]}>
+        <View style={{...styles.whiteBorderBottom,}}>
           <Text style={styles.activityHeader}>{item.title}</Text>
           <Text style={styles.activityCount}>
             {item.activities.length} Activites
           </Text>
         </View>
-        <View style={[styles.whiteBorderBottom]}>
+        <View style={{marginBottom: 20, }}>
           <Text style={styles.activityPackDescription}>{item.description}</Text>
-        </View>
-        <View style={{ alignItems: "center" }}>
-          <Pressable
-            //style={styles.button}
-
-            style={({ pressed }) => [
-              {
-                backgroundColor: pressed
-                  ? "rgba(18, 150, 179, 0.2)"
-                  : Colors.secondary,
-              },
-              styles.button,
-            ]}
-            onPress={() => {
-              props.navigation.navigate("CustomizePackScreen");
-            }}
-          >
-            <Text style={styles.text}>Customize Pack</Text>
-          </Pressable>
         </View>
       </View>
     ),
@@ -100,14 +101,15 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
     width: "100%",
-    minHeight: 300,
+    //minHeight: 250,
   },
   activityCarousel: {
     width: "100%",
-    height: "100%",
+    height: 200,
     backgroundColor: Colors.primary,
     padding: 10,
-    justifyContent: "center",
+    //justifyContent: "center",
+    borderRadius: 10,
   },
   activityCarouselDots: {
     flexDirection: "row",
@@ -141,6 +143,7 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
     fontSize: 18,
     textAlign: "center",
+    minHeight: 150,
   },
 
   button: {
