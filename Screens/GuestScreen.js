@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useCallback } from 'react';
 import Banner from '../Components/PageSections/Banner';
 import {
     View,
@@ -20,6 +20,7 @@ import { SocketContext } from '../Context/SocketContext';
 import { PartyContext } from './../Context/PartyContext';
 import { UserContext } from '../Context/UserContext';
 import InfoWindowBottom from '../Components/PageSections/InfoWindowBottom';
+import { useFocusEffect, useIsFocused } from '@react-navigation/core';
 
 export default GuestScreen = ({ navigation }) => {
     const [activityPackage, setactivityPackage] = useState(null);
@@ -31,16 +32,33 @@ export default GuestScreen = ({ navigation }) => {
     const partyContext = useContext(PartyContext);
     const userContext = useContext(UserContext);
 
+    const isFocused = useIsFocused();
+
     const unixToHours = (unix) => {
         let unix_timestamp = unix;
-        let date = new Date(unix_timestamp * 1000);
+        let date = new Date(unix_timestamp);
         let hours = date.getHours().toString().padStart(2,"0");
         var minutes = date.getMinutes().toString().padStart(2,"0");
-        //var seconds = "0" + date.getSeconds();
         return hours + ':' + minutes;
     };
-    
+
+    const onSocketEvent = (toBeCurrent) => {
+        let listOfActivities = partyContext.getAllActivities();
+
+            for (let index = 0; index < listOfActivities.length; index++) {
+                if (currentActivity == listOfActivities[index]) {
+                    if (listOfActivities[index + 1] != null) {
+                        setnextActivity(listOfActivities[index + 1]);
+                    } else {
+                        setnextActivity(null);
+                    }
+                }
+            }
+            setcurrentActivity(toBeCurrent);
+    }
+
     const getPartyInformation = async () => {
+        setactivityPackage(null)
         // Fetch party to get activityPackId
         const partyResult = await PartyService.getParty(
             partyContext.getPartyId(),
@@ -48,7 +66,8 @@ export default GuestScreen = ({ navigation }) => {
         )
         // Continue if party exists
         if(partyResult) {
-    
+          // Set the party ID for use under customizePack
+          
           const activityPackResult = await ActivityPackService.getActivityPack(
             partyResult.activityPackId
           )
@@ -64,12 +83,20 @@ export default GuestScreen = ({ navigation }) => {
     
           // Use fetch results
           if(activityPackResult && allActivitiesResult){
-            console.log(activityPackResult)
-            console.log(allActivitiesResult)
-    
+            // Set activityPack in partyContext for use in customizePack
+            partyContext.setActivityPack(activityPackResult)
+            partyContext.setAllActivities(allActivitiesResult)
+
+            let currentTime = +new Date();
+
             setactivityPackage(activityPackResult);
             setallActivities(allActivitiesResult);
-            setcurrentActivity(allActivitiesResult[0]);
+
+            allActivitiesResult.forEach(element => {
+                if (element.startTime < currentTime){
+                    setcurrentActivity(element)
+                }
+            });
             setready(true);
           } else {
             Alert.alert("Unable to fetch activities");
@@ -77,6 +104,7 @@ export default GuestScreen = ({ navigation }) => {
           if(nextActivityResult){
             setnextActivity(nextActivityResult);
           } else {
+            setnextActivity(null);
             Alert.alert("Unable to fetch next activity");
           }
         
@@ -85,28 +113,23 @@ export default GuestScreen = ({ navigation }) => {
           Alert.alert("Unable to find party");
         }
       }
-
+    
     useEffect(() => {
-        getPartyInformation();
-    }, []);
+        if(isFocused){
+            console.log("Focus triggered me!!")
+            getPartyInformation();
+        }
+        
+    }, [isFocused]);
 
     useEffect(() => {
         // Socket event when activity starts!
-        socket.on('activity-started', (activity) => {
-            setcurrentActivity(activity);
 
-            for (let index = 0; index < allActivities.length; index++) {
-                if (currentActivity == allActivities[index]) {
-                    if (allActivities[index + 1] != null) {
-                        setnextActivity(allActivities[index + 1]);
-                    } else {
-                        setnextActivity(null);
-                    }
-                }
-            }
+        socket.on('activity-started', (data) => {
+            onSocketEvent(data.activity);
         });
         return () => {
-            //Clean
+            socket.close();
         };
     }, [socket]);
 
@@ -166,7 +189,7 @@ const styles = StyleSheet.create({
         margin: 15,
     },
     guestMesssage: {
-        fontSize: 18,
+        fontSize: 20,
         color: 'white',
         margin: 15,
         textAlign: 'center',

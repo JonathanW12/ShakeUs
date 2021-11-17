@@ -5,7 +5,7 @@ import InfoWindowBottom from '../PageSections/InfoWindowBottom';
 export default function ActivityStartTime({activity, style}) {
     const unixToHours = (unix) => {
         let unix_timestamp = unix;
-        let date = new Date(unix_timestamp * 1000);
+        let date = new Date(unix_timestamp);
         let hours = date.getHours().toString().padStart(2,"0");
         var minutes = date.getMinutes().toString().padStart(2,"0");
         //var seconds = "0" + date.getSeconds();
@@ -16,9 +16,8 @@ export default function ActivityStartTime({activity, style}) {
         return (
             <View>
                 <Text>
-                    started at: 
                     <Text style={style}>
-                        {unixToHours(activity.startTime)}
+                          {unixToHours(activity.startTime)}
                     </Text>
                 </Text>
             </View>

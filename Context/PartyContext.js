@@ -14,6 +14,7 @@ const partyInfo = {
     },
     hosts: [],
     guests: [],
+    allActivities: [],
 };
 
 export const PartyContext = React.createContext();
@@ -50,6 +51,12 @@ export default PartyProvider = (props) => {
         setGuests: (guests) => {
             partyInfo.guests = guests;
         },
+        setAllActivities: (allActivities) => {
+            partyInfo.allActivities = allActivities;
+        },
+        getAllActivities: () => {
+            return partyInfo.allActivities;
+        }
     };
 
     return (

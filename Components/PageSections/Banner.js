@@ -86,6 +86,21 @@ export default Banner = (props) => {
                                     </Text>
                                 </TouchableOpacity>
                             )}
+                            {isHost == true && (
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setModalVisible(!modalVisible);
+                                        navigation.navigate(
+                                            'GuestScreen'
+                                        );
+                                    }}
+                                    style={styles.menuItem}
+                                >
+                                    <Text style={styles.participantsText}>
+                                        Guest Screen
+                                    </Text>
+                                </TouchableOpacity>
+                            )}
                         </View>
                         <TouchableOpacity
                             onPress={() => {
