@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Banner from '../Components/PageSections/Banner';
 import Colors from './../Constants/Colors';
@@ -10,16 +10,35 @@ import ActivityPackService from '../Services/ActivityPackService';
 import { PartyContext } from './../Context/PartyContext';
 
 export default ActivityFormScreen = ({ route, navigation }) => {
+    const { newActivity, activityId, activityStartTime } = route.params;
+    const partyContext = useContext(PartyContext);
+
     const [title, setTitle] = useState(
         newActivity ? '' : route.params.activityTitle
     );
     const [description, setDescription] = useState(
         newActivity ? '' : route.params.activityDescription
     );
+    const [hours, setHours] = useState(
+        newActivity
+            ? new Date(new Date().getTime() + 60 * 60 * 1000)
+                  .getHours()
+                  .toString()
+                  .padStart(2, '0')
+            : new Date(activityStartTime).getHours().toString().padStart(2, '0')
+    );
+    const [minutes, setMinutes] = useState(
+        newActivity
+            ? new Date(new Date().getTime() + 60 * 60 * 1000)
+                  .getMinutes()
+                  .toString()
+                  .padStart(2, '0')
+            : new Date(activityStartTime)
+                  .getMinutes()
+                  .toString()
+                  .padStart(2, '0')
+    );
     const timeSelectorRef = useRef(null);
-
-    const { newActivity, activityId, activityStartTime } = route.params;
-    const partyContext = useContext(PartyContext);
 
     const submit = async () => {
         const activity = {
@@ -56,7 +75,6 @@ export default ActivityFormScreen = ({ route, navigation }) => {
 
             const addRes = ActivityPackService.addActivityToPack(
                 partyContext.getActivityPack()._id,
-                // ActivityPackService.currentPack._id,
                 res.activityId
             );
 
@@ -79,6 +97,21 @@ export default ActivityFormScreen = ({ route, navigation }) => {
         } else {
             throw new Error('Failed to update activity');
         }
+    };
+
+    const onTimeChanged = () => {
+        setHours(
+            new Date(timeSelectorRef.current.getSelectedTime())
+                .getHours()
+                .toString()
+                .padStart(2, '0')
+        );
+        setMinutes(
+            new Date(timeSelectorRef.current.getSelectedTime())
+                .getMinutes()
+                .toString()
+                .padStart(2, '0')
+        );
     };
 
     return (
@@ -110,28 +143,9 @@ export default ActivityFormScreen = ({ route, navigation }) => {
                         borderBottomColor: '#fff',
                         borderBottomWidth: 2,
                     }}
-                    hours={
-                        newActivity
-                            ? new Date(new Date().getTime() + 60 * 60 * 1000)
-                                  .getHours()
-                                  .toString()
-                                  .padStart(2, '0')
-                            : new Date(activityStartTime)
-                                  .getHours()
-                                  .toString()
-                                  .padStart(2, '0')
-                    }
-                    minutes={
-                        newActivity
-                            ? new Date(new Date().getTime() + 60 * 60 * 1000)
-                                  .getMinutes()
-                                  .toString()
-                                  .padStart(2, '0')
-                            : new Date(activityStartTime)
-                                  .getMinutes()
-                                  .toString()
-                                  .padStart(2, '0')
-                    }
+                    hours={hours}
+                    minutes={minutes}
+                    timeChanged={onTimeChanged}
                 ></TimeSelector>
                 <Pressable onPress={submit} style={styles.button}>
                     <Text style={styles.buttonText}>

@@ -5,7 +5,11 @@ import Colors from '../../Constants/Colors';
 import StandardButton from './StandardButton';
 
 export default TimeSelector = React.forwardRef((props, ref) => {
-    const [date, setDate] = useState(new Date(new Date().getTime() + 3600000));
+    const [date, setDate] = useState(
+        props.hours && props.minutes
+            ? convertToTimeStamp(props.hours, props.minutes)
+            : new Date(new Date().getTime() + 3600000)
+    );
     const [show, setShow] = useState(false);
 
     useImperativeHandle(ref, () => ({
@@ -13,21 +17,17 @@ export default TimeSelector = React.forwardRef((props, ref) => {
     }));
 
     const onGetSelectedTime = () => {
-        const today = new Date();
-
-        return new Date(
-            today.getFullYear(),
-            today.getMonth(),
-            today.getDate(),
-            date.getHours(),
-            date.getMinutes()
-        ).getTime();
+        return date.getTime();
     };
 
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
+        const selectedHours = new Date(currentDate).getHours();
+        const selectedMinutes = new Date(currentDate).getMinutes();
         setShow(Platform.OS === 'ios');
-        setDate(currentDate);
+        setDate(convertToTimeStamp(selectedHours, selectedMinutes));
+
+        props.timeChanged();
     };
 
     return (
@@ -76,6 +76,18 @@ export default TimeSelector = React.forwardRef((props, ref) => {
         </View>
     );
 });
+
+const convertToTimeStamp = (hours, minutes) => {
+    const today = new Date();
+
+    return new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate(),
+        hours,
+        minutes
+    );
+};
 
 const styles = StyleSheet.create({
     timeButton: {

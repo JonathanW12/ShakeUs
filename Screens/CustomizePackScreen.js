@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import Banner from '../Components/PageSections/Banner';
 import { View, StyleSheet, FlatList } from 'react-native';
 import ActivityPackService from '../Services/ActivityPackService';
@@ -8,6 +8,7 @@ import ActivityContainer from '../Components/CustomizePackScreenComponents/Activ
 import CustomizeToolBar from './../Components/CustomizePackScreenComponents/CustomizeToolBar';
 import { PartyContext } from './../Context/PartyContext';
 import { SocketContext } from '../Context/SocketContext';
+import { useFocusEffect } from '@react-navigation/core';
 
 export default CustomizePackScreen = ({ navigation }) => {
     const [activities, setActivities] = useState([]);
@@ -15,23 +16,52 @@ export default CustomizePackScreen = ({ navigation }) => {
     const partyContext = useContext(PartyContext);
     const socketContext = useContext(SocketContext);
 
-    useEffect(() => {
-        socketContext.on('activity-title-updated', (data) => {
-            console.log(data);
-        });
-    }, [socketContext]);
+    useFocusEffect(
+        useCallback(() => {
+            if (selectedActivity) {
+                const activity = activities.find(
+                    (a) => a._id == selectedActivity._id
+                );
+                setSelectedActivity(activity);
+            }
+
+            return;
+        })
+    );
 
     useEffect(() => {
-        loadAllActivities(partyContext.getActivityPack()._id);
+        loadAllActivities();
     }, []);
+
+    useEffect(() => {
+        socketContext.on('activity-title-updated', () => {
+            loadAllActivities();
+        });
+
+        socketContext.on('activity-description-updated', () => {
+            loadAllActivities();
+        });
+
+        socketContext.on('activity-start-time-updated', () => {
+            loadAllActivities();
+        });
+
+        socketContext.on('activity-added', () => {
+            loadAllActivities();
+        });
+
+        return () => {
+            socketContext.close();
+        };
+    }, [socketContext]);
 
     const onSelectActivity = (activity) => {
         setSelectedActivity(activity);
     };
 
-    const loadAllActivities = async (activityPackId) => {
+    const loadAllActivities = async () => {
         const res = await ActivityService.getAllActivitiesByActivityPackId(
-            activityPackId
+            partyContext.getActivityPack()._id
         );
 
         if (res) {
@@ -51,7 +81,7 @@ export default CustomizePackScreen = ({ navigation }) => {
         });
     };
 
-    const updateSelectedActivity = async (activity) => {
+    const updateSelectedActivity = async () => {
         if (selectedActivity) {
             navigation.navigate('ActivityFormScreen', {
                 newActivity: false,
