@@ -6,17 +6,25 @@ import Pagination from './Pagination';
 import ActivityPackService from './Services/ActivityPackService';
 
 const CustomCarousel = (props) => {
-    const [activeIndex, setActiveIndex] = useState(0);
-    const [carouselItems, setCarouselItems] = useState([]);
-    const [personalActivityPackIds, setPersonalActivityPackIds] = useState([
-        'b40bd330-98e9-429e-871c-7064ae410b54',
-    ]);
-    const ref = useRef(null);
-    useEffect(() => {
-        let fetchedPacks = [];
-        ActivityPackService.getActivityPackTemplates().then((activityPacks) => {
-            fetchedPacks.push(...activityPacks);
-            ActivityPackService.currentPack = fetchedPacks[0];
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [carouselItems, setCarouselItems] = useState([]);
+  const [personalActivityPackIds, setPersonalActivityPackIds] = useState([
+    "b40bd330-98e9-429e-871c-7064ae410b54",
+  ]);
+  const ref = useRef(null);
+  useEffect(() => {
+    let fetchedPacks = [];
+    ActivityPackService.getActivityPackTemplates().then((activityPacks) => {
+      fetchedPacks.push(...activityPacks);
+      ActivityPackService.currentPack = fetchedPacks[0];
+    });
+    personalActivityPackIds.forEach(async (id) => {
+      await ActivityPackService.getActivityPack(id)
+        .then((activityPack) => {
+          setCarouselItems([...fetchedPacks, activityPack]);
+        })
+        .catch((error) => {
+          setCarouselItems([...fetchedPacks]);
         });
         personalActivityPackIds.forEach(async (id) => {
             await ActivityPackService.getActivityPack(id)
@@ -29,43 +37,22 @@ const CustomCarousel = (props) => {
         });
     }, []);
 
-    const renderItem = useCallback(
-        ({ item, index }) => (
-            <View style={[styles.activityCarousel]}>
-                <View style={[styles.whiteBorderBottom]}>
-                    <Text style={styles.activityHeader}>{item.title}</Text>
-                    <Text style={styles.activityCount}>
-                        {item.activities.length} Activites
-                    </Text>
-                </View>
-                <View style={[styles.whiteBorderBottom]}>
-                    <Text style={styles.activityPackDescription}>
-                        {item.description}
-                    </Text>
-                </View>
-                <View style={{ alignItems: 'center' }}>
-                    <Pressable
-                        //style={styles.button}
-
-                        style={({ pressed }) => [
-                            {
-                                backgroundColor: pressed
-                                    ? 'rgba(18, 150, 179, 0.2)'
-                                    : Colors.secondary,
-                            },
-                            styles.button,
-                        ]}
-                        onPress={() => {
-                            props.navigation.navigate('CustomizePackScreen');
-                        }}
-                    >
-                        <Text style={styles.text}>Customize Pack</Text>
-                    </Pressable>
-                </View>
-            </View>
-        ),
-        []
-    );
+  const renderItem = useCallback(
+    ({ item, index }) => (
+      <View style={[styles.activityCarousel]}>
+        <View style={{...styles.whiteBorderBottom,}}>
+          <Text style={styles.activityHeader}>{item.title}</Text>
+          <Text style={styles.activityCount}>
+            {item.activities.length} Activites
+          </Text>
+        </View>
+        <View style={{marginBottom: 20, }}>
+          <Text style={styles.activityPackDescription}>{item.description}</Text>
+        </View>
+      </View>
+    ),
+    []
+  );
 
     return (
         <SafeAreaView
@@ -101,57 +88,59 @@ const CustomCarousel = (props) => {
             </View>
         </SafeAreaView>
     );
-};
+});
 
 export default CustomCarousel;
 
 const styles = StyleSheet.create({
-    activityWrapper: {
-        justifyContent: 'space-evenly',
-        alignItems: 'center',
-        width: '100%',
-        minHeight: 300,
-    },
-    activityCarousel: {
-        width: '100%',
-        height: '100%',
-        backgroundColor: Colors.primary,
-        padding: 10,
-        justifyContent: 'center',
-    },
-    activityCarouselDots: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        width: '50%',
-    },
-    whiteBorderBottom: {
-        borderBottomWidth: 1,
-        borderColor: '#fff',
-    },
-    whiteTextColor: {
-        color: '#fff',
-        textAlign: 'center',
-    },
-    activityHeader: {
-        color: '#fff',
-        fontWeight: '700',
-        fontSize: 24,
-        width: '100%',
-        textAlign: 'center',
-    },
-    activityCount: {
-        fontSize: 20,
-        color: '#fff',
-        textAlign: 'center',
-        marginBottom: 10,
-    },
-    activityPackDescription: {
-        color: '#fff',
-        marginTop: 12,
-        paddingBottom: 12,
-        fontSize: 18,
-        textAlign: 'center',
-    },
+  activityWrapper: {
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    width: "100%",
+    //minHeight: 250,
+  },
+  activityCarousel: {
+    width: "100%",
+    height: 200,
+    backgroundColor: Colors.primary,
+    padding: 10,
+    //justifyContent: "center",
+    borderRadius: 10,
+  },
+  activityCarouselDots: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "50%",
+  },
+  whiteBorderBottom: {
+    borderBottomWidth: 1,
+    borderColor: "#fff",
+  },
+  whiteTextColor: {
+    color: "#fff",
+    textAlign: "center",
+  },
+  activityHeader: {
+    color: "#fff",
+    fontWeight: "700",
+    fontSize: 24,
+    width: "100%",
+    textAlign: "center",
+  },
+  activityCount: {
+    fontSize: 20,
+    color: "#fff",
+    textAlign: "center",
+    marginBottom: 10,
+  },
+  activityPackDescription: {
+    color: "#fff",
+    marginTop: 12,
+    paddingBottom: 12,
+    fontSize: 18,
+    textAlign: "center",
+    minHeight: 150,
+  },
 
     button: {
         alignItems: 'center',
@@ -171,4 +160,4 @@ const styles = StyleSheet.create({
         letterSpacing: 0.25,
         color: 'white',
     },
-});
+})};

@@ -62,16 +62,28 @@ export default GuestScreen = ({ navigation }) => {
   }
 
   useEffect(() => {
-    console.log("THIS IS FROM THE GUESTSCREEN");
-    //console.log(socket);
-   // const { socket } = props;
-            if(socket.connected) {
-                console.log("Connected");
-            }
-
     getPartyInformation();
-
   },[]);
+
+  useEffect(() => {
+    // Socket event when activity starts!
+    socket.on("activity-started", (activity) => {
+      setcurrentActivity(activity);
+
+      for (let index = 0; index < allActivities.length; index++) {
+        if(currentActivity == allActivities[index]){
+          if(allActivities[index+1] != null){
+            setnextActivity(allActivities[index+1]);
+          } else {
+            setnextActivity(null);
+          }
+        }
+      }
+    })
+    return () => {
+      //Clean
+    }
+  }, [socket])
 
   if (ready) {
     return (
@@ -84,7 +96,14 @@ export default GuestScreen = ({ navigation }) => {
           <View>
             <Text style={styles.partyTitle}>{currentActivity.title}</Text>
             <View style={styles.whiteLine}></View>
-            <Text style={styles.partyTitle}>Started at:<Text style={styles.blueText}>{unixToHours(currentActivity.startTime)}</Text></Text>
+            <Text style={styles.partyTitle}>Started at:<Text style={styles.blueText}>{ () => {
+              if(currentActivity != null){
+                unixToHours(currentActivity.startTime)
+              } else {
+                // Do nothing
+              }
+            }
+            }</Text></Text>
           </View>
           <Text style={styles.guestMesssage}>
             {currentActivity.description}
@@ -95,7 +114,14 @@ export default GuestScreen = ({ navigation }) => {
         </View>
         <View style={styles.lowerContainer}>
           <Text style={styles.nextActivity}>Next Activity At</Text>
-          <Text style={styles.timeStamp}>{unixToHours(nextActivity.startTime)}</Text>
+          <Text style={styles.timeStamp}>{ () => {
+            if (nextActivity != null) {
+              unixToHours(nextActivity.startTime)
+            } else {
+              // Do nothing
+            }
+          }
+          }</Text>
         </View>
       </View>
     );
