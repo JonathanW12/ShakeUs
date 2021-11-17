@@ -4,17 +4,18 @@ import { View, Text, StyleSheet, Alert } from 'react-native';
 import StandardButton from '../Components/UI/StandardButton';
 import Colors from '../Constants/Colors';
 import CustomCarousel from '../Components/PageSections/CustomCarusel';
-import GuestService from '../Services/GuestService';
 import ActivityPackService from '../Services/ActivityPackService';
 import PartyService from '../Services/PartyService';
 import TimeSelector from '../Components/UI/TimeSelector';
 import { PartyContext } from './../Context/PartyContext';
 import { UserContext } from '../Context/UserContext';
+import { SocketContext } from '../Context/SocketContext';
 
 export default HostPartyScreen = ({ navigation }) => {
     const [index, setIndex] = useState(0);
     const partyContext = useContext(PartyContext);
     const userContext = useContext(UserContext);
+    const socketContext = useContext(SocketContext);
 
     async function createTheParty() {
         const res = await PartyService.createParty(
@@ -52,6 +53,7 @@ export default HostPartyScreen = ({ navigation }) => {
                 console.log('Activity Pack: ' + partyContext.getActivityPack());
             }
 
+            socketContext.emit('join-room', partyContext.getPartyId());
             navigation.navigate('PartyInformationScreen');
         }
     }
@@ -80,9 +82,6 @@ export default HostPartyScreen = ({ navigation }) => {
                 { text: 'OK', onPress: () => createTheParty() },
             ]
         );
-
-    const [mode, setMode] = useState('date');
-    const [selectedActivityPack, setSelectedActivtyPack] = useState();
 
     return (
         <View style={styles.container}>

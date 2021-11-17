@@ -8,6 +8,7 @@ import PartyService from '../Services/PartyService';
 import GuestService from '../Services/GuestService';
 import { PartyContext } from './../Context/PartyContext';
 import { UserContext } from '../Context/UserContext';
+import { SocketContext } from '../Context/SocketContext';
 
 export default JoinPartyScreen = ({ navigation }) => {
     const [guestName, setguestName] = useState('');
@@ -15,6 +16,7 @@ export default JoinPartyScreen = ({ navigation }) => {
     const [namePlaceholder, setnamePlaceholder] = useState('Enter Name');
     const [partyCodePlaceholder, setpartyCodePlaceholder] =
         useState('Enter Party Code');
+    const socketContext = useContext(SocketContext);
     const partyContext = useContext(PartyContext);
     const userContext = useContext(UserContext);
 
@@ -24,9 +26,8 @@ export default JoinPartyScreen = ({ navigation }) => {
         partyContext.setHosts(res.hosts);
         partyContext.setPartyId(partyCode);
 
-        console.log(partyCode);
-
         if (userContext.getUserId() && partyContext.getGuests().length > 0) {
+            socketContext.emit('join-room', partyContext.getPartyId());
             navigation.navigate('GuestScreen');
         } else {
             Alert.alert('Something went wrong, please try again');

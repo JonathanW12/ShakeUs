@@ -7,11 +7,19 @@ import Colors from '../Constants/Colors';
 import ActivityContainer from '../Components/CustomizePackScreenComponents/ActivityContainer';
 import CustomizeToolBar from './../Components/CustomizePackScreenComponents/CustomizeToolBar';
 import { PartyContext } from './../Context/PartyContext';
+import { SocketContext } from '../Context/SocketContext';
 
 export default CustomizePackScreen = ({ navigation }) => {
     const [activities, setActivities] = useState([]);
     const [selectedActivity, setSelectedActivity] = useState(null);
     const partyContext = useContext(PartyContext);
+    const socketContext = useContext(SocketContext);
+
+    useEffect(() => {
+        socketContext.on('activity-title-updated', (data) => {
+            console.log(data);
+        });
+    }, [socketContext]);
 
     useEffect(() => {
         loadAllActivities(partyContext.getActivityPack()._id);
