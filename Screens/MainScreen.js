@@ -134,8 +134,9 @@ const styles = StyleSheet.create({
     },
     contentContainer: {
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
         flex: 1,
+        marginBottom: 25,
     },
     button: { width: '90%', height: 65 },
     buttonTextStyle: {
