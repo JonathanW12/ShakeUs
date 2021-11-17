@@ -46,7 +46,7 @@ export default class GuestService {
                 },
             }
         );
-
+            console.log("response: " + response);
         if (response.ok) {
             return await response.json();
         }
