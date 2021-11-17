@@ -38,15 +38,14 @@ export default class GuestService {
 
     static async getAllGuests(partyId, guestId) {
         const response = await fetch(
-            `https://shakeus.herokuapp.com:443/guest/get-all/${partyId}/${guestId}`,
-            {
-                method: 'GET',
-                headers: {
-                    Accept: 'application/json',
-                },
-            }
+          `https://shakeus.herokuapp.com:443/guest/get-all/${partyId}/${guestId}`,
+          {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+            },
+          }
         );
-
         if (response.ok) {
             return await response.json();
         }

@@ -18,70 +18,65 @@ export default HostPartyScreen = ({ navigation }) => {
     const socketContext = useContext(SocketContext);
 
     async function createTheParty() {
-        const res = await PartyService.createParty(
-            partyContext.getActivityPack()._id,
-            partyContext.getPrimaryHost().name,
-            userContext.getNotificationToken()
+      const res = await PartyService.createParty(
+        partyContext.getActivityPack()._id,
+        partyContext.getPrimaryHost().name,
+        userContext.getNotificationToken()
+      );
+
+      if (res) {
+        partyContext.setPartyId(res.partyId);
+        partyContext.setPrimaryHost({
+          id: res.hostId,
+          name: partyContext.getPrimaryHost().name,
+        });
+
+        userContext.setUserId(res.hostId);
+        userContext.setIsPrimaryHost(true);
+        userContext.setIs;
+        const party = await PartyService.getParty(
+          partyContext.getPartyId(),
+          res.hostId
         );
 
-        if (res) {
-            partyContext.setPartyId(res.partyId);
-            partyContext.setPrimaryHost({
-                id: res.hostId,
-                name: partyContext.getPrimaryHost().name,
-            });
+        if (party) {
+          const updatedActivity = await ActivityPackService.updateCurrentPack(
+            party.activityPackId
+          );
 
-            userContext.setUserId(res.hostId);
-
-            const party = await PartyService.getParty(
-                partyContext.getPartyId(),
-                res.hostId
-            );
-
-            console.log(party);
-
-            if (party) {
-                const updatedActivity =
-                    await ActivityPackService.updateCurrentPack(
-                        party.activityPackId
-                    );
-
-                if (updatedActivity) {
-                    partyContext.setActivityPack(updatedActivity);
-                }
-
-                console.log('Activity Pack: ' + partyContext.getActivityPack());
-            }
-
-            socketContext.emit('join-room', partyContext.getPartyId());
-            navigation.navigate('PartyInformationScreen');
+          if (updatedActivity) {
+            partyContext.setActivityPack(updatedActivity);
+          }
         }
+
+        socketContext.emit("join-room", partyContext.getPartyId());
+        navigation.navigate("PartyInformationScreen");
+      }
     }
 
     const handleActionStartParty = () => {
-        if (
-            partyContext.getPrimaryHost().name &&
-            partyContext.getActivityPack()
-        ) {
-            createTwoButtonAlert();
-        } else {
-            throw new Error('Missing hostname and / or activity pack');
-        }
+      if (
+        partyContext.getPrimaryHost().name &&
+        partyContext.getActivityPack()
+      ) {
+        createTwoButtonAlert();
+      } else {
+        throw new Error("Missing hostname and / or activity pack");
+      }
     };
 
     const createTwoButtonAlert = () =>
-        Alert.alert(
-            'Confirmation',
-            `Create party: ${partyContext.getActivityPack().title}`,
-            [
-                {
-                    text: 'Cancel',
-                    onPress: () => console.log('Cancel Pressed'),
-                    style: 'cancel',
-                },
-                { text: 'OK', onPress: () => createTheParty() },
-            ]
-        );
+      Alert.alert(
+        "Confirmation",
+        `Create party: ${partyContext.getActivityPack().title}`,
+        [
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+          { text: "OK", onPress: () => createTheParty() },
+        ]
+      );
 
     return (
         <View style={styles.container}>
