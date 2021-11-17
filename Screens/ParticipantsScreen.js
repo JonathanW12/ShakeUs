@@ -48,6 +48,9 @@ export default ParticipantsScreen = ({ navigation }) => {
     socket.on("user-joined-party", (guest) => {
       updateGuests();
     });
+    return () => {
+      socket.close();
+    };
   }, [socket]);
 
   const renderPerson = ({ item }) => {
