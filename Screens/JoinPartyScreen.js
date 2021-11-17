@@ -20,31 +20,24 @@ export default JoinPartyScreen = ({ navigation }) => {
     const partyContext = useContext(PartyContext);
     const userContext = useContext(UserContext);
 
-    const onSucces = (res) => {
-        userContext.setUserId(res.newGuest._id);
-        partyContext.setGuests(res.guests);
-        partyContext.setHosts(res.hosts);
-        partyContext.setPartyId(partyCode);
-
-        if (userContext.getUserId() && partyContext.getGuests().length > 0) {
+    const joinParty = async () => {
+        const res = await PartyService.joinParty(
+          partyCode,
+          guestName,
+          userContext.getNotificationToken()
+        )
+    
+        if(res){
+            userContext.setUserId(res.newGuest._id);
+            partyContext.setGuests(res.guests);
+            partyContext.setHosts(res.hosts);
+            partyContext.setPartyId(partyCode);
             socketContext.emit('join-room', partyContext.getPartyId());
-            navigation.navigate('GuestScreen');
+            navigation.navigate("GuestScreen");
         } else {
-            Alert.alert('Something went wrong, please try again');
+          Alert.alert("Party does not exist");
         }
-    };
-
-    async function joinParty() {
-        const response = await PartyService.joinParty(
-            partyCode,
-            guestName,
-            userContext.getNotificationToken()
-        );
-        const result = await response
-            .json()
-            .then((res) => onSucces(res))
-            .catch((err) => Alert.alert('Party does not exist'));
-    }
+      }
 
     const handleAction = () => {
         if (guestName != '' && partyCode != '') {
