@@ -13,7 +13,7 @@ import ParticipantBox from "../Components/UI/ParticipantBox";
 import GuestService from "../Services/GuestService";
 import PartyService from "../Services/PartyService";
 import { SocketContext } from "../Context/SocketContext";
-import PartyContext from "../Context/PartyContext";
+import { PartyContext } from "../Context/PartyContext";
 
 export default ParticipantsScreen = ({ navigation }) => {
   const partyContext = useContext(PartyContext);
@@ -66,7 +66,6 @@ export default ParticipantsScreen = ({ navigation }) => {
     );
   };
   const updateGuests = async () => {
-    console.log("party: " + partyContext);
     let newGuestList = [];
     const res = await GuestService.getAllGuests(
       partyContext.getPartyId(),
@@ -103,13 +102,6 @@ export default ParticipantsScreen = ({ navigation }) => {
         />
       </View>
       <View style={styles.lowerContainer}>
-        <TouchableOpacity
-          onPress={() => {
-            updateGuests();
-          }}
-        >
-          <Text style={styles.temporary}>Temporary Update</Text>
-        </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
             setShowingDeleteSymbol(

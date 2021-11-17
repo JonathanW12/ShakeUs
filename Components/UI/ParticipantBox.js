@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
@@ -10,8 +10,10 @@ import shadow from "../../Constants/ShadowCSS";
 import Colors from "../../Constants/Colors";
 import { Icon } from "react-native-elements";
 import PartyService from "../../Services/PartyService";
+import { PartyContext } from "../../Context/PartyContext";
 
 export default ParticipantBox = (props) => {
+  const partyContext = useContext(PartyContext);
   return (
     <View
       style={[
@@ -36,8 +38,8 @@ export default ParticipantBox = (props) => {
             color="red"
             onPress={() => {
               PartyService.removeGuestFromParty(
-                PartyService.partyId,
-                PartyService.hostId,
+                partyContext.getPartyId(),
+                partyContext.getPrimaryHost().id,
                 props.id
               )
                 .then((res) => {
