@@ -39,6 +39,7 @@ export default HostPartyScreen = ({ navigation }) => {
                 console.log(
                     'Activity Pack: ' + ActivityPackService.currentPack
                 );
+              socket.emit("join-room", PartyService.partyId);
             }
 
             navigation.navigate('PartyInformationScreen');

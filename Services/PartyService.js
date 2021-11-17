@@ -33,7 +33,7 @@ export default class PartService {
                 },
             }
         );
-
+            
         if (res.ok) {
             return await res.json();
         }

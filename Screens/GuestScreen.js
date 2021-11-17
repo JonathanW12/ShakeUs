@@ -8,6 +8,7 @@ import PartyService from "../Services/PartyService";
 import GuestService from "../Services/GuestService";
 import ActivityService from "../Services/ActivityService";
 import {SocketContext} from "../Context/SocketContext";
+import ActivityStartTime from "../Components/UI/ActivityStartTime";
 
 export default GuestScreen = ({ navigation }) => {
   const [activityPackage, setactivityPackage] = useState(null);
@@ -26,38 +27,52 @@ export default GuestScreen = ({ navigation }) => {
     return hours + ':' + minutes.substr(-2);
   }
 
-  const onSucces = (res) => {
-    
-    ActivityPackService.getActivityPack(res.activityPackId)
-    .then((res1) => {
-      setactivityPackage(res1)
-    })
-    .catch(() => Alert.alert("Could not get the activitypackage"));
-
-    ActivityService.getAllActivities(res.activityPackId)
-    .then((res2) => {
-      setallActivities(res2)
-      setcurrentActivity(res2[0])
-      setnextActivity(res2[1])
-      setready(true);
-    })
-    .catch(() => Alert.alert("Could not get all activities"));
-    
-    ActivityService.getNextActivityNico(PartyService.partyId,GuestService.guestId)
-    .then((res3) => setnextActivity(res3))
-    .catch(() => Alert.alert("Could not get next activity"));
-    
-  }
-
-  async function getPartyInformation(){
-    const response = await PartyService.getParty(
+  const getPartyInformation = async () => {
+    // Fetch party to get activityPackId
+    const partyResult = await PartyService.getParty(
       PartyService.partyId,
-      GuestService.guestId,
+      GuestService.guestId
     )
-    const result = await response.json()
-    .then(res => onSucces(res))
-    .catch(err => console.error(err));
+    console.log(partyResult)
+    // Continue if party exists
+    if(partyResult) {
+
+      const activityPackResult = await ActivityPackService.getActivityPack(
+        partyResult.activityPackId
+      )
+  
+      const allActivitiesResult = await ActivityService.getAllActivities(
+        partyResult.activityPackId
+      )
+  
+      const nextActivityResult = await ActivityService.getNextActivity(
+        PartyService.partyId,
+        GuestService.guestId
+      )
+
+      // Use fetch results
+      if(activityPackResult && allActivitiesResult){
+        console.log(activityPackResult)
+        console.log(allActivitiesResult)
+
+
+        setactivityPackage(activityPackResult);
+        setallActivities(allActivitiesResult);
+        setcurrentActivity(allActivitiesResult[0]);
+        setready(true);
+      } else {
+        Alert.alert("Unable to fetch activities");
+      }
+      if(nextActivityResult){
+        setnextActivity(nextActivityResult);
+      } else {
+        Alert.alert("Unable to fetch next activity");
+      }
     
+    // Handle error fetching party
+    } else {
+      Alert.alert("Unable to find party");
+    }
   }
 
   useEffect(() => {
@@ -95,14 +110,9 @@ export default GuestScreen = ({ navigation }) => {
           <View>
             <Text style={styles.partyTitle}>{currentActivity.title}</Text>
             <View style={styles.whiteLine}></View>
-            <Text style={styles.partyTitle}>Started at:<Text style={styles.blueText}>{ () => {
-              if(currentActivity != null){
-                unixToHours(currentActivity.startTime)
-              } else {
-                // Do nothing
-              }
-            }
-            }</Text></Text>
+            <Text style={styles.partyTitle}>{
+              <ActivityStartTime activity = {currentActivity} />
+            }</Text>
           </View>
           <Text style={styles.guestMesssage}>
             {currentActivity.description}
@@ -113,13 +123,7 @@ export default GuestScreen = ({ navigation }) => {
         </View>
         <View style={styles.lowerContainer}>
           <Text style={styles.nextActivity}>Next Activity At</Text>
-          <Text style={styles.timeStamp}>{ () => {
-            if (nextActivity != null) {
-              unixToHours(nextActivity.startTime)
-            } else {
-              // Do nothing
-            }
-          }
+          <Text style={styles.timeStamp}>{  <ActivityStartTime activity = {nextActivity} />
           }</Text>
         </View>
       </View>

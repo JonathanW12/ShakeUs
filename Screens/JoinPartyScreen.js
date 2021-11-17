@@ -14,49 +14,41 @@ import Colors from "../Constants/Colors";
 import StandardInput from "../Components/UI/StandardInput";
 import PartyService from "../Services/PartyService";
 import GuestService from "../Services/GuestService";
+import SocketContext from "../Context/SocketContext";
 
 export default JoinPartyScreen = ({ navigation }) => {
   const [guestName, setguestName] = useState('');
   const [partyCode, setpartyCode] = useState('');
   const [namePlaceholder, setnamePlaceholder] = useState('Enter Name')
   const [partyCodePlaceholder, setpartyCodePlaceholder] = useState('Enter Party Code')
+  const socket = useContext(SocketContext);
   
-  const onSucces = (res) => {
-    //console.log(res);
-    GuestService.guestId = res.newGuest._id;
-    GuestService.guestList = res.guests;
-    PartyService.partyId = partyCode;
-
-    console.log(partyCode);
-
-    if(GuestService.guestId != null && GuestService.guestList != null){
-      navigation.navigate("GuestScreen");
-    } else {
-      Alert.alert("Something went wrong, please try again");
-    }
-    
-  }
-
-  async function joinParty(){
+  const joinParty = async () => {
     const response = await PartyService.joinParty(
       partyCode,
       guestName,
       GuestService.guestNotificationToken
     )
-    const result = await response.json()
-    .then(res => onSucces(res))
-    .catch(err => Alert.alert("Party does not exist"));
+
+    if(response){
+      PartyService.partyId = partyCode;
+      GuestService.guestId = response.newGuest._id;
+      socket.emit("join-room", partyCode);
+      navigation.navigate("GuestScreen");
+    } else {
+      Alert.alert("Party does not exist");
+    }
     
   }
   
   const handleAction = () => {
-    if(guestName != '' && partyCode != ''){
-      //Do magic to join party
-      console.log(partyCode);
-      console.log(guestName);
-      console.log(GuestService.guestNotificationToken);
+
+    if(guestName && partyCode){
+
       joinParty();
+
     } else {
+
       if(guestName == ''){
         setnamePlaceholder("Missing name!");
       }
@@ -83,7 +75,6 @@ export default JoinPartyScreen = ({ navigation }) => {
          maxLength={9}
          onChangeText={text => setpartyCode(text)} 
          />
-
         <StandardButton
           style={styles.button}
           title="Join Party"

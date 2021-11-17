@@ -55,7 +55,12 @@ export default class ActivityPackService {
         const res = await fetch(
             'https://shakeus.herokuapp.com:443/activity-pack/' + activityPackId
         );
-        return await res.json();
+        if(res.ok){
+            return await res.json();
+        } else {
+            return null;
+        }
+        
     }
 
     static async patchActivityPack(activityPackId, newTitle, newDescription) {
