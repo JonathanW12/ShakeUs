@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import Banner from "../Components/Banner";
+import Banner from "../Components/PageSections/Banner";
 import {
   Dimensions,
   View,
@@ -8,10 +8,10 @@ import {
   Image,
   TextInput,
 } from "react-native";
-import StandardButton from "../Components/StandardButton";
+import StandardButton from "../Components/UI/StandardButton";
 import Colors from "../Constants/Colors";
-import StandardInput from "../Components/StandardInput";
-import GuestService from "../Components/Services/GuestService";
+import StandardInput from "../Components/UI/StandardInput";
+import GuestService from "../Services/GuestService";
 
 export default JoinPartyScreenHost = ({ navigation }) => {
   const [hostName, sethostName] = React.useState('');

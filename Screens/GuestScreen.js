@@ -1,14 +1,13 @@
 import React, {useEffect, useState, useContext} from "react";
-import Banner from "../Components/Banner";
+import Banner from "../Components/PageSections/Banner";
 import { View, Text, StyleSheet, Image, Dimensions, ActivityIndicator, Alert } from "react-native";
 import Colors from "../Constants/Colors";
-import SmallButton from "../Components/SmallButton";
 import ShadowCSS from "../Constants/ShadowCSS";
-import ActivityPackService from "../Components/Services/ActivityPackService";
-import PartyService from "../Components/Services/PartyService";
-import GuestService from "../Components/Services/GuestService";
-import ActivityService from "../Components/Services/ActivityService";
-import {SocketContext} from "../Components/SocketContext";
+import ActivityPackService from "../Services/ActivityPackService";
+import PartyService from "../Services/PartyService";
+import GuestService from "../Services/GuestService";
+import ActivityService from "../Services/ActivityService";
+import {SocketContext} from "../Context/SocketContext";
 
 export default GuestScreen = ({ navigation }) => {
   const [activityPackage, setactivityPackage] = useState(null);

@@ -1,6 +1,6 @@
 import { View, StyleSheet, TextInput } from 'react-native';
 import React, { useRef } from 'react';
-import ShadowCSS from '../Constants/ShadowCSS';
+import ShadowCSS from '../../Constants/ShadowCSS';
 
 export default StandardInput = (props) => {
     const textInputRef = useRef(null);

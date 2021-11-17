@@ -1,8 +1,8 @@
 import React from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 import Carousel, { Pagination } from "react-native-snap-carousel";
-import activityPackages from "../Constants/Packages";
-import Colors from "../Constants/Colors";
+import activityPackages from "../../Constants/Packages";
+import Colors from "../../Constants/Colors";
 
 export default function pagination({ index, length }) {
   return (

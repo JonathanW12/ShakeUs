@@ -1,7 +1,7 @@
 import React, { useState, useImperativeHandle } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { StyleSheet, View, Text } from 'react-native';
-import Colors from '../Constants/Colors';
+import Colors from '../../Constants/Colors';
 import StandardButton from './StandardButton';
 
 export default TimeSelector = React.forwardRef((props, ref) => {

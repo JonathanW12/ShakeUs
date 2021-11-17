@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Banner from "../Components/Banner";
+import Banner from "../Components/PageSections/Banner";
 import {
   View,
   Text,
@@ -9,9 +9,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Colors from "../Constants/Colors";
-import PersonBlock from "../Components/PersonBlock";
-import GuestService from "../Components/Services/GuestService";
-import PartyService from "../Components/Services/PartyService";
+import PersonBlock from "../Components/UI/PersonBlock";
+import GuestService from "../Services/GuestService";
+import PartyService from "../Services/PartyService";
 
 export default ParticipantsScreen = ({ navigation }) => {
   //CAHNGE THE DEFAULT TO: ActivityPackService.packTitle

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Banner from '../Components/Banner';
+import Banner from '../Components/PageSections/Banner';
 import {
     View,
     Text,
@@ -9,10 +9,11 @@ import {
 } from 'react-native';
 import Colors from '../Constants/Colors';
 import ShadowCSS from '../Constants/ShadowCSS';
-import ActivityPackService from '../Components/Services/ActivityPackService';
-import PartyService from '../Components/Services/PartyService';
-import GuestService from '../Components/Services/GuestService';
+import ActivityPackService from '../Services/ActivityPackService';
+import PartyService from '../Services/PartyService';
+import GuestService from '../Services/GuestService';
 import InfoWindowBottom from '../Components/PageSections/InfoWindowBottom';
+import SmallButton from './../Components/UI/SmallButton';
 
 export default PartyInformationScreen = ({ navigation }) => {
     const [activityPackage, setactivityPackage] = useState(null);

@@ -1,17 +1,18 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Text, View, SafeAreaView, StyleSheet, Pressable } from 'react-native';
-import Colors from '../Constants/Colors';
+import Colors from '../../Constants/Colors';
 import Carousel from 'react-native-snap-carousel';
 import Pagination from './Pagination';
-import ActivityPackService from './Services/ActivityPackService';
+import ActivityPackService from '../../Services/ActivityPackService';
 
-const CustomCarousel = (props) => {
+export default CustomCarousel = (props) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [carouselItems, setCarouselItems] = useState([]);
   const [personalActivityPackIds, setPersonalActivityPackIds] = useState([
     "b40bd330-98e9-429e-871c-7064ae410b54",
   ]);
   const ref = useRef(null);
+
   useEffect(() => {
     let fetchedPacks = [];
     ActivityPackService.getActivityPackTemplates().then((activityPacks) => {
@@ -26,17 +27,9 @@ const CustomCarousel = (props) => {
         .catch((error) => {
           setCarouselItems([...fetchedPacks]);
         });
-        personalActivityPackIds.forEach(async (id) => {
-            await ActivityPackService.getActivityPack(id)
-                .then((activityPack) => {
-                    setCarouselItems([...fetchedPacks, activityPack]);
-                })
-                .catch((error) => {
-                    setCarouselItems([...fetchedPacks]);
-                });
-        });
+      });
     }, []);
-
+  
   const renderItem = useCallback(
     ({ item, index }) => (
       <View style={[styles.activityCarousel]}>
@@ -88,9 +81,7 @@ const CustomCarousel = (props) => {
             </View>
         </SafeAreaView>
     );
-});
-
-export default CustomCarousel;
+};
 
 const styles = StyleSheet.create({
   activityWrapper: {
@@ -160,4 +151,4 @@ const styles = StyleSheet.create({
         letterSpacing: 0.25,
         color: 'white',
     },
-})};
+});

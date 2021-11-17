@@ -6,10 +6,10 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
-import shadow from "../Constants/ShadowCSS";
-import Colors from "../Constants/Colors";
+import shadow from "../../Constants/ShadowCSS";
+import Colors from "../../Constants/Colors";
 import { Icon } from "react-native-elements";
-import PartyService from "./Services/PartyService";
+import PartyService from "../../Services/PartyService";
 
 export default PersonBlock = (props) => {
   return (

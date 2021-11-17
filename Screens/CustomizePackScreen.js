@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import Banner from '../Components/Banner';
+import Banner from '../Components/PageSections/Banner';
 import { View, StyleSheet, FlatList } from 'react-native';
-import ActivityPackService from '../Components/Services/ActivityPackService';
-import ActivityService from '../Components/Services/ActivityService';
+import ActivityPackService from '../Services/ActivityPackService';
+import ActivityService from '../Services/ActivityService';
 import Colors from '../Constants/Colors';
 import ActivityContainer from '../Components/CustomizePackScreenComponents/ActivityContainer';
 import CustomizeToolBar from './../Components/CustomizePackScreenComponents/CustomizeToolBar';

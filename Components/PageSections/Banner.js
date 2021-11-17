@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
-import Colors from "../Constants/Colors";
+import Colors from "../../Constants/Colors";
 import { Icon } from "react-native-elements";
 import { useNavigation } from "@react-navigation/core";
 

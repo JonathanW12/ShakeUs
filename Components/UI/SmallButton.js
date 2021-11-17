@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import shadow from "../Constants/ShadowCSS";
+import shadow from "../../Constants/ShadowCSS";
 
 export default SmallButton = (props) => {
   return (

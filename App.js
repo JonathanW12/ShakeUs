@@ -17,9 +17,8 @@ import ParticipantsScreen from './Screens/ParticipantsScreen';
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 
-import io from 'socket.io-client';
-import { SocketProvider, socket } from './Components/SocketContext';
-import GuestService from './Components/Services/GuestService';
+import { SocketProvider, socket } from './Context/SocketContext';
+import GuestService from './Services/GuestService';
 import ActivityFormScreen from './Screens/ActivityFormScreen';
 
 Notifications.setNotificationHandler({

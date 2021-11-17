@@ -1,12 +1,12 @@
 import React, { useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import Banner from '../Components/Banner';
+import Banner from '../Components/PageSections/Banner';
 import Colors from './../Constants/Colors';
-import StandardInput from '../Components/StandardInput';
+import StandardInput from '../Components/UI/StandardInput';
 import { TextInput } from 'react-native';
-import TimeSelector from './../Components/TimeSelector';
-import ActivityService from '../Components/Services/ActivityService';
-import ActivityPackService from '../Components/Services/ActivityPackService';
+import TimeSelector from './../Components/UI/TimeSelector';
+import ActivityService from '../Services/ActivityService';
+import ActivityPackService from '../Services/ActivityPackService';
 
 export default ActivityFormScreen = ({ route, navigation }) => {
     const [title, setTitle] = useState(

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import Banner from '../Components/Banner';
+import Banner from '../Components/PageSections/Banner';
 import { View, Text, StyleSheet, Alert } from 'react-native';
-import StandardButton from '../Components/StandardButton';
+import StandardButton from '../Components/UI/StandardButton';
 import Colors from '../Constants/Colors';
-import CustomCarousel from '../Components/CustomCarusel';
-import GuestService from '../Components/Services/GuestService';
-import ActivityPackService from '../Components/Services/ActivityPackService';
-import PartyService from '../Components/Services/PartyService';
-import TimeSelector from '../Components/TimeSelector';
+import CustomCarousel from '../Components/PageSections/CustomCarusel';
+import GuestService from '../Services/GuestService';
+import ActivityPackService from '../Services/ActivityPackService';
+import PartyService from '../Services/PartyService';
+import TimeSelector from '../Components/UI/TimeSelector';
 
 export default HostPartyScreen = ({ navigation }) => {
     const [index, setIndex] = useState(0);

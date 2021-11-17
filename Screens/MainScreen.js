@@ -1,11 +1,10 @@
 //Bad name as this is not the main screen a user will see?
 import React, { useState, useEffect } from "react";
 import { Dimensions, NativeAppEventEmitter } from "react-native";
-import Banner from "../Components/Banner";
 import { View, Text, StyleSheet, Image } from "react-native";
-import StandardButton from "../Components/StandardButton";
+import StandardButton from "../Components/UI/StandardButton";
 import Colors from "../Constants/Colors";
-import PartyService from "../Components/Services/PartyService";
+import PartyService from "../Services/PartyService";
 
 
 export default MainScreen = ({ navigation }) => {
