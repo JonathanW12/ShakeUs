@@ -12,6 +12,8 @@ import PartyInformationScreen from "./Screens/PartyInformationScreen";
 import CustomizePackScreen from "./Screens/CustomizePackScreen/CustomizePackScreen";
 import JoinPartyScreenHost from "./Screens/JoinPartyScreenHost";
 import ParticipantsScreen from "./Screens/ParticipantsScreen";
+import {navigationRef} from "./Constants/RootNavigation";
+import * as RootNavigation from "./Constants/RootNavigation";
 
 import * as Notifications from "expo-notifications";
 
@@ -44,7 +46,9 @@ export default function App() {
         // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
         responseListener.current =
             Notifications.addNotificationResponseReceivedListener(
-                (response) => {}
+                (response) => {
+                    RootNavigation.navigate('GuestScreen')
+                }
             );
 
         return () => {
@@ -61,7 +65,7 @@ export default function App() {
         <SocketProvider socket={socket}>
             <PartyProvider>
                 <UserProvider>
-                    <NavigationContainer>
+                    <NavigationContainer ref={navigationRef}>
                         <StatusBar />
                         <Stack.Navigator>
                             <Stack.Screen
