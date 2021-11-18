@@ -8,6 +8,7 @@ export default TimeSelector = (props) => {
     const [show, setShow] = useState(Platform.OS === "ios");
 
     const onChange = (event, selectedDate) => {
+        setShow(Platform.OS === "ios");
         const currentDate = selectedDate || props.date;
         if (props.setDate) {
             props.setDate(new Date(currentDate));

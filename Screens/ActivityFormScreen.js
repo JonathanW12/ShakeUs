@@ -79,7 +79,7 @@ export default ActivityFormScreen = ({ route, navigation }) => {
         }
     };
 
-    const [date, setDate] = useState(new Date(new Date().getTime() + 3600000));
+    const [date, setDate] = useState(activityStartTime);
 
     return (
         <View style={styles.container}>
