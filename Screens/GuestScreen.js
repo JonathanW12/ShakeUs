@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 import Banner from '../Components/PageSections/Banner';
 import {
     View,
@@ -9,6 +9,7 @@ import {
     ActivityIndicator,
     Alert,
     BackHandler,
+    AppState,
 } from 'react-native';
 import Colors from '../Constants/Colors';
 import ShadowCSS from '../Constants/ShadowCSS';
@@ -32,6 +33,8 @@ export default GuestScreen = ({ navigation }) => {
     const socket = useContext(SocketContext);
     const partyContext = useContext(PartyContext);
     const userContext = useContext(UserContext);
+    const appState = useRef(AppState.currentState);
+    const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
     const isFocused = useIsFocused();
 
@@ -139,11 +142,27 @@ export default GuestScreen = ({ navigation }) => {
   };
 
     useEffect(() => {
+        const subscription = AppState.addEventListener("change", nextAppState => {
+            if (
+              appState.current.match(/inactive|background/) &&
+              nextAppState === "active"
+            ) {
+                getPartyInformation()
+              //console.log("App has come to the foreground!");
+            }
+            appState.current = nextAppState;
+            setAppStateVisible(appState.current);
+            //console.log("AppState", appState.current);
 
-      BackHandler.addEventListener('hardwareBackPress', () => true)
+        });
+
+        BackHandler.addEventListener('hardwareBackPress', () => true)
 
         if (isFocused) {
             getPartyInformation();
+        }
+
+        return () => {
         }
     }, [isFocused]);
 

@@ -12,7 +12,6 @@ export default class PartyService {
       actualStartTime += 1000*60*60*24;
     }
 
-
     const res = await fetch("https://shakeus.herokuapp.com:443/party", {
       method: "POST",
       headers: {
