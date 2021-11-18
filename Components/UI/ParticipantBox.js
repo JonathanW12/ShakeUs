@@ -24,7 +24,7 @@ export default ParticipantBox = (props) => {
         >
             <View style={styles.boxLeft}></View>
             <View style={styles.boxCenter}>
-                <TouchableOpacity onPress={props.action}>
+                <TouchableOpacity onPress={props.action} activeOpacity={1}>
                     <Text style={{ ...styles.buttonText, ...props.textStyle }}>
                         {props.title}
                     </Text>

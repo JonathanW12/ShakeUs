@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, StyleSheet, TouchableOpacity, Pressable } from 'react-native';
+import { Text, StyleSheet, Pressable } from 'react-native';
 import shadow from '../../Constants/ShadowCSS';
 
 export default StandardButton = (props) => {
