@@ -80,6 +80,8 @@ export default ParticipantsScreen = ({ navigation }) => {
       Alert.alert("Unable to get guests");
       return;
     }
+    console.log("83 participant: ");
+    console.log(res);
     for (let host of res.hosts) {
       newGuestList.push({
         id: host._id,

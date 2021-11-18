@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from 'react';
-import { PartyContext } from './PartyContext';
+import React, { useContext, useEffect } from "react";
+import { PartyContext } from "./PartyContext";
 
 const userInfo = {
   isHost: false,
@@ -19,10 +19,11 @@ export const UserProvider = (props) => {
 
   //doesnt work
   useEffect(() => {
+    console.log("effect");
     partyContext.getHosts().includes(userInfo.userId)
       ? setIsHost(true)
       : setIsHost(false);
-  }, [userInfo.userId, partyContext.getHosts()]);
+  }, [userInfo.userId, partyContext.getHosts]);
 
   const userContextActions = {
     isHost: () => {

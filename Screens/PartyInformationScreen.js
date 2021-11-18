@@ -1,21 +1,21 @@
-import React, { useState, useEffect, useContext } from 'react';
-import Banner from '../Components/PageSections/Banner';
+import React, { useState, useEffect, useContext } from "react";
+import Banner from "../Components/PageSections/Banner";
 import {
-    View,
-    Text,
-    StyleSheet,
-    Dimensions,
-    ActivityIndicator,
-} from 'react-native';
-import Colors from '../Constants/Colors';
-import ShadowCSS from '../Constants/ShadowCSS';
-import ActivityPackService from '../Services/ActivityPackService';
-import PartyService from '../Services/PartyService';
-import GuestService from '../Services/GuestService';
-import InfoWindowBottom from '../Components/PageSections/InfoWindowBottom';
-import SmallButton from './../Components/UI/SmallButton';
-import { PartyContext } from './../Context/PartyContext';
-import { UserContext } from '../Context/UserContext';
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  ActivityIndicator,
+} from "react-native";
+import Colors from "../Constants/Colors";
+import ShadowCSS from "../Constants/ShadowCSS";
+import ActivityPackService from "../Services/ActivityPackService";
+import PartyService from "../Services/PartyService";
+import GuestService from "../Services/GuestService";
+import InfoWindowBottom from "../Components/PageSections/InfoWindowBottom";
+import SmallButton from "./../Components/UI/SmallButton";
+import { PartyContext } from "./../Context/PartyContext";
+import { UserContext } from "../Context/UserContext";
 import { SocketContext } from "../Context/SocketContext";
 
 export default PartyInformationScreen = ({ navigation }) => {
@@ -52,12 +52,12 @@ export default PartyInformationScreen = ({ navigation }) => {
       partyContext.getPartyId(),
       partyContext.getPrimaryHost().id
     );
-    for (let host of res.hosts) {
-      participantsSize++;
+    console.log("55 partyinfo: ");
+    console.log(res);
+    if (res.hosts) {
+      participantsSize = res.hosts.length + res.guests.length;
     }
-    for (let guest of res.guests) {
-      participantsSize++;
-    }
+
     setparticipantCount(participantsSize);
   };
 
@@ -131,105 +131,105 @@ export default PartyInformationScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: Colors.secondary,
-        flex: 1,
-        justifyContent: 'center',
-    },
-    innerWrapper: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    currentActivity: {
-        color: 'white',
-        textAlign: 'center',
-        fontSize: 22,
-        margin: 15,
-    },
-    guestMesssage: {
-        fontSize: 18,
-        color: 'white',
-        margin: 15,
-        textAlign: 'center',
-    },
-    button: {
-        width: 'auto',
-        height: 40,
-        marginBottom: 10,
-        marginTop: 5,
-        paddingLeft: 20,
-        paddingRight: 20,
-    },
-    challengeContainer: {
-        width: '94%',
-        padding: 5,
-        backgroundColor: Colors.primary,
-        justifyContent: 'space-between',
-        borderRadius: 4,
-        alignSelf: 'center',
-    },
-    partyTitle: {
-        fontSize: 26,
-        alignSelf: 'center',
-        paddingTop: 5,
-        paddingBottom: 5,
-        color: 'white',
-    },
-    whiteLine: {
-        width: '80%',
-        height: 2,
-        backgroundColor: 'white',
-        alignSelf: 'center',
-    },
-    lowerContainer: {
-        justifyContent: 'flex-end',
-        flex: 1,
-    },
-    nextActivity: {
-        backgroundColor: '#CC9300',
-        width: '100%',
-        height: Dimensions.get('screen').height * 0.05,
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        color: 'white',
-    },
-    timeStamp: {
-        backgroundColor: Colors.primary,
-        width: '100%',
-        height: Dimensions.get('screen').height * 0.1,
-        textAlign: 'center',
-        color: 'white',
-        fontSize: 30,
-        textAlignVertical: 'center',
-    },
-    loadingIcon: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    partyCode: {
-        color: Colors.secondary,
-        alignSelf: 'center',
-        fontSize: 25,
-        fontWeight: 'bold',
-        justifyContent: 'flex-start',
-        alignContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'white',
-        borderRadius: 5,
-        paddingLeft: 7,
-        paddingRight: 7,
-    },
-    partyCodeLabel: {
-        fontSize: 20,
-        color: Colors.secondary,
-        paddingLeft: 20,
-    },
-    container_horizontal: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        marginTop: 25,
-        marginBottom: 25,
-    },
+  container: {
+    backgroundColor: Colors.secondary,
+    flex: 1,
+    justifyContent: "center",
+  },
+  innerWrapper: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  currentActivity: {
+    color: "white",
+    textAlign: "center",
+    fontSize: 22,
+    margin: 15,
+  },
+  guestMesssage: {
+    fontSize: 18,
+    color: "white",
+    margin: 15,
+    textAlign: "center",
+  },
+  button: {
+    width: "auto",
+    height: 40,
+    marginBottom: 10,
+    marginTop: 5,
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+  challengeContainer: {
+    width: "94%",
+    padding: 5,
+    backgroundColor: Colors.primary,
+    justifyContent: "space-between",
+    borderRadius: 4,
+    alignSelf: "center",
+  },
+  partyTitle: {
+    fontSize: 26,
+    alignSelf: "center",
+    paddingTop: 5,
+    paddingBottom: 5,
+    color: "white",
+  },
+  whiteLine: {
+    width: "80%",
+    height: 2,
+    backgroundColor: "white",
+    alignSelf: "center",
+  },
+  lowerContainer: {
+    justifyContent: "flex-end",
+    flex: 1,
+  },
+  nextActivity: {
+    backgroundColor: "#CC9300",
+    width: "100%",
+    height: Dimensions.get("screen").height * 0.05,
+    textAlign: "center",
+    textAlignVertical: "center",
+    color: "white",
+  },
+  timeStamp: {
+    backgroundColor: Colors.primary,
+    width: "100%",
+    height: Dimensions.get("screen").height * 0.1,
+    textAlign: "center",
+    color: "white",
+    fontSize: 30,
+    textAlignVertical: "center",
+  },
+  loadingIcon: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  partyCode: {
+    color: Colors.secondary,
+    alignSelf: "center",
+    fontSize: 25,
+    fontWeight: "bold",
+    justifyContent: "flex-start",
+    alignContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
+    borderRadius: 5,
+    paddingLeft: 7,
+    paddingRight: 7,
+  },
+  partyCodeLabel: {
+    fontSize: 20,
+    color: Colors.secondary,
+    paddingLeft: 20,
+  },
+  container_horizontal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: 25,
+    marginBottom: 25,
+  },
 });
