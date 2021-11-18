@@ -4,7 +4,6 @@ import {
     View,
     Text,
     StyleSheet,
-    Image,
     FlatList,
     TouchableOpacity,
     Alert,
@@ -12,7 +11,6 @@ import {
 import Colors from '../Constants/Colors';
 import ParticipantBox from '../Components/UI/ParticipantBox';
 import GuestService from '../Services/GuestService';
-import PartyService from '../Services/PartyService';
 import { SocketContext } from '../Context/SocketContext';
 import { PartyContext } from '../Context/PartyContext';
 import { UserContext } from '../Context/UserContext';
@@ -39,20 +37,14 @@ export default ParticipantsScreen = ({ navigation }) => {
     }, []);
 
     useEffect(() => {
-        socket.on('guest-removed', () => {
-            console.log('guest-removed');
-            updateGuests();
-        });
-        socket.on('user-left-party', () => {
-            console.log('user-left-party');
-            updateGuests();
-        });
-        socket.on('user-joined-party', (guest) => {
-            console.log('user-joined-party');
-            updateGuests();
-        });
+        socket.on('guest-removed', updateGuests);
+        socket.on('user-left-party', updateGuests);
+        socket.on('user-joined-party', updateGuests);
+
         return () => {
-            socket.close();
+            socket.off('guest-removed', updateGuests);
+            socket.off('user-left-party', updateGuests);
+            socket.off('user-joined-party', updateGuests);
         };
     }, [socket]);
 
@@ -75,8 +67,7 @@ export default ParticipantsScreen = ({ navigation }) => {
             />
         );
     };
-    const updateGuests = async (test) => {
-        console.log;
+    const updateGuests = async () => {
         let newGuestList = [];
         const res = await GuestService.getAllGuests(
             partyContext.getPartyId(),

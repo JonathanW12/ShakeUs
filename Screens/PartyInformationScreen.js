@@ -9,13 +9,10 @@ import {
 } from 'react-native';
 import Colors from '../Constants/Colors';
 import ShadowCSS from '../Constants/ShadowCSS';
-import ActivityPackService from '../Services/ActivityPackService';
-import PartyService from '../Services/PartyService';
 import GuestService from '../Services/GuestService';
 import InfoWindowBottom from '../Components/PageSections/InfoWindowBottom';
 import SmallButton from './../Components/UI/SmallButton';
 import { PartyContext } from './../Context/PartyContext';
-import { UserContext } from '../Context/UserContext';
 import { SocketContext } from '../Context/SocketContext';
 
 export default PartyInformationScreen = ({ navigation }) => {
@@ -23,7 +20,6 @@ export default PartyInformationScreen = ({ navigation }) => {
     const [participantCount, setparticipantCount] = useState(0);
     const [activityCount, setactivityCount] = useState(0);
     const partyContext = useContext(PartyContext);
-    const userContext = useContext(UserContext);
     const socketContext = useContext(SocketContext);
 
     useEffect(() => {

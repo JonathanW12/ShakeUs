@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useCallback } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Banner from '../Components/PageSections/Banner';
 import {
     View,
@@ -13,7 +13,6 @@ import Colors from '../Constants/Colors';
 import ShadowCSS from '../Constants/ShadowCSS';
 import ActivityPackService from '../Services/ActivityPackService';
 import PartyService from '../Services/PartyService';
-import GuestService from '../Services/GuestService';
 import ActivityService from '../Services/ActivityService';
 import ActivityStartTime from '../Components/UI/ActivityStartTime';
 import { SocketContext } from '../Context/SocketContext';
