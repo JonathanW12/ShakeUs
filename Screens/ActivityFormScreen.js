@@ -147,11 +147,11 @@ export default ActivityFormScreen = ({ route, navigation }) => {
                     minutes={minutes}
                     timeChanged={onTimeChanged}
                 ></TimeSelector>
-                <Pressable onPress={submit} style={styles.button}>
-                    <Text style={styles.buttonText}>
-                        {newActivity ? 'Create Activity' : 'Save Changes'}
-                    </Text>
-                </Pressable>
+                <StandardButton
+                    title={newActivity ? 'Create Activity' : 'Save Changes'}
+                    style={styles.button}
+                    action={submit}
+                />
             </View>
         </View>
     );
@@ -188,14 +188,6 @@ const styles = StyleSheet.create({
     button: {
         width: '100%',
         backgroundColor: Colors.tertiary,
-        borderRadius: 4,
-        marginTop: 10,
-        shadowColor: '#666',
-        shadowOffset: { height: 2, width: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 5,
-        borderRadius: 200,
-        borderWidth: 0,
         elevation: 0,
     },
     buttonText: {
