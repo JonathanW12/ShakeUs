@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext,useCallback } from 'react';
 import Banner from '../Components/PageSections/Banner';
 import {
     View,
@@ -7,6 +7,7 @@ import {
     FlatList,
     TouchableOpacity,
     Alert,
+    BackHandler,
 } from 'react-native';
 import Colors from '../Constants/Colors';
 import ParticipantBox from '../Components/UI/ParticipantBox';
@@ -14,6 +15,7 @@ import GuestService from '../Services/GuestService';
 import { SocketContext } from '../Context/SocketContext';
 import { PartyContext } from '../Context/PartyContext';
 import { UserContext } from '../Context/UserContext';
+import { useFocusEffect } from '@react-navigation/core';
 
 export default ParticipantsScreen = ({ navigation }) => {
     const partyContext = useContext(PartyContext);
@@ -24,9 +26,17 @@ export default ParticipantsScreen = ({ navigation }) => {
     );
     //CAHNGE THE DEFAULT TO: GuestService.isHost
     //True is only for visibility
-    const [currentUserIsHost, setIsHost] = useState(userContext.isHost());
+    const [currentUserIsHost, setIsHost] = useState(userContext.getIsHost());
     const [participantsList, setParticipantsList] = useState([]);
     const [_showingDeleteSymbol, setShowingDeleteSymbol] = useState(false);
+
+    useFocusEffect(
+        useCallback(() => {
+            BackHandler.addEventListener("hardwareBackPress", () => navigation.goBack())
+            return;
+        })
+    );
+
     useEffect(() => {
         participantsList.forEach((participant) => {
             participant.showingDeleteSymbol = _showingDeleteSymbol;
@@ -37,6 +47,8 @@ export default ParticipantsScreen = ({ navigation }) => {
     }, []);
 
     useEffect(() => {
+        BackHandler.addEventListener("hardwareBackPress", () => navigation.goBack())
+
         socket.on('guest-removed', updateGuests);
         socket.on('user-left-party', updateGuests);
         socket.on('user-joined-party', updateGuests);

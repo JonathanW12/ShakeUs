@@ -37,6 +37,7 @@ export default Banner = (props) => {
             return;
         }
 
+
         await socketContext.emit('leave-room', partyContext.getPartyId());
         setModalVisible(!modalVisible);
         navigation.navigate('MainScreen');
@@ -52,6 +53,13 @@ export default Banner = (props) => {
             Alert.alert('You cannot delete the party');
             return;
         }
+
+        partyContext.setPrimaryHost({
+            _id: '',
+            name: '',
+        });
+        
+
         await socketContext.emit('leave-room', partyContext.getPartyId());
         setModalVisible(!modalVisible);
         navigation.navigate('MainScreen');
