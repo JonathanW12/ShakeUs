@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import Banner from "../Components/PageSections/Banner";
 import { View, Text, StyleSheet, Alert } from "react-native";
 import StandardButton from "../Components/UI/StandardButton";
@@ -24,7 +24,7 @@ export default HostPartyScreen = ({ navigation }) => {
       partyContext.getActivityPack()._id,
       partyContext.getPrimaryHost().name,
       userContext.getNotificationToken(),
-      timeSelectorRef.getSelectedTime()
+      timeSelectorRef.current.getSelectedTime()
     );
 
     if (res) {
