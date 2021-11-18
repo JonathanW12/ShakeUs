@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Banner from "../Components/PageSections/Banner";
 import { View, Text, StyleSheet, Alert } from "react-native";
 import StandardButton from "../Components/UI/StandardButton";
@@ -16,27 +16,17 @@ export default HostPartyScreen = ({ navigation }) => {
     const partyContext = useContext(PartyContext);
     const userContext = useContext(UserContext);
     const socketContext = useContext(SocketContext);
+    const [date, setDate] = useState(new Date(new Date().getTime() + 3600000));
 
-    const timeSelectorRef = useRef(null);
-    const [hours, setHours] = useState(
-        new Date(new Date().getTime() + 60 * 60 * 1000)
-            .getHours()
-            .toString()
-            .padStart(2, "0")
-    );
-    const [minutes, setMinutes] = useState(
-        new Date(new Date().getTime() + 60 * 60 * 1000)
-            .getMinutes()
-            .toString()
-            .padStart(2, "0")
-    );
-
+    useEffect(() => {
+        console.log(date.getTime());
+    }, [date]);
     async function createTheParty() {
         const res = await PartyService.createParty(
             partyContext.getActivityPack()._id,
             partyContext.getPrimaryHost().name,
             userContext.getNotificationToken(),
-            timeSelectorRef.current.getSelectedTime()
+            date.getTime()
         );
 
         if (res) {
@@ -95,22 +85,6 @@ export default HostPartyScreen = ({ navigation }) => {
             ]
         );
 
-    const [] = useState();
-    const onTimeChanged = () => {
-        setHours(
-            new Date(timeSelectorRef.current.getSelectedTime())
-                .getHours()
-                .toString()
-                .padStart(2, "0")
-        );
-        setMinutes(
-            new Date(timeSelectorRef.current.getSelectedTime())
-                .getMinutes()
-                .toString()
-                .padStart(2, "0")
-        );
-    };
-
     return (
         <View style={styles.container}>
             <Banner title="Host Party" isBack={true} />
@@ -122,12 +96,7 @@ export default HostPartyScreen = ({ navigation }) => {
                         setIndex={setIndex}
                     ></CustomCarousel>
                 </View>
-                <TimeSelector
-                    ref={timeSelectorRef}
-                    timeChanged={onTimeChanged}
-                    hours={hours}
-                    minutes={minutes}
-                ></TimeSelector>
+                <TimeSelector setDate={setDate} date={date}></TimeSelector>
                 <View style={{ alignItems: "center", width: "100%" }}>
                     <StandardButton
                         textStyle={styles.buttonTextStyle}

@@ -1,33 +1,16 @@
 import React, { useState, useImperativeHandle } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Platform } from "react-native";
 import Colors from "../../Constants/Colors";
 import StandardButton from "./StandardButton";
 
-export default TimeSelector = React.forwardRef((props, ref) => {
-    const [date, setDate] = useState(
-        props.hours && props.minutes
-            ? convertToTimeStamp(props.hours, props.minutes)
-            : new Date(new Date().getTime() + 3600000)
-    );
-    const [show, setShow] = useState(false);
-
-    useImperativeHandle(ref, () => ({
-        getSelectedTime: onGetSelectedTime,
-    }));
-
-    const onGetSelectedTime = () => {
-        return date.getTime();
-    };
+export default TimeSelector = (props) => {
+    const [show, setShow] = useState(Platform.OS === "ios");
 
     const onChange = (event, selectedDate) => {
-        const currentDate = selectedDate || date;
-        const selectedHours = new Date(currentDate).getHours();
-        const selectedMinutes = new Date(currentDate).getMinutes();
-        setShow(Platform.OS === "ios");
-        setDate(convertToTimeStamp(selectedHours, selectedMinutes));
-
-        props.timeChanged();
+        if (props.setDate) {
+            props.setDate(new Date(selectedDate));
+        }
     };
 
     return (
@@ -37,45 +20,57 @@ export default TimeSelector = React.forwardRef((props, ref) => {
                     Start Time
                 </Text>
 
-                <View style={[styles.timeBoxContent, props.timeBoxStyles]}>
-                    <StandardButton
-                        title={props.hours ? props.hours : date.getHours()}
-                        shadow={false}
-                        style={styles.timeButton}
-                        textStyle={{ color: "black" }}
-                        action={() => {
-                            setShow(true);
-                        }}
-                    />
+                {Platform.OS !== "ios" && (
+                    <View style={[styles.timeBoxContent, props.timeBoxStyles]}>
+                        <StandardButton
+                            title={props.date
+                                .getHours()
+                                .toString()
+                                .padStart(2, "0")}
+                            shadow={false}
+                            style={styles.timeButton}
+                            textStyle={{ color: "black" }}
+                            action={() => {
+                                setShow(true);
+                            }}
+                        />
 
-                    <Text style={styles.dotsBetweenTime}>:</Text>
+                        <Text style={styles.dotsBetweenTime}>:</Text>
 
-                    <StandardButton
-                        title={
-                            props.minutes ? props.minutes : date.getMinutes()
-                        }
-                        shadow={false}
-                        style={styles.timeButton}
-                        textStyle={{ color: "black" }}
-                        action={() => {
-                            setShow(true);
-                        }}
-                    />
-                </View>
+                        <StandardButton
+                            title={props.date
+                                .getMinutes()
+                                .toString()
+                                .padStart(2, "0")}
+                            shadow={false}
+                            style={styles.timeButton}
+                            textStyle={{ color: "black" }}
+                            action={() => {
+                                setShow(true);
+                            }}
+                        />
+                    </View>
+                )}
                 {show && (
                     <DateTimePicker
                         testID="dateTimePicker"
-                        value={date}
+                        value={props.date}
                         mode={"time"}
                         is24Hour={true}
-                        display="default"
+                        display={Platform.OS !== "ios" ? "default" : "spinner"}
                         onChange={onChange}
+                        style={{
+                            height: 90,
+                            backgroundColor: Colors.primary,
+                            marginBottom: 20,
+                        }}
+                        textColor={"white"}
                     />
                 )}
             </View>
         </View>
     );
-});
+};
 
 const convertToTimeStamp = (hours, minutes) => {
     const today = new Date();

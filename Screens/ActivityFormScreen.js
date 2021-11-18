@@ -1,51 +1,31 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import Banner from '../Components/PageSections/Banner';
-import Colors from './../Constants/Colors';
-import StandardInput from '../Components/UI/StandardInput';
-import { TextInput } from 'react-native';
-import TimeSelector from './../Components/UI/TimeSelector';
-import ActivityService from '../Services/ActivityService';
-import ActivityPackService from '../Services/ActivityPackService';
-import { PartyContext } from './../Context/PartyContext';
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import Banner from "../Components/PageSections/Banner";
+import Colors from "./../Constants/Colors";
+import StandardInput from "../Components/UI/StandardInput";
+import { TextInput } from "react-native";
+import TimeSelector from "./../Components/UI/TimeSelector";
+import ActivityService from "../Services/ActivityService";
+import ActivityPackService from "../Services/ActivityPackService";
+import { PartyContext } from "./../Context/PartyContext";
 
 export default ActivityFormScreen = ({ route, navigation }) => {
     const { newActivity, activityId, activityStartTime } = route.params;
     const partyContext = useContext(PartyContext);
 
     const [title, setTitle] = useState(
-        newActivity ? '' : route.params.activityTitle
+        newActivity ? "" : route.params.activityTitle
     );
     const [description, setDescription] = useState(
-        newActivity ? '' : route.params.activityDescription
+        newActivity ? "" : route.params.activityDescription
     );
-    const [hours, setHours] = useState(
-        newActivity
-            ? new Date(new Date().getTime() + 60 * 60 * 1000)
-                  .getHours()
-                  .toString()
-                  .padStart(2, '0')
-            : new Date(activityStartTime).getHours().toString().padStart(2, '0')
-    );
-    const [minutes, setMinutes] = useState(
-        newActivity
-            ? new Date(new Date().getTime() + 60 * 60 * 1000)
-                  .getMinutes()
-                  .toString()
-                  .padStart(2, '0')
-            : new Date(activityStartTime)
-                  .getMinutes()
-                  .toString()
-                  .padStart(2, '0')
-    );
-    const timeSelectorRef = useRef(null);
 
     const submit = async () => {
         const activity = {
             _id: activityId ? activityId : null,
             title: title,
             description: description,
-            startTime: timeSelectorRef.current.getSelectedTime(),
+            startTime: date.getTime(),
         };
 
         if (newActivity) {
@@ -80,7 +60,7 @@ export default ActivityFormScreen = ({ route, navigation }) => {
 
             return addRes;
         } else {
-            throw new Error('Failed to create activity');
+            throw new Error("Failed to create activity");
         }
     };
 
@@ -95,28 +75,15 @@ export default ActivityFormScreen = ({ route, navigation }) => {
         if (res) {
             return res;
         } else {
-            throw new Error('Failed to update activity');
+            throw new Error("Failed to update activity");
         }
     };
 
-    const onTimeChanged = () => {
-        setHours(
-            new Date(timeSelectorRef.current.getSelectedTime())
-                .getHours()
-                .toString()
-                .padStart(2, '0')
-        );
-        setMinutes(
-            new Date(timeSelectorRef.current.getSelectedTime())
-                .getMinutes()
-                .toString()
-                .padStart(2, '0')
-        );
-    };
+    const [date, setDate] = useState(new Date(new Date().getTime() + 3600000));
 
     return (
         <View style={styles.container}>
-            <Banner title={newActivity ? 'New Activity' : 'Edit Activity'} />
+            <Banner title={newActivity ? "New Activity" : "Edit Activity"} />
             <View style={styles.formContainer}>
                 <StandardInput
                     style={styles.titleInput}
@@ -136,20 +103,18 @@ export default ActivityFormScreen = ({ route, navigation }) => {
                     }}
                 ></TextInput>
                 <TimeSelector
-                    ref={timeSelectorRef}
+                    setDate={setDate}
+                    date={date}
                     timeBoxStyles={{ backgroundColor: Colors.secondary }}
                     timeBoxHeaderStyles={{
                         backgroundColor: Colors.secondary,
-                        borderBottomColor: '#fff',
+                        borderBottomColor: "#fff",
                         borderBottomWidth: 2,
                     }}
-                    hours={hours}
-                    minutes={minutes}
-                    timeChanged={onTimeChanged}
                 ></TimeSelector>
                 <Pressable onPress={submit} style={styles.button}>
                     <Text style={styles.buttonText}>
-                        {newActivity ? 'Create Activity' : 'Save Changes'}
+                        {newActivity ? "Create Activity" : "Save Changes"}
                     </Text>
                 </Pressable>
             </View>
@@ -159,42 +124,42 @@ export default ActivityFormScreen = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
     container: {
-        width: '100%',
+        width: "100%",
         backgroundColor: Colors.secondary,
         flex: 1,
-        alignItems: 'center',
+        alignItems: "center",
     },
     formContainer: {
-        width: '95%',
+        width: "95%",
         padding: 15,
         backgroundColor: Colors.primary,
         borderRadius: 3,
         marginTop: 25,
     },
     titleInput: {
-        width: '99%',
+        width: "99%",
         marginBottom: 10,
     },
     descriptionInput: {
-        width: '99%',
+        width: "99%",
         height: 225,
         marginBottom: 10,
-        textAlignVertical: 'top',
-        backgroundColor: '#fff',
+        textAlignVertical: "top",
+        backgroundColor: "#fff",
         borderRadius: 3,
         fontSize: 16,
         padding: 10,
     },
     button: {
-        width: '100%',
+        width: "100%",
         backgroundColor: Colors.secondary,
         borderRadius: 4,
         marginTop: 10,
     },
     buttonText: {
-        color: '#fff',
+        color: "#fff",
         fontSize: 22,
-        textAlign: 'center',
+        textAlign: "center",
         padding: 15,
     },
 });
