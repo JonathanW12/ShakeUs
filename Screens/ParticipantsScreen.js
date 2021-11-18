@@ -15,26 +15,25 @@ import GuestService from "../Services/GuestService";
 import PartyService from "../Services/PartyService";
 import { SocketContext } from "../Context/SocketContext";
 import { PartyContext } from "../Context/PartyContext";
+import { UserContext } from "../Context/UserContext";
 
 export default ParticipantsScreen = ({ navigation }) => {
   const partyContext = useContext(PartyContext);
+  const userContext = useContext(UserContext);
   const socket = useContext(SocketContext);
   const [partyTitle, setPartytitle] = useState(
     partyContext.getActivityPack.title
   );
   //CAHNGE THE DEFAULT TO: GuestService.isHost
   //True is only for visibility
-  const [currentUserIsHost, setIsHost] = useState(true);
+  const [currentUserIsHost, setIsHost] = useState(userContext.isHost());
   const [participantsList, setParticipantsList] = useState([]);
   const [_showingDeleteSymbol, setShowingDeleteSymbol] = useState(false);
   useEffect(() => {
-    participantsList.forEach(
-      (participant) => {
-        participant.showingDeleteSymbol = _showingDeleteSymbol;
-      },
-      [_showingDeleteSymbol, setShowingDeleteSymbol]
-    );
-  });
+    participantsList.forEach((participant) => {
+      participant.showingDeleteSymbol = _showingDeleteSymbol;
+    });
+  }, [_showingDeleteSymbol, setShowingDeleteSymbol]);
   useEffect(() => {
     updateGuests();
   }, []);
@@ -96,6 +95,25 @@ export default ParticipantsScreen = ({ navigation }) => {
     setParticipantsList(newGuestList);
   };
 
+  const isCurrentUserHostRender = () => {
+    if (currentUserIsHost == true) {
+      return (
+        <View style={styles.lowerContainer}>
+          <TouchableOpacity
+            onPress={() => {
+              setShowingDeleteSymbol(
+                (_showingDeleteSymbol) => !_showingDeleteSymbol
+              );
+            }}
+          >
+            <Text style={styles.removeGuests}>Remove Guests</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+    return <View style={{ height: "10%" }}></View>;
+  };
+
   return (
     <View style={styles.container}>
       <View>
@@ -109,17 +127,7 @@ export default ParticipantsScreen = ({ navigation }) => {
           keyExtractor={(item) => item.id}
         />
       </View>
-      <View style={styles.lowerContainer}>
-        <TouchableOpacity
-          onPress={() => {
-            setShowingDeleteSymbol(
-              (_showingDeleteSymbol) => !_showingDeleteSymbol
-            );
-          }}
-        >
-          <Text style={styles.removeGuests}>Remove Guests</Text>
-        </TouchableOpacity>
-      </View>
+      {isCurrentUserHostRender()}
     </View>
   );
 };

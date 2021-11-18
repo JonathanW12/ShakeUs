@@ -55,7 +55,7 @@ export default HostPartyScreen = ({ navigation }) => {
       }
 
       socketContext.emit("join-room", partyContext.getPartyId());
-      navigation.navigate("PartyInformationScreen");
+      navigation.navigate("GuestScreen");
     }
   }
 

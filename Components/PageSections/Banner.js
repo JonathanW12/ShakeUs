@@ -86,7 +86,12 @@ export default Banner = (props) => {
   const partyCode = () => {
     if (partyContext.getPartyId() != "") {
       return (
-        <View style={styles.menuItem}>
+        <View
+          style={{
+            ...styles.menuItem,
+            ...styles.topBorder,
+          }}
+        >
           <Text style={styles.participantsText}>
             Game Pin: {partyContext.getPartyId()}
           </Text>
@@ -107,18 +112,17 @@ export default Banner = (props) => {
           ></TouchableOpacity>
           <View style={styles.modalContent}>
             <View style={styles.header}>
+              {partyCode()}
               <TouchableOpacity
                 onPress={() => {
                   setModalVisible(!modalVisible);
+                  navigation.navigate("GuestScreen");
                 }}
-                style={{
-                  ...styles.menuItem,
-                  ...styles.topBorder,
-                }}
+                style={styles.menuItem}
               >
-                <Text style={styles.participantsText}>Close</Text>
+                <Text style={styles.participantsText}>Guest Screen</Text>
               </TouchableOpacity>
-              {partyCode()}
+
               <TouchableOpacity
                 onPress={() => {
                   setModalVisible(!modalVisible);
