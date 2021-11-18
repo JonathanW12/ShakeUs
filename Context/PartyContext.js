@@ -9,7 +9,7 @@ const partyInfo = {
         activities: [],
     },
     primaryHost: {
-        id: '',
+        _id: '',
         name: '',
     },
     hosts: [],
@@ -56,7 +56,7 @@ export default PartyProvider = (props) => {
         },
         getAllActivities: () => {
             return partyInfo.allActivities;
-        }
+        },
     };
 
     return (

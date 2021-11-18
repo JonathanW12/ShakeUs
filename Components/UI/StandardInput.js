@@ -9,8 +9,8 @@ export default StandardInput = (props) => {
     return (
         <View
             style={{
-                ...styles.container,
                 ...ShadowCSS.standardShadow,
+                ...styles.container,
                 ...props.style,
             }}
         >
@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         width: '100%',
         height: '100%',
+        elevation: 0,
     },
     container: {
         height: 65,
@@ -41,6 +42,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flexDirection: 'row',
         backgroundColor: 'white',
-        borderRadius: 4,
+        borderRadius: 200,
+        shadowColor: '#666',
+        shadowOffset: { height: 2, width: 0 },
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
+        elevation: 0,
+        marginTop: 10,
     },
 });

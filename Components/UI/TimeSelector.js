@@ -88,18 +88,20 @@ const styles = StyleSheet.create({
     timeButton: {
         width: "40%",
         backgroundColor: "white",
-        borderRadius: 5,
+        borderRadius: 4,
         height: 60,
+        elevation: 0,
     },
     timeWrapper: {
         flexDirection: "row",
         justifyContent: "center",
         width: "90%",
+        marginBottom: 15,
     },
     timeBox: {
         width: "45%",
         backgroundColor: Colors.primaryDark,
-        borderRadius: 5,
+        borderRadius: 4,
     },
     timeBoxHeader: {
         color: "#fff",

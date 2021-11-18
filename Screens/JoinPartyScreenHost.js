@@ -29,7 +29,7 @@ export default JoinPartyScreenHost = ({ navigation }) => {
     };
     return (
       <View style={styles.container}>
-        <Banner title="Join Party" isBack={true} />
+        <Banner title="Create Party" isBack={true} />
         <Image
           source={require("../assets/ShakeUsLogo.png")}
           style={styles.logo}

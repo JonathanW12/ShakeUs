@@ -70,9 +70,6 @@ const styles = StyleSheet.create({
     activityDescription: {
         color: '#ffffff',
         fontSize: 18,
-        textShadowColor: 'rgba(0, 0, 0, 0.3)',
-        textShadowRadius: 0.5,
-        textShadowOffset: { width: 1, height: 1 },
         borderTopColor: '#fff',
         borderTopWidth: 1,
         paddingTop: 10,

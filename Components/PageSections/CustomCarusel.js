@@ -5,12 +5,13 @@ import React, {
     useEffect,
     useContext,
 } from 'react';
-import { Text, View, SafeAreaView, StyleSheet, Pressable } from 'react-native';
+import { Text, View, SafeAreaView, StyleSheet, Pressable, Dimensions } from 'react-native';
 import Colors from '../../Constants/Colors';
 import Carousel from 'react-native-snap-carousel';
 import Pagination from './Pagination';
 import ActivityPackService from '../../Services/ActivityPackService';
 import { PartyContext } from '../../Context/PartyContext';
+
 
 export default CustomCarousel = (props) => {
     const [activeIndex, setActiveIndex] = useState(0);
@@ -18,6 +19,7 @@ export default CustomCarousel = (props) => {
     const [personalActivityPackIds, setPersonalActivityPackIds] = useState([
         'b40bd330-98e9-429e-871c-7064ae410b54',
     ]);
+    const windowWidth = Dimensions.get('window').width;
     const ref = useRef(null);
     const partyContext = useContext(PartyContext);
 
@@ -63,22 +65,21 @@ export default CustomCarousel = (props) => {
             style={{
                 flex: 1,
                 backgroundColor: Colors.secondary,
-                paddingTop: 5,
             }}
         >
             <View
                 style={{
-                    flex: 1,
                     flexDirection: 'row',
-                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginBottom: 0,
                 }}
             >
                 <Carousel
                     layout="default"
                     ref={ref}
                     data={carouselItems}
-                    sliderWidth={370}
-                    itemWidth={340}
+                    sliderWidth={390}
+                    itemWidth={350}
                     renderItem={renderItem}
                     onSnapToItem={(index) => {
                         setActiveIndex(index);
@@ -86,8 +87,10 @@ export default CustomCarousel = (props) => {
                         // ActivityPackService.currentPack = carouselItems[index];
                     }}
                 />
+
+                
             </View>
-            <View style={{ alignItems: 'center' }}>
+            <View style={{ alignItems: 'center', paddingLeft: 25 }}>
                 <Pagination length={carouselItems.length} index={activeIndex} />
             </View>
         </SafeAreaView>
@@ -95,24 +98,15 @@ export default CustomCarousel = (props) => {
 };
 
 const styles = StyleSheet.create({
-    activityWrapper: {
-        justifyContent: 'space-evenly',
-        alignItems: 'center',
-        width: '100%',
-        //minHeight: 250,
-    },
+    
     activityCarousel: {
-        width: '100%',
-        height: 200,
+        width: '90%',
+        maxHeight: 225,
         backgroundColor: Colors.primary,
         padding: 10,
         //justifyContent: "center",
-        borderRadius: 10,
-    },
-    activityCarouselDots: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        width: '50%',
+        borderRadius: 4,
+        
     },
     whiteBorderBottom: {
         borderBottomWidth: 1,
@@ -151,7 +145,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 32,
         borderRadius: 4,
         elevation: 3,
-        //backgroundColor: Colors.secondary,
         width: 200,
         marginTop: 20,
     },

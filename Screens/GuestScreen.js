@@ -8,6 +8,7 @@ import {
     Dimensions,
     ActivityIndicator,
     Alert,
+    BackHandler,
 } from 'react-native';
 import Colors from '../Constants/Colors';
 import ShadowCSS from '../Constants/ShadowCSS';
@@ -20,6 +21,7 @@ import { PartyContext } from './../Context/PartyContext';
 import { UserContext } from '../Context/UserContext';
 import InfoWindowBottom from '../Components/PageSections/InfoWindowBottom';
 import { useFocusEffect, useIsFocused } from '@react-navigation/core';
+import { CommonActions } from '@react-navigation/routers';
 
 export default GuestScreen = ({ navigation }) => {
     const [activityPackage, setactivityPackage] = useState(null);
@@ -45,8 +47,9 @@ export default GuestScreen = ({ navigation }) => {
     let listOfActivities = partyContext.getAllActivities();
 
         for (let index = 0; index < listOfActivities.length; index++) {
-            if (currentActivity == listOfActivities[index]) {
+            if (currentActivity._id == listOfActivities[index]._id) {
                 if (listOfActivities[index + 1] != null) {
+                    console.log(listOfActivities[index + 1])
                     setnextActivity(listOfActivities[index + 1]);
                 } else {
                     setnextActivity(null);
@@ -116,9 +119,7 @@ export default GuestScreen = ({ navigation }) => {
 
     });
     if(arr.length > 0){
-      console.log(arr.slice(-1))
       setcurrentActivity(arr.slice(-1)[0]);
-     
     } else {
       setcurrentActivity(null)
     }
@@ -137,6 +138,9 @@ export default GuestScreen = ({ navigation }) => {
   };
 
     useEffect(() => {
+
+      BackHandler.addEventListener('hardwareBackPress', () => true)
+
         if (isFocused) {
             getPartyInformation();
         }
@@ -240,7 +244,7 @@ const styles = StyleSheet.create({
     currentActivity: {
         color: 'white',
         textAlign: 'center',
-        fontSize: 22,
+        fontSize: 24,
         margin: 15,
     },
     guestMesssage: {

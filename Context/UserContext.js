@@ -14,9 +14,6 @@ export const UserProvider = (props) => {
     const partyContext = React.useContext(PartyContext);
 
     const userContextActions = {
-        isHost: () => {
-            return userInfo.isHost;
-        },
         getUserId: () => {
             return userInfo.userId;
         },

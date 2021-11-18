@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
         width: "95%",
         padding: 15,
         backgroundColor: Colors.primary,
-        borderRadius: 3,
+        borderRadius: 4,
         marginTop: 25,
     },
     titleInput: {
@@ -146,15 +146,14 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         textAlignVertical: "top",
         backgroundColor: "#fff",
-        borderRadius: 3,
+        borderRadius: 4,
         fontSize: 16,
         padding: 10,
     },
     button: {
         width: "100%",
-        backgroundColor: Colors.secondary,
-        borderRadius: 4,
-        marginTop: 10,
+        backgroundColor: Colors.tertiary,
+        elevation: 0,
     },
     buttonText: {
         color: "#fff",

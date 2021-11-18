@@ -18,9 +18,6 @@ export default HostPartyScreen = ({ navigation }) => {
     const socketContext = useContext(SocketContext);
     const [date, setDate] = useState(new Date(new Date().getTime() + 3600000));
 
-    useEffect(() => {
-        console.log(date.getTime());
-    }, [date]);
     async function createTheParty() {
         const res = await PartyService.createParty(
             partyContext.getActivityPack()._id,
@@ -119,29 +116,19 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.secondary,
     },
     header1: {
-        fontSize: 20,
+        fontSize: 24,
         color: "#fff",
         marginTop: 20,
         marginBottom: 20,
     },
     contentWrapper: {
-        flex: 1,
+        //flex: 1,
         alignItems: "center",
     },
     activityWrapper: {
-        justifyContent: "space-evenly",
-        alignItems: "center",
         width: "100%",
-        minHeight: 335,
+        minHeight: 300,
     },
-    activityCarousel: {
-        width: "90%",
-        height: 260,
-        backgroundColor: Colors.primary,
-        padding: 15,
-        flexWrap: "wrap",
-    },
-
     border: {
         borderColor: "#fff",
         borderBottomWidth: 1,
@@ -181,27 +168,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     button: {
-        alignItems: "center",
-        justifyContent: "center",
-        paddingVertical: 12,
-        paddingHorizontal: 32,
-        borderRadius: 4,
-        elevation: 3,
-        backgroundColor: Colors.secondary,
         width: 200,
-        marginTop: 20,
-    },
-    buttonStartParty: {
-        alignItems: "center",
-        justifyContent: "center",
-        paddingVertical: 12,
-        paddingHorizontal: 32,
-        borderRadius: 4,
-        elevation: 3,
         backgroundColor: Colors.tertiary,
-        width: "90%",
-        marginTop: 20,
-        height: 70,
     },
     text: {
         fontSize: 16,
