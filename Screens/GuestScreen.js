@@ -45,8 +45,9 @@ export default GuestScreen = ({ navigation }) => {
     let listOfActivities = partyContext.getAllActivities();
 
         for (let index = 0; index < listOfActivities.length; index++) {
-            if (currentActivity == listOfActivities[index]) {
+            if (currentActivity._id == listOfActivities[index]._id) {
                 if (listOfActivities[index + 1] != null) {
+                    console.log(listOfActivities[index + 1])
                     setnextActivity(listOfActivities[index + 1]);
                 } else {
                     setnextActivity(null);
@@ -116,9 +117,7 @@ export default GuestScreen = ({ navigation }) => {
 
     });
     if(arr.length > 0){
-      console.log(arr.slice(-1))
       setcurrentActivity(arr.slice(-1)[0]);
-     
     } else {
       setcurrentActivity(null)
     }
