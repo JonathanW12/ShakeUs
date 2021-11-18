@@ -42,8 +42,6 @@ export default HostPartyScreen = ({ navigation }) => {
         res.hostId
       );
 
-      console.log(party);
-
       if (party) {
         const activityPack = await ActivityPackService.getActivityPack(
           party.activityPackId

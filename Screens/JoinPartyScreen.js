@@ -26,7 +26,6 @@ export default JoinPartyScreen = ({ navigation }) => {
       guestName,
       userContext.getNotificationToken()
     );
-    console.log(res);
 
     if (res) {
       userContext.setUserId(res.newGuest._id);

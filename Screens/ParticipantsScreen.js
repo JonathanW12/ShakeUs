@@ -35,18 +35,22 @@ export default ParticipantsScreen = ({ navigation }) => {
       [_showingDeleteSymbol, setShowingDeleteSymbol]
     );
   });
+
   useEffect(() => {
     updateGuests();
   }, []);
 
   useEffect(() => {
     socket.on("guest-removed", () => {
+      console.log("guest-removed");
       updateGuests();
     });
     socket.on("user-left-party", () => {
+      console.log("user-left-party");
       updateGuests();
     });
     socket.on("user-joined-party", (guest) => {
+      console.log("user-joined-party");
       updateGuests();
     });
     return () => {
@@ -80,8 +84,6 @@ export default ParticipantsScreen = ({ navigation }) => {
       Alert.alert("Unable to get guests");
       return;
     }
-    console.log("83 participant: ");
-    console.log(res);
     for (let host of res.hosts) {
       newGuestList.push({
         id: host._id,

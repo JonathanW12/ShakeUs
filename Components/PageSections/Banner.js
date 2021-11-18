@@ -24,7 +24,6 @@ export default Banner = (props) => {
   const partyContext = useContext(PartyContext);
 
   const isHost = userContext.isHost();
-  console.log("is host: " + isHost);
 
   const leavePartyButtonHandle = async () => {
     const res = await PartyService.leaveParty(

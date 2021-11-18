@@ -19,7 +19,6 @@ export const UserProvider = (props) => {
 
   //doesnt work
   useEffect(() => {
-    console.log("effect");
     partyContext.getHosts().includes(userInfo.userId)
       ? setIsHost(true)
       : setIsHost(false);
