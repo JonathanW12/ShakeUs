@@ -56,7 +56,7 @@ export default PartyProvider = (props) => {
         },
         getAllActivities: () => {
             return partyInfo.allActivities;
-        }
+        },
     };
 
     return (
