@@ -1,8 +1,8 @@
-import React from "react";
-import { StyleSheet, View, Text, TouchableHighlight } from "react-native";
-import HiddenActivitySection from "./HiddenActivitySection";
-import Colors from "../../Constants/Colors";
-import { useRef } from "react";
+import React from 'react';
+import { StyleSheet, View, Text, TouchableHighlight } from 'react-native';
+import HiddenActivitySection from './HiddenActivitySection';
+import Colors from '../../Constants/Colors';
+import { useRef } from 'react';
 
 export default ActivityContainer = (props) => {
     const activityRef = useRef(null);
@@ -40,10 +40,10 @@ export default ActivityContainer = (props) => {
                         return `${time
                             .getHours()
                             .toString()
-                            .padStart(2, "0")}:${time
+                            .padStart(2, '0')}:${time
                             .getMinutes()
                             .toString()
-                            .padStart(2, "0")} | `;
+                            .padStart(2, '0')} | `;
                     })()}
                     {props.item.title}
                 </Text>
@@ -60,18 +60,15 @@ const styles = StyleSheet.create({
     activityContainer: {
         flex: 1,
         marginTop: 4,
-        width: "100%",
-        alignContent: "center",
+        width: '100%',
+        alignContent: 'center',
         paddingTop: 15,
     },
     activityTitle: {
-        color: "#fff",
+        color: '#fff',
         fontSize: 22,
         paddingBottom: 15,
         paddingLeft: 10,
         paddingRight: 10,
-        textShadowColor: "rgba(0, 0, 0, 0.3)",
-        textShadowRadius: 0.5,
-        textShadowOffset: { width: 1, height: 1 },
     },
 });

@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
     currentActivity: {
         color: 'white',
         textAlign: 'center',
-        fontSize: 22,
+        fontSize: 24,
         margin: 15,
     },
     guestMesssage: {

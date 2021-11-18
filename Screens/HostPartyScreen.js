@@ -1,15 +1,15 @@
-import React, { useContext, useRef, useState } from "react";
-import Banner from "../Components/PageSections/Banner";
-import { View, Text, StyleSheet, Alert } from "react-native";
-import StandardButton from "../Components/UI/StandardButton";
-import Colors from "../Constants/Colors";
-import CustomCarousel from "../Components/PageSections/CustomCarusel";
-import ActivityPackService from "../Services/ActivityPackService";
-import PartyService from "../Services/PartyService";
-import TimeSelector from "../Components/UI/TimeSelector";
-import { PartyContext } from "./../Context/PartyContext";
-import { UserContext } from "../Context/UserContext";
-import { SocketContext } from "../Context/SocketContext";
+import React, { useContext, useRef, useState } from 'react';
+import Banner from '../Components/PageSections/Banner';
+import { View, Text, StyleSheet, Alert } from 'react-native';
+import StandardButton from '../Components/UI/StandardButton';
+import Colors from '../Constants/Colors';
+import CustomCarousel from '../Components/PageSections/CustomCarusel';
+import ActivityPackService from '../Services/ActivityPackService';
+import PartyService from '../Services/PartyService';
+import TimeSelector from '../Components/UI/TimeSelector';
+import { PartyContext } from './../Context/PartyContext';
+import { UserContext } from '../Context/UserContext';
+import { SocketContext } from '../Context/SocketContext';
 
 export default HostPartyScreen = ({ navigation }) => {
     const [index, setIndex] = useState(0);
@@ -22,13 +22,13 @@ export default HostPartyScreen = ({ navigation }) => {
         new Date(new Date().getTime() + 60 * 60 * 1000)
             .getHours()
             .toString()
-            .padStart(2, "0")
+            .padStart(2, '0')
     );
     const [minutes, setMinutes] = useState(
         new Date(new Date().getTime() + 60 * 60 * 1000)
             .getMinutes()
             .toString()
-            .padStart(2, "0")
+            .padStart(2, '0')
     );
 
     async function createTheParty() {
@@ -66,8 +66,8 @@ export default HostPartyScreen = ({ navigation }) => {
                 partyContext.setHosts(party.hosts);
             }
 
-            socketContext.emit("join-room", partyContext.getPartyId());
-            navigation.navigate("GuestScreen");
+            socketContext.emit('join-room', partyContext.getPartyId());
+            navigation.navigate('GuestScreen');
         }
     }
 
@@ -78,20 +78,20 @@ export default HostPartyScreen = ({ navigation }) => {
         ) {
             createTwoButtonAlert();
         } else {
-            throw new Error("Missing hostname and / or activity pack");
+            throw new Error('Missing hostname and / or activity pack');
         }
     };
 
     const createTwoButtonAlert = () =>
         Alert.alert(
-            "Confirmation",
+            'Confirmation',
             `Create party: ${partyContext.getActivityPack().title}`,
             [
                 {
-                    text: "Cancel",
-                    style: "cancel",
+                    text: 'Cancel',
+                    style: 'cancel',
                 },
-                { text: "OK", onPress: () => createTheParty() },
+                { text: 'OK', onPress: () => createTheParty() },
             ]
         );
 
@@ -101,13 +101,13 @@ export default HostPartyScreen = ({ navigation }) => {
             new Date(timeSelectorRef.current.getSelectedTime())
                 .getHours()
                 .toString()
-                .padStart(2, "0")
+                .padStart(2, '0')
         );
         setMinutes(
             new Date(timeSelectorRef.current.getSelectedTime())
                 .getMinutes()
                 .toString()
-                .padStart(2, "0")
+                .padStart(2, '0')
         );
     };
 
@@ -128,7 +128,7 @@ export default HostPartyScreen = ({ navigation }) => {
                     hours={hours}
                     minutes={minutes}
                 ></TimeSelector>
-                <View style={{ alignItems: "center", width: "100%" }}>
+                <View style={{ alignItems: 'center', width: '100%' }}>
                     <StandardButton
                         textStyle={styles.buttonTextStyle}
                         style={{
@@ -150,21 +150,21 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.secondary,
     },
     header1: {
-        fontSize: 20,
-        color: "#fff",
+        fontSize: 24,
+        color: '#fff',
         marginTop: 20,
         marginBottom: 20,
     },
     contentWrapper: {
         flex: 1,
-        alignItems: "center",
+        alignItems: 'center',
     },
     activityWrapper: {
         width: "100%",
         minHeight: 335,
     },
     border: {
-        borderColor: "#fff",
+        borderColor: '#fff',
         borderBottomWidth: 1,
         borderTopWidth: 1,
         borderLeftWidth: 1,
@@ -172,63 +172,44 @@ const styles = StyleSheet.create({
     },
     whiteBorderBottom: {
         borderBottomWidth: 1,
-        borderColor: "#fff",
+        borderColor: '#fff',
     },
     whiteTextColor: {
-        color: "#fff",
-        textAlign: "center",
+        color: '#fff',
+        textAlign: 'center',
     },
     activityHeader: {
-        color: "#fff",
-        fontWeight: "700",
+        color: '#fff',
+        fontWeight: '700',
         fontSize: 24,
-        width: "100%",
-        textAlign: "center",
+        width: '100%',
+        textAlign: 'center',
     },
     activityCount: {
         fontSize: 20,
-        color: "#fff",
-        textAlign: "center",
+        color: '#fff',
+        textAlign: 'center',
         marginBottom: 10,
     },
     activityPackDescription: {
-        color: "#fff",
+        color: '#fff',
         marginTop: 12,
         paddingBottom: 12,
         fontSize: 18,
-        textAlign: "center",
+        textAlign: 'center',
     },
     centerText: {
-        alignItems: "center",
+        alignItems: 'center',
     },
     button: {
-        alignItems: "center",
-        justifyContent: "center",
-        paddingVertical: 12,
-        paddingHorizontal: 32,
-        borderRadius: 4,
-        elevation: 3,
-        backgroundColor: Colors.secondary,
         width: 200,
-        marginTop: 20,
-    },
-    buttonStartParty: {
-        alignItems: "center",
-        justifyContent: "center",
-        paddingVertical: 12,
-        paddingHorizontal: 32,
-        borderRadius: 4,
-        elevation: 3,
         backgroundColor: Colors.tertiary,
-        width: "90%",
-        marginTop: 20,
-        height: 70,
     },
     text: {
         fontSize: 16,
         lineHeight: 21,
-        fontWeight: "bold",
+        fontWeight: 'bold',
         letterSpacing: 0.25,
-        color: "white",
+        color: 'white',
     },
 });
