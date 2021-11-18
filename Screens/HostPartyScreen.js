@@ -160,19 +160,9 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     activityWrapper: {
-        justifyContent: "space-evenly",
-        alignItems: "center",
         width: "100%",
         minHeight: 335,
     },
-    activityCarousel: {
-        width: "90%",
-        height: 260,
-        backgroundColor: Colors.primary,
-        padding: 15,
-        flexWrap: "wrap",
-    },
-
     border: {
         borderColor: "#fff",
         borderBottomWidth: 1,
