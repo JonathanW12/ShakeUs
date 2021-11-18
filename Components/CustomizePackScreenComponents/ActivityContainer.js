@@ -70,8 +70,5 @@ const styles = StyleSheet.create({
         paddingBottom: 15,
         paddingLeft: 10,
         paddingRight: 10,
-        textShadowColor: 'rgba(0, 0, 0, 0.3)',
-        textShadowRadius: 0.5,
-        textShadowOffset: { width: 1, height: 1 },
     },
 });

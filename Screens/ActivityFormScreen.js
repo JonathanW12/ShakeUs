@@ -137,9 +137,9 @@ export default ActivityFormScreen = ({ route, navigation }) => {
                 ></TextInput>
                 <TimeSelector
                     ref={timeSelectorRef}
-                    timeBoxStyles={{ backgroundColor: Colors.secondary }}
+                    timeBoxStyles={{ backgroundColor: Colors.tertiary }}
                     timeBoxHeaderStyles={{
-                        backgroundColor: Colors.secondary,
+                        backgroundColor: Colors.tertiary,
                         borderBottomColor: '#fff',
                         borderBottomWidth: 2,
                     }}
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
         width: '95%',
         padding: 15,
         backgroundColor: Colors.primary,
-        borderRadius: 3,
+        borderRadius: 4,
         marginTop: 25,
     },
     titleInput: {
@@ -181,15 +181,22 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         textAlignVertical: 'top',
         backgroundColor: '#fff',
-        borderRadius: 3,
+        borderRadius: 4,
         fontSize: 16,
         padding: 10,
     },
     button: {
         width: '100%',
-        backgroundColor: Colors.secondary,
+        backgroundColor: Colors.tertiary,
         borderRadius: 4,
         marginTop: 10,
+        shadowColor: '#666',
+        shadowOffset: { height: 2, width: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
+        borderRadius: 200,
+        borderWidth: 0,
+        elevation: 0,
     },
     buttonText: {
         color: '#fff',

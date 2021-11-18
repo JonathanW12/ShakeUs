@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.primary,
         padding: 10,
         //justifyContent: "center",
-        borderRadius: 10,
+        borderRadius: 4,
     },
     activityCarouselDots: {
         flexDirection: 'row',
