@@ -129,7 +129,6 @@ export default GuestScreen = ({ navigation }) => {
 
   useEffect(() => {
     // Socket event when activity starts!
-
     socket.on("activity-started", (data) => {
       onSocketEvent(data.activity);
     });

@@ -64,6 +64,7 @@ export default PartyInformationScreen = ({ navigation }) => {
       setactivityPackage(partyContext.getActivityPack());
       setactivityCount(partyContext.getActivityPack().activities.length);
     } else {
+      console.log("No activityPack");
     }
   }
 
