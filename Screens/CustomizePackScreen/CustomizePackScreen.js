@@ -1,20 +1,20 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-import Banner from '../Components/PageSections/Banner';
-import { View, StyleSheet, FlatList } from 'react-native';
-import ActivityPackService from '../Services/ActivityPackService';
-import ActivityService from '../Services/ActivityService';
-import Colors from '../Constants/Colors';
-import ActivityContainer from '../Components/CustomizePackScreenComponents/ActivityContainer';
-import CustomizeToolBar from './../Components/CustomizePackScreenComponents/CustomizeToolBar';
-import { PartyContext } from './../Context/PartyContext';
-import { SocketContext } from '../Context/SocketContext';
-import { useFocusEffect } from '@react-navigation/core';
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import Banner from "../../Components/PageSections/Banner";
+import { View, StyleSheet, FlatList } from "react-native";
+import ActivityPackService from "../../Services/ActivityPackService";
+import ActivityService from "../../Services/ActivityService";
+import Colors from "../../Constants/Colors";
+import ActivityContainer from "./ActivityContainer";
+import CustomizeToolBar from "./CustomizeToolBar";
+import { PartyContext } from "../../Context/PartyContext";
+import { SocketContext } from "../../Context/SocketContext";
+import { useFocusEffect } from "@react-navigation/core";
 
 export default CustomizePackScreen = ({ navigation }) => {
     const [activities, setActivities] = useState([]);
     const [selectedActivity, setSelectedActivity] = useState(null);
     const partyContext = useContext(PartyContext);
-    const socketContext = useContext(SocketContext);
+    const socket = useContext(SocketContext);
 
     useFocusEffect(
         useCallback(() => {
@@ -34,21 +34,18 @@ export default CustomizePackScreen = ({ navigation }) => {
     }, []);
 
     useEffect(() => {
-        socketContext.on('activity-title-updated', loadAllActivities);
-        socketContext.on('activity-description-updated', loadAllActivities);
-        socketContext.on('activity-start-time-updated', loadAllActivities);
-        socketContext.on('activity-added', loadAllActivities);
+        socket.on("activity-title-updated", loadAllActivities);
+        socket.on("activity-description-updated", loadAllActivities);
+        socket.on("activity-start-time-updated", loadAllActivities);
+        socket.on("activity-added", loadAllActivities);
 
         return () => {
-            socketContext.off('activity-title-updated', loadAllActivities);
-            socketContext.off(
-                'activity-description-updated',
-                loadAllActivities
-            );
-            socketContext.off('activity-start-time-updated', loadAllActivities);
-            socketContext.off('activity-added', loadAllActivities);
+            socket.off("activity-title-updated", loadAllActivities);
+            socket.off("activity-description-updated", loadAllActivities);
+            socket.off("activity-start-time-updated", loadAllActivities);
+            socket.off("activity-added", loadAllActivities);
         };
-    }, [socketContext]);
+    }, [socket]);
 
     const onSelectActivity = (activity) => {
         setSelectedActivity(activity);
@@ -62,23 +59,23 @@ export default CustomizePackScreen = ({ navigation }) => {
         if (res) {
             setActivities(res);
         } else {
-            throw new Error('Failed to load activities');
+            throw new Error("Failed to load activities");
         }
     };
 
     const createActivity = async () => {
-        navigation.navigate('ActivityFormScreen', {
+        navigation.navigate("ActivityFormScreen", {
             newActivity: true,
-            activityId: '',
-            activityTitle: '',
-            activityDescription: '',
-            activityStartTime: '',
+            activityId: "",
+            activityTitle: "",
+            activityDescription: "",
+            activityStartTime: "",
         });
     };
 
     const updateSelectedActivity = async () => {
         if (selectedActivity) {
-            navigation.navigate('ActivityFormScreen', {
+            navigation.navigate("ActivityFormScreen", {
                 newActivity: false,
                 activityId: selectedActivity._id,
                 activityTitle: selectedActivity.title,
@@ -106,7 +103,7 @@ export default CustomizePackScreen = ({ navigation }) => {
                 });
                 setActivities(newActivities);
             } else {
-                throw new Error('Failed to delete activity');
+                throw new Error("Failed to delete activity");
             }
         }
     };
@@ -142,8 +139,8 @@ export default CustomizePackScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'space-between',
+        flexDirection: "column",
+        justifyContent: "space-between",
         backgroundColor: Colors.secondary,
         paddingBottom: 80,
     },

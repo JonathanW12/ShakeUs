@@ -18,6 +18,18 @@ export default HostPartyScreen = ({ navigation }) => {
     const socketContext = useContext(SocketContext);
 
     const timeSelectorRef = useRef(null);
+    const [hours, setHours] = useState(
+        new Date(new Date().getTime() + 60 * 60 * 1000)
+            .getHours()
+            .toString()
+            .padStart(2, '0')
+    );
+    const [minutes, setMinutes] = useState(
+        new Date(new Date().getTime() + 60 * 60 * 1000)
+            .getMinutes()
+            .toString()
+            .padStart(2, '0')
+    );
 
     async function createTheParty() {
         const res = await PartyService.createParty(
@@ -83,6 +95,22 @@ export default HostPartyScreen = ({ navigation }) => {
             ]
         );
 
+    const [] = useState();
+    const onTimeChanged = () => {
+        setHours(
+            new Date(timeSelectorRef.current.getSelectedTime())
+                .getHours()
+                .toString()
+                .padStart(2, '0')
+        );
+        setMinutes(
+            new Date(timeSelectorRef.current.getSelectedTime())
+                .getMinutes()
+                .toString()
+                .padStart(2, '0')
+        );
+    };
+
     return (
         <View style={styles.container}>
             <Banner title="Host Party" isBack={true} />
@@ -94,10 +122,19 @@ export default HostPartyScreen = ({ navigation }) => {
                         setIndex={setIndex}
                     ></CustomCarousel>
                 </View>
-                <TimeSelector ref={timeSelectorRef}></TimeSelector>
+                <TimeSelector
+                    ref={timeSelectorRef}
+                    timeChanged={onTimeChanged}
+                    hours={hours}
+                    minutes={minutes}
+                ></TimeSelector>
                 <View style={{ alignItems: 'center', width: '100%' }}>
                     <StandardButton
-                        style={styles.button}
+                        textStyle={styles.buttonTextStyle}
+                        style={{
+                            ...styles.button,
+                            backgroundColor: Colors.tertiary,
+                        }}
                         title="Start Party"
                         action={handleActionStartParty}
                     />

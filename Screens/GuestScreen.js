@@ -41,24 +41,26 @@ export default GuestScreen = ({ navigation }) => {
         return hours + ':' + minutes;
     };
 
-    const onSocketEvent = (data) => {
-        let listOfActivities = partyContext.getAllActivities();
+  const onSocketEvent = (data) => {
+    let listOfActivities = partyContext.getAllActivities();
 
         for (let index = 0; index < listOfActivities.length; index++) {
-            if (currentActivity == listOfActivities[index]) {
+            if (currentActivity._id == listOfActivities[index]._id) {
                 if (listOfActivities[index + 1] != null) {
+                    console.log(listOfActivities[index + 1])
                     setnextActivity(listOfActivities[index + 1]);
                 } else {
                     setnextActivity(null);
                 }
             }
         }
-        setcurrentActivity(data.activity);
-    };
+    console.log(data.activity)
+    setcurrentActivity(data.activity);
+  };
 
-    const getPartyInformation = async () => {
-        setactivityPackage(null);
-        let currentTime = +new Date();
+  const getPartyInformation = async () => {
+    //setactivityPackage(null);
+    let currentTime = +new Date();
 
         //Handle Party Result
         const partyResult = await PartyService.getParty(
@@ -105,20 +107,33 @@ export default GuestScreen = ({ navigation }) => {
         setactivityPackage(activityPackResult);
         setallActivities(allActivitiesResult);
 
-        allActivitiesResult.forEach((element) => {
-            if (element.startTime < currentTime) {
-                setcurrentActivity(element);
-            }
-        });
-        setready(true);
+    let arr = []
 
-        if (nextActivityResult) {
-            setnextActivity(nextActivityResult);
-        } else {
-            setnextActivity(null);
-            Alert.alert('Unable to fetch next activity');
-        }
-    };
+    allActivitiesResult.forEach((element) => {
+
+      if (element.startTime < currentTime) {
+        arr.push(element);
+      }
+
+    });
+    if(arr.length > 0){
+      setcurrentActivity(arr.slice(-1)[0]);
+    } else {
+      setcurrentActivity(null)
+    }
+    
+    
+  
+
+    setready(true);
+
+    if (nextActivityResult) {
+      setnextActivity(nextActivityResult);
+    } else {
+      setnextActivity(null);
+      //Alert.alert("Unable to fetch next activity");
+    }
+  };
 
     useEffect(() => {
         if (isFocused) {
@@ -166,27 +181,25 @@ export default GuestScreen = ({ navigation }) => {
                 </View>
             );
         }
-        return (
-            <View
-                style={{
-                    ...ShadowCSS.standardShadow,
-                    ...styles.challengeContainer,
-                }}
-            >
-                <View>
-                    <Text style={styles.partyTitle}>
-                        Waiting For Next Activity
-                    </Text>
-                    <View style={styles.whiteLine}></View>
-                </View>
-                <Text style={styles.guestMesssage}>
-                    Waiting for the first activity to start. You can see who
-                    else has joined by looking at participants from the menu.
-                </Text>
-                <View></View>
-            </View>
-        );
-    };
+    return (  
+      <View
+        style={{
+          ...ShadowCSS.standardShadow,
+          ...styles.challengeContainer,
+        }}
+      >
+        <View>
+          <Text style={styles.partyTitle}>Waiting For Next Activity</Text>
+          <View style={styles.whiteLine}></View>
+        </View>
+        <Text style={styles.guestMesssage}>
+          Waiting for the first activity to start. You can see who else has
+          joined by looking at participants from the menu.
+        </Text>
+        <View></View>
+      </View>
+    );
+  };
 
     //Actual render below:
     if (ready) {

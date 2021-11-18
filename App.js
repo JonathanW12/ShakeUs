@@ -1,24 +1,24 @@
 // exe819m
-import { StatusBar } from 'expo-status-bar';
-import React, { useState, useEffect, useRef } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { StatusBar } from "expo-status-bar";
+import React, { useState, useEffect, useRef } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import MainScreen from './Screens/MainScreen';
-import HostPartyScreen from './Screens/HostPartyScreen';
-import JoinPartyScreen from './Screens/JoinPartyScreen';
-import GuestScreen from './Screens/GuestScreen';
-import PartyInformationScreen from './Screens/PartyInformationScreen';
-import CustomizePackScreen from './Screens/CustomizePackScreen';
-import JoinPartyScreenHost from './Screens/JoinPartyScreenHost';
-import ParticipantsScreen from './Screens/ParticipantsScreen';
+import MainScreen from "./Screens/MainScreen";
+import HostPartyScreen from "./Screens/HostPartyScreen";
+import JoinPartyScreen from "./Screens/JoinPartyScreen";
+import GuestScreen from "./Screens/GuestScreen";
+import PartyInformationScreen from "./Screens/PartyInformationScreen";
+import CustomizePackScreen from "./Screens/CustomizePackScreen/CustomizePackScreen";
+import JoinPartyScreenHost from "./Screens/JoinPartyScreenHost";
+import ParticipantsScreen from "./Screens/ParticipantsScreen";
 
-import * as Notifications from 'expo-notifications';
+import * as Notifications from "expo-notifications";
 
-import { SocketProvider, socket } from './Context/SocketContext';
-import ActivityFormScreen from './Screens/ActivityFormScreen';
-import PartyProvider from './Context/PartyContext';
-import { UserProvider } from './Context/UserContext';
+import { SocketProvider, socket } from "./Context/SocketContext";
+import ActivityFormScreen from "./Screens/ActivityFormScreen";
+import PartyProvider from "./Context/PartyContext";
+import { UserProvider } from "./Context/UserContext";
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
