@@ -42,7 +42,7 @@ export default GuestScreen = ({ navigation }) => {
     return hours + ":" + minutes;
   };
 
-  const onSocketEvent = (toBeCurrent) => {
+  const onSocketEvent = (data) => {
     let listOfActivities = partyContext.getAllActivities();
 
     for (let index = 0; index < listOfActivities.length; index++) {
@@ -54,11 +54,12 @@ export default GuestScreen = ({ navigation }) => {
         }
       }
     }
-    setcurrentActivity(toBeCurrent);
+    console.log(data.activity)
+    setcurrentActivity(data.activity);
   };
 
   const getPartyInformation = async () => {
-    setactivityPackage(null);
+    //setactivityPackage(null);
     let currentTime = +new Date();
 
     //Handle Party Result
@@ -106,18 +107,33 @@ export default GuestScreen = ({ navigation }) => {
     setactivityPackage(activityPackResult);
     setallActivities(allActivitiesResult);
 
+    let arr = []
+
     allActivitiesResult.forEach((element) => {
+
       if (element.startTime < currentTime) {
-        setcurrentActivity(element);
+        arr.push(element);
       }
+
     });
+    if(arr.length > 0){
+      console.log(arr.slice(-1))
+      setcurrentActivity(arr.slice(-1)[0]);
+     
+    } else {
+      setcurrentActivity(null)
+    }
+    
+    
+  
+
     setready(true);
 
     if (nextActivityResult) {
       setnextActivity(nextActivityResult);
     } else {
       setnextActivity(null);
-      Alert.alert("Unable to fetch next activity");
+      //Alert.alert("Unable to fetch next activity");
     }
   };
 
@@ -129,11 +145,10 @@ export default GuestScreen = ({ navigation }) => {
 
   useEffect(() => {
     // Socket event when activity starts!
-    socket.on("activity-started", (data) => {
-      onSocketEvent(data.activity);
-    });
+    socket.on("activity-started", onSocketEvent);
+
     return () => {
-      socket.close();
+      socket.off("activity-started", onSocketEvent);
     };
   }, [socket]);
 
@@ -168,7 +183,7 @@ export default GuestScreen = ({ navigation }) => {
         </View>
       );
     }
-    return (
+    return (  
       <View
         style={{
           ...ShadowCSS.standardShadow,
@@ -195,18 +210,20 @@ export default GuestScreen = ({ navigation }) => {
         <Banner title="Guest Screen" />
         <Text style={styles.currentActivity}>Current Activity</Text>
 
-        {handleCurrentActivity()}
-        {nextActivity ? (
+        {handleCurrentActivity(currentActivity)}
+        {nextActivity 
+        ? (
           <InfoWindowBottom
             title={"Next activity starting at:"}
             content={unixToHours(nextActivity.startTime)}
           />
-        ) : (
+          ) 
+        : (
           <InfoWindowBottom
             title={"Next activity starting at:"}
             content={"No more activities"}
           />
-        )}
+          )}
       </View>
     );
   } else {
