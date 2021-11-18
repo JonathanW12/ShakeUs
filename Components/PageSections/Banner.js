@@ -23,7 +23,11 @@ export default Banner = (props) => {
   const socketContext = useContext(SocketContext);
   const partyContext = useContext(PartyContext);
 
+<<<<<<< HEAD
   const isHost = userContext.isHost();
+=======
+  const isHost = userContext.getIsHost();
+>>>>>>> ae2280d309239ecd46572ae7f8065f76e4b3b938
 
   const leavePartyButtonHandle = async () => {
     const res = await PartyService.leaveParty(
@@ -86,7 +90,12 @@ export default Banner = (props) => {
   const partyCode = () => {
     if (partyContext.getPartyId() != "") {
       return (
-        <View style={styles.menuItem}>
+        <View
+          style={{
+            ...styles.menuItem,
+            ...styles.topBorder,
+          }}
+        >
           <Text style={styles.participantsText}>
             Game Pin: {partyContext.getPartyId()}
           </Text>
@@ -107,18 +116,17 @@ export default Banner = (props) => {
           ></TouchableOpacity>
           <View style={styles.modalContent}>
             <View style={styles.header}>
+              {partyCode()}
               <TouchableOpacity
                 onPress={() => {
                   setModalVisible(!modalVisible);
+                  navigation.navigate("GuestScreen");
                 }}
-                style={{
-                  ...styles.menuItem,
-                  ...styles.topBorder,
-                }}
+                style={styles.menuItem}
               >
-                <Text style={styles.participantsText}>Close</Text>
+                <Text style={styles.participantsText}>Guest Screen</Text>
               </TouchableOpacity>
-              {partyCode()}
+
               <TouchableOpacity
                 onPress={() => {
                   setModalVisible(!modalVisible);

@@ -36,7 +36,7 @@ export default HostPartyScreen = ({ navigation }) => {
 
       userContext.setUserId(res.hostId);
       userContext.setIsPrimaryHost(true);
-      userContext.setIs;
+      userContext.setIsHost(true);
       const party = await PartyService.getParty(
         partyContext.getPartyId(),
         res.hostId
@@ -55,7 +55,7 @@ export default HostPartyScreen = ({ navigation }) => {
       }
 
       socketContext.emit("join-room", partyContext.getPartyId());
-      navigation.navigate("PartyInformationScreen");
+      navigation.navigate("GuestScreen");
     }
   }
 

@@ -38,9 +38,8 @@ export default class ActivityService {
         );
 
         if (res.ok) {
-            return await res.json();
+          return await res.json();
         } else {
-            console.log('Failed to load activities from: ' + activityPackId);
         }
 
         return null;
