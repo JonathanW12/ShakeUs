@@ -28,26 +28,27 @@ export default JoinPartyScreenHost = ({ navigation }) => {
         }
     };
     return (
-        <View style={styles.container}>
-            <Banner title="Join Party" isBack={true} />
-            <Image
-                source={require('../assets/ShakeUsLogo.png')}
-                style={styles.logo}
-            />
-            <View style={styles.lowerContainer}>
-                <StandardInput
-                    placeholder={placeHolderText}
-                    maxLength={20}
-                    onChangeText={(text) => sethostName(text)}
-                />
+      <View style={styles.container}>
+        <Banner title="Join Party" isBack={true} />
+        <Image
+          source={require("../assets/ShakeUsLogo.png")}
+          style={styles.logo}
+        />
+        <View style={styles.lowerContainer}>
+          <StandardInput
+            placeholder={placeHolderText}
+            maxLength={20}
+            onChangeText={(text) => sethostName(text)}
+            autoCorrect={false}
+          />
 
-                <StandardButton
-                    style={styles.button}
-                    title="Register as Host"
-                    action={handleAction}
-                />
-            </View>
+          <StandardButton
+            style={styles.button}
+            title="Register as Host"
+            action={handleAction}
+          />
         </View>
+      </View>
     );
 };
 

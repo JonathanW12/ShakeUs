@@ -32,7 +32,7 @@ export default Banner = (props) => {
     );
 
     if (!res) {
-      Alert.alert("You cannot delete the party");
+      Alert.alert("You cannot leave the party");
       return;
     }
 
@@ -51,7 +51,7 @@ export default Banner = (props) => {
       Alert.alert("You cannot delete the party");
       return;
     }
-    socketContext.emit("leave-room", partyContext.getPartyId());
+    await socketContext.emit("leave-room", partyContext.getPartyId());
     setModalVisible(!modalVisible);
     navigation.navigate("Main Screen");
   };
@@ -88,7 +88,7 @@ export default Banner = (props) => {
       return (
         <View style={styles.menuItem}>
           <Text style={styles.participantsText}>
-            Party code: {partyContext.getPartyId()}
+            Game Pin: {partyContext.getPartyId()}
           </Text>
         </View>
       );

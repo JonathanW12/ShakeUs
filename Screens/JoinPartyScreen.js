@@ -52,31 +52,34 @@ export default JoinPartyScreen = ({ navigation }) => {
         }
     };
     return (
-        <View style={styles.container}>
-            <Banner title="Join Party" isBack={true} />
-            <Image
-                source={require('../assets/ShakeUsLogo.png')}
-                style={styles.logo}
-            />
-            <View style={styles.lowerContainer}>
-                <StandardInput
-                    placeholder={namePlaceholder}
-                    maxLength={20}
-                    onChangeText={(text) => setguestName(text)}
-                />
-                <StandardInput
-                    placeholder={partyCodePlaceholder}
-                    maxLength={9}
-                    onChangeText={(text) => setpartyCode(text)}
-                />
+      <View style={styles.container}>
+        <Banner title="Join Party" isBack={true} />
+        <Image
+          source={require("../assets/ShakeUsLogo.png")}
+          style={styles.logo}
+        />
+        <View style={styles.lowerContainer}>
+          <StandardInput
+            placeholder={namePlaceholder}
+            maxLength={20}
+            onChangeText={(text) => setguestName(text)}
+            autoCorrect={false}
+          />
+          <StandardInput
+            placeholder={partyCodePlaceholder}
+            maxLength={9}
+            onChangeText={(text) => setpartyCode(text)}
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
 
-                <StandardButton
-                    style={styles.button}
-                    title="Join Party"
-                    action={handleAction}
-                />
-            </View>
+          <StandardButton
+            style={styles.button}
+            title="Join Party"
+            action={handleAction}
+          />
         </View>
+      </View>
     );
 };
 

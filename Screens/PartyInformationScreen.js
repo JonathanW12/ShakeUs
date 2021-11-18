@@ -16,102 +16,118 @@ import InfoWindowBottom from '../Components/PageSections/InfoWindowBottom';
 import SmallButton from './../Components/UI/SmallButton';
 import { PartyContext } from './../Context/PartyContext';
 import { UserContext } from '../Context/UserContext';
+import { SocketContext } from "../Context/SocketContext";
 
 export default PartyInformationScreen = ({ navigation }) => {
-    const [activityPackage, setactivityPackage] = useState(null);
-    const [participantCount, setparticipantCount] = useState(0);
-    const [activityCount, setactivityCount] = useState(0);
-    const partyContext = useContext(PartyContext);
-    const userContext = useContext(UserContext);
+  const [activityPackage, setactivityPackage] = useState(null);
+  const [participantCount, setparticipantCount] = useState(0);
+  const [activityCount, setactivityCount] = useState(0);
+  const partyContext = useContext(PartyContext);
+  const userContext = useContext(UserContext);
+  const socketContext = useContext(SocketContext);
 
-    useEffect(() => {
-        load();
-    }, []);
+  useEffect(() => {
+    load();
+    updateParticipantsList();
+  }, []);
 
-    async function getPartyInformation() {
-        const res = await PartyService.getParty(
-            partyContext.getPartyId(),
-            userContext.getUserId()
-        );
+  useEffect(() => {
+    socketContext.on("guest-removed", () => {
+      updateParticipantsList();
+    });
+    socketContext.on("user-left-party", () => {
+      updateParticipantsList();
+    });
+    socketContext.on("user-joined-party", () => {
+      updateParticipantsList();
+    });
+    return () => {
+      socketContext.close();
+    };
+  }, [socketContext]);
 
-        if (res) {
-            setparticipantCount(res.guests.length);
-        } else {
-            throw new Error('Error getting party information');
-        }
+  const updateParticipantsList = async () => {
+    let participantsSize = 0;
+    const res = await GuestService.getAllGuests(
+      partyContext.getPartyId(),
+      partyContext.getPrimaryHost().id
+    );
+    for (let host of res.hosts) {
+      participantsSize++;
     }
-
-    function load() {
-        if (partyContext.getActivityPack()) {
-            setactivityPackage(partyContext.getActivityPack());
-            setactivityCount(partyContext.getActivityPack().activities.length);
-        } else {
-            console.log('No activityPack');
-        }
-
-        getPartyInformation();
+    for (let guest of res.guests) {
+      participantsSize++;
     }
+    setparticipantCount(participantsSize);
+  };
 
-    if (activityPackage != null) {
-        return (
-            <View style={styles.container}>
-                <Banner title="Party Information" />
-                <View style={styles.innerWrapper}>
-                    <View
-                        style={{
-                            ...ShadowCSS.standardShadow,
-                            ...styles.challengeContainer,
-                        }}
-                    >
-                        <View>
-                            <Text style={styles.partyTitle}>Activity Pack</Text>
-                        </View>
-
-                        <View>
-                            <SmallButton
-                                style={{
-                                    ...styles.button,
-                                    backgroundColor: Colors.secondary,
-                                }}
-                                title="Customize"
-                                action={() => {
-                                    navigation.navigate('CustomizePackScreen');
-                                }}
-                            />
-
-                            <Text style={styles.partyTitle}>
-                                Guests: {participantCount}{' '}
-                            </Text>
-                            <SmallButton
-                                style={{
-                                    ...styles.button,
-                                    backgroundColor: Colors.secondary,
-                                }}
-                                title="Guest List"
-                                action={() => {
-                                    navigation.navigate('ParticipantsScreen');
-                                }}
-                            />
-                        </View>
-                    </View>
-                </View>
-
-                <InfoWindowBottom
-                    title="Party Code"
-                    content={partyContext.getPartyId()}
-                ></InfoWindowBottom>
-            </View>
-        );
+  function load() {
+    if (partyContext.getActivityPack()) {
+      setactivityPackage(partyContext.getActivityPack());
+      setactivityCount(partyContext.getActivityPack().activities.length);
     } else {
-        return (
-            <View style={styles.container}>
-                <Banner title="Party Information" />
-                <View style={styles.loadingIcon}>
-                    <ActivityIndicator size={52} color={Colors.primary} />
-                </View>
-            </View>
-        );
+      console.log("No activityPack");
     }
+  }
+
+  if (activityPackage != null) {
+    return (
+      <View style={styles.container}>
+        <Banner title="Party Information" />
+        <View style={styles.innerWrapper}>
+          <View
+            style={{
+              ...ShadowCSS.standardShadow,
+              ...styles.challengeContainer,
+            }}
+          >
+            <View>
+              <Text style={styles.partyTitle}>Activity Pack</Text>
+            </View>
+
+            <View>
+              <SmallButton
+                style={{
+                  ...styles.button,
+                  backgroundColor: Colors.secondary,
+                }}
+                title="Customize"
+                action={() => {
+                  navigation.navigate("CustomizePackScreen");
+                }}
+              />
+
+              <Text style={styles.partyTitle}>Guests: {participantCount} </Text>
+              <SmallButton
+                style={{
+                  ...styles.button,
+                  backgroundColor: Colors.secondary,
+                }}
+                title="Guest List"
+                action={() => {
+                  navigation.navigate("ParticipantsScreen");
+                }}
+              />
+            </View>
+          </View>
+        </View>
+
+        <InfoWindowBottom
+          title="Party Code"
+          content={partyContext.getPartyId()}
+        ></InfoWindowBottom>
+      </View>
+    );
+  } else {
+    return (
+      <View style={styles.container}>
+        <Banner title="Party Information" />
+        <View style={styles.loadingIcon}>
+          <ActivityIndicator size={52} color={Colors.primary} />
+        </View>
+      </View>
+    );
+  }
 };
 
 const styles = StyleSheet.create({

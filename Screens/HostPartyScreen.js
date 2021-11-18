@@ -79,30 +79,30 @@ export default HostPartyScreen = ({ navigation }) => {
       );
 
     return (
-        <View style={styles.container}>
-            <Banner title="Host Party" />
-            <View style={styles.contentWrapper}>
-                <Text style={styles.header1}>Select Activity Pack</Text>
-                <View style={[styles.activityWrapper]}>
-                    <CustomCarousel
-                        navigation={navigation}
-                        setIndex={setIndex}
-                    ></CustomCarousel>
-                </View>
-                <TimeSelector></TimeSelector>
-                <View style={{ alignItems: 'center', width: '100%' }}>
-                    <StandardButton
-                        textStyle={styles.buttonTextStyle}
-                        style={{
-                            ...styles.button,
-                            backgroundColor: Colors.tertiary,
-                        }}
-                        title="Start Party"
-                        action={handleActionStartParty}
-                    />
-                </View>
-            </View>
+      <View style={styles.container}>
+        <Banner title="Host Party" isBack={true} />
+        <View style={styles.contentWrapper}>
+          <Text style={styles.header1}>Select Activity Pack</Text>
+          <View style={[styles.activityWrapper]}>
+            <CustomCarousel
+              navigation={navigation}
+              setIndex={setIndex}
+            ></CustomCarousel>
+          </View>
+          <TimeSelector></TimeSelector>
+          <View style={{ alignItems: "center", width: "100%" }}>
+            <StandardButton
+              textStyle={styles.buttonTextStyle}
+              style={{
+                ...styles.button,
+                backgroundColor: Colors.tertiary,
+              }}
+              title="Start Party"
+              action={handleActionStartParty}
+            />
+          </View>
         </View>
+      </View>
     );
 };
 

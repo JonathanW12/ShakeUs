@@ -58,125 +58,173 @@ export default GuestScreen = ({ navigation }) => {
     }
 
     const getPartyInformation = async () => {
-        setactivityPackage(null)
-        // Fetch party to get activityPackId
-        const partyResult = await PartyService.getParty(
-            partyContext.getPartyId(),
-            userContext.getUserId()
-        )
-        // Continue if party exists
-        if(partyResult) {
-          // Set the party ID for use under customizePack
-          
-          const activityPackResult = await ActivityPackService.getActivityPack(
-            partyResult.activityPackId
-          )
-      
-          const allActivitiesResult = await ActivityService.getAllActivities(
-            partyResult.activityPackId
-          )
-      
-          const nextActivityResult = await ActivityService.getNextActivity(
-            partyContext.getPartyId(),
-            userContext.getUserId()
-          )
-    
-          // Use fetch results
-          if(activityPackResult && allActivitiesResult){
-            // Set activityPack in partyContext for use in customizePack
-            partyContext.setActivityPack(activityPackResult)
-            partyContext.setAllActivities(allActivitiesResult)
+      setactivityPackage(null);
+      let currentTime = +new Date();
 
-            let currentTime = +new Date();
-
-            setactivityPackage(activityPackResult);
-            setallActivities(allActivitiesResult);
-
-            allActivitiesResult.forEach(element => {
-                if (element.startTime < currentTime){
-                    setcurrentActivity(element)
-                }
-            });
-            setready(true);
-          } else {
-            Alert.alert("Unable to fetch activities");
-          }
-          if(nextActivityResult){
-            setnextActivity(nextActivityResult);
-          } else {
-            setnextActivity(null);
-            Alert.alert("Unable to fetch next activity");
-          }
-        
-        // Handle error fetching party
-        } else {
-          Alert.alert("Unable to find party");
-        }
+      //Handle Party Result
+      const partyResult = await PartyService.getParty(
+        partyContext.getPartyId(),
+        userContext.getUserId()
+      );
+      console.log("party result: " + JSON.stringify(partyResult));
+      if (!partyResult) {
+        Alert.alert("Unable to find party");
+        return;
       }
-    
-    useEffect(() => {
-        if(isFocused){
-            console.log("Focus triggered me!!")
-            getPartyInformation();
+      // Set the party ID for use under customizePack
+
+      //Handle Activity Pack Result
+      const activityPackResult = await ActivityPackService.getActivityPack(
+        partyResult.activityPackId
+      );
+      console.log("pack result: \n" + JSON.stringify(activityPackResult));
+      if (!activityPackResult) {
+        Alert.alert("Unable to fetch activity pack");
+        return;
+      }
+
+      //Handle All activities Result
+      const allActivitiesResult = await ActivityService.getAllActivities(
+        partyResult.activityPackId
+      );
+      console.log("all result: \n " + JSON.stringify(allActivitiesResult));
+      if (!allActivitiesResult) {
+        Alert.alert("Unable to fetch all activities");
+        return;
+      }
+
+      //Handle Next activity result
+      const nextActivityResult = await ActivityService.getNextActivity(
+        partyContext.getPartyId(),
+        userContext.getUserId()
+      );
+      console.log("next result: \n " + JSON.stringify(nextActivityResult));
+      if (!nextActivityResult) {
+        Alert.alert("Unable to fetch next activity");
+        return;
+      }
+
+      // Set activityPack in partyContext for use in customizePack
+      partyContext.setActivityPack(activityPackResult);
+      partyContext.setAllActivities(allActivitiesResult);
+      setactivityPackage(activityPackResult);
+      setallActivities(allActivitiesResult);
+
+      allActivitiesResult.forEach((element) => {
+        console.log(element);
+        if (element.startTime < currentTime) {
+          setcurrentActivity(element);
         }
-        
+      });
+      setready(true);
+
+      if (nextActivityResult) {
+        setnextActivity(nextActivityResult);
+      } else {
+        setnextActivity(null);
+        Alert.alert("Unable to fetch next activity");
+      }
+    };
+
+    useEffect(() => {
+      if (isFocused) {
+        console.log("Focus triggered me!!");
+        getPartyInformation();
+      }
     }, [isFocused]);
 
     useEffect(() => {
-        // Socket event when activity starts!
+      // Socket event when activity starts!
 
-        socket.on('activity-started', (data) => {
-            onSocketEvent(data.activity);
-        });
-        return () => {
-            socket.close();
-        };
+      socket.on("activity-started", (data) => {
+        onSocketEvent(data.activity);
+      });
+      return () => {
+        socket.close();
+      };
     }, [socket]);
 
+    const handleCurrentActivity = () => {
+      if (currentActivity != null) {
+        return (
+          <View
+            style={{
+              ...ShadowCSS.standardShadow,
+              ...styles.challengeContainer,
+            }}
+          >
+            <View>
+              <Text style={styles.partyTitle}>{currentActivity.title}</Text>
+              <View style={styles.whiteLine}></View>
+              <Text style={styles.partyTitle}>
+                <ActivityStartTime
+                  activity={currentActivity}
+                  style={{
+                    ...styles.blueText,
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                />
+              </Text>
+            </View>
+            <Text style={styles.guestMesssage}>
+              {currentActivity.description}
+            </Text>
+            <View></View>
+          </View>
+        );
+      }
+      return (
+        <View
+          style={{
+            ...ShadowCSS.standardShadow,
+            ...styles.challengeContainer,
+          }}
+        >
+          <View>
+            <Text style={styles.partyTitle}>Waiting For Next Activity</Text>
+            <View style={styles.whiteLine}></View>
+          </View>
+          <Text style={styles.guestMesssage}>
+            Waiting for the first activity to start. You can see who else has
+            joined by looking at participants from the menu.
+          </Text>
+          <View></View>
+        </View>
+      );
+    };
+
+    //Actual render below:
     if (ready) {
-        return (
-            <View style={styles.container}>
-                <Banner title="Guest Screen" />
-                <Text style={styles.currentActivity}>Current Activity</Text>
-                <View
-                    style={{
-                        ...ShadowCSS.standardShadow,
-                        ...styles.challengeContainer,
-                    }}
-                >
-                    <View>
-                        <Text style={styles.partyTitle}>
-                            {currentActivity.title}
-                        </Text>
-                        <View style={styles.whiteLine}></View>
-                        <Text style={styles.partyTitle}>
-                            
-                                <ActivityStartTime activity={currentActivity} style={{...styles.blueText, flex: 1, justifyContent: 'center', alignItems: 'center'}} />
-                        </Text>
-                    </View>
-                    <Text style={styles.guestMesssage}>
-                        {currentActivity.description}
-                    </Text>
-                    <View></View>
-                </View>
+      return (
+        <View style={styles.container}>
+          <Banner title="Guest Screen" />
+          <Text style={styles.currentActivity}>Current Activity</Text>
 
-                    {nextActivity
-                        ? <InfoWindowBottom title={"Next activity starting at:"} content={unixToHours(nextActivity.startTime)} />
-                        : <InfoWindowBottom title={"Next activity starting at:"} content={"No more"} />
-                    }
-
-                
-            </View>
-        );
+          {handleCurrentActivity()}
+          {nextActivity ? (
+            <InfoWindowBottom
+              title={"Next activity starting at:"}
+              content={unixToHours(nextActivity.startTime)}
+            />
+          ) : (
+            <InfoWindowBottom
+              title={"Next activity starting at:"}
+              content={"No more"}
+            />
+          )}
+        </View>
+      );
     } else {
-        return (
-            <View style={styles.container}>
-                <Banner title="Guest Screen" />
-                <View style={styles.loadingIcon}>
-                    <ActivityIndicator size={52} color={Colors.primary} />
-                </View>
-            </View>
-        );
+      return (
+        <View style={styles.container}>
+          <Banner title="Guest Screen" />
+          <View style={styles.loadingIcon}>
+            <ActivityIndicator size={52} color={Colors.primary} />
+          </View>
+        </View>
+      );
     }
 };
 
