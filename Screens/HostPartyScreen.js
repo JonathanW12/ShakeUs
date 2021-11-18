@@ -128,7 +128,7 @@ export default HostPartyScreen = ({ navigation }) => {
                     hours={hours}
                     minutes={minutes}
                 ></TimeSelector>
-                <View style={{ alignItems: 'center', width: '100%' }}>
+                <View style={{ alignItems: 'center', width: '100%', marginBottom: 25 }}>
                     <StandardButton
                         textStyle={styles.buttonTextStyle}
                         style={{
@@ -156,12 +156,13 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     contentWrapper: {
-        flex: 1,
+        //flex: 1,
         alignItems: 'center',
+
     },
     activityWrapper: {
         width: "100%",
-        minHeight: 335,
+        minHeight: 300,
     },
     border: {
         borderColor: '#fff',

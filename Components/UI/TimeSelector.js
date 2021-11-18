@@ -101,6 +101,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         width: '90%',
+        marginBottom: 15
     },
     timeBox: {
         width: '45%',
