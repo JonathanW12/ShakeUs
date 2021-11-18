@@ -12,6 +12,7 @@ import { PartyContext } from "./../Context/PartyContext";
 export default ActivityFormScreen = ({ route, navigation }) => {
     const { newActivity, activityId, activityStartTime } = route.params;
     const partyContext = useContext(PartyContext);
+    const [date, setDate] = useState(new Date(activityStartTime));
 
     const [title, setTitle] = useState(
         newActivity ? "" : route.params.activityTitle
@@ -78,8 +79,6 @@ export default ActivityFormScreen = ({ route, navigation }) => {
             throw new Error("Failed to update activity");
         }
     };
-
-    const [date, setDate] = useState(activityStartTime);
 
     return (
         <View style={styles.container}>
