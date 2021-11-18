@@ -64,50 +64,53 @@ export default GuestScreen = ({ navigation }) => {
     //setactivityPackage(null);
     let currentTime = +new Date();
 
-        //Handle Party Result
-        const partyResult = await PartyService.getParty(
-            partyContext.getPartyId(),
-            userContext.getUserId()
-        );
-        if (!partyResult) {
-            Alert.alert('Unable to find party');
-            return;
-        }
-        // Set the party ID for use under customizePack
+    //Handle Party Result
+    const partyResult = await PartyService.getParty(
+        partyContext.getPartyId(),
+        userContext.getUserId()
+    );
+    if (!partyResult) {
+        Alert.alert('Unable to find party');
+        return;
+    }
+    // Set the party ID for use under customizePack
 
-        //Handle Activity Pack Result
-        const activityPackResult = await ActivityPackService.getActivityPack(
-            partyResult.activityPackId
-        );
-        if (!activityPackResult) {
-            Alert.alert('Unable to fetch activity pack');
-            return;
-        }
+    //Handle Activity Pack Result
+    const activityPackResult = await ActivityPackService.getActivityPack(
+        partyResult.activityPackId
+    );
+    if (!activityPackResult) {
+        Alert.alert('Unable to fetch activity pack');
+        return;
+    }
 
-        //Handle All activities Result
-        const allActivitiesResult = await ActivityService.getAllActivities(
-            partyResult.activityPackId
-        );
-        if (!allActivitiesResult) {
-            Alert.alert('Unable to fetch all activities');
-            return;
-        }
+    //Handle All activities Result
+    const allActivitiesResult = await ActivityService.getAllActivities(
+        partyResult.activityPackId
+    );
+    if (!allActivitiesResult) {
+        Alert.alert('Unable to fetch all activities');
+        return;
+    }
 
-        //Handle Next activity result
-        const nextActivityResult = await ActivityService.getNextActivity(
-            partyContext.getPartyId(),
-            userContext.getUserId()
-        );
-        if (!nextActivityResult) {
-            Alert.alert('Unable to fetch next activity');
-            return;
-        }
+    //Handle Next activity result
+    
+    const nextActivityResult = await ActivityService.getNextActivity(
+        partyContext.getPartyId(),
+        userContext.getUserId()
+    );
+    
+    if (!nextActivityResult) {
+        Alert.alert('Unable to fetch next activity');
+        return;
+    }
+    
 
-        // Set activityPack in partyContext for use in customizePack
-        partyContext.setActivityPack(activityPackResult);
-        partyContext.setAllActivities(allActivitiesResult);
-        setactivityPackage(activityPackResult);
-        setallActivities(allActivitiesResult);
+    // Set activityPack in partyContext for use in customizePack
+    partyContext.setActivityPack(activityPackResult);
+    partyContext.setAllActivities(allActivitiesResult);
+    setactivityPackage(activityPackResult);
+    setallActivities(allActivitiesResult);
 
     let arr = []
 
@@ -118,15 +121,13 @@ export default GuestScreen = ({ navigation }) => {
       }
 
     });
+
     if(arr.length > 0){
       setcurrentActivity(arr.slice(-1)[0]);
     } else {
       setcurrentActivity(null)
     }
-    
-    
   
-
     setready(true);
 
     if (nextActivityResult) {
