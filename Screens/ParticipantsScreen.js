@@ -1,172 +1,177 @@
-import React, { useState, useEffect, useContext } from "react";
-import Banner from "../Components/PageSections/Banner";
+import React, { useState, useEffect, useContext } from 'react';
+import Banner from '../Components/PageSections/Banner';
 import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  FlatList,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
-import Colors from "../Constants/Colors";
-import ParticipantBox from "../Components/UI/ParticipantBox";
-import GuestService from "../Services/GuestService";
-import PartyService from "../Services/PartyService";
-import { SocketContext } from "../Context/SocketContext";
-import { PartyContext } from "../Context/PartyContext";
-import { UserContext } from "../Context/UserContext";
+    View,
+    Text,
+    StyleSheet,
+    Image,
+    FlatList,
+    TouchableOpacity,
+    Alert,
+} from 'react-native';
+import Colors from '../Constants/Colors';
+import ParticipantBox from '../Components/UI/ParticipantBox';
+import GuestService from '../Services/GuestService';
+import PartyService from '../Services/PartyService';
+import { SocketContext } from '../Context/SocketContext';
+import { PartyContext } from '../Context/PartyContext';
+import { UserContext } from '../Context/UserContext';
 
 export default ParticipantsScreen = ({ navigation }) => {
-  const partyContext = useContext(PartyContext);
-  const userContext = useContext(UserContext);
-  const socket = useContext(SocketContext);
-  const [partyTitle, setPartytitle] = useState(
-    partyContext.getActivityPack.title
-  );
-  //CAHNGE THE DEFAULT TO: GuestService.isHost
-  //True is only for visibility
-  const [currentUserIsHost, setIsHost] = useState(userContext.isHost());
-  const [participantsList, setParticipantsList] = useState([]);
-  const [_showingDeleteSymbol, setShowingDeleteSymbol] = useState(false);
-  useEffect(() => {
-    participantsList.forEach((participant) => {
-      participant.showingDeleteSymbol = _showingDeleteSymbol;
-    });
-  }, [_showingDeleteSymbol, setShowingDeleteSymbol]);
-  useEffect(() => {
-    updateGuests();
-  }, []);
+    const partyContext = useContext(PartyContext);
+    const userContext = useContext(UserContext);
+    const socket = useContext(SocketContext);
+    const [partyTitle, setPartytitle] = useState(
+        partyContext.getActivityPack.title
+    );
+    //CAHNGE THE DEFAULT TO: GuestService.isHost
+    //True is only for visibility
+    const [currentUserIsHost, setIsHost] = useState(userContext.isHost());
+    const [participantsList, setParticipantsList] = useState([]);
+    const [_showingDeleteSymbol, setShowingDeleteSymbol] = useState(false);
+    useEffect(() => {
+        participantsList.forEach((participant) => {
+            participant.showingDeleteSymbol = _showingDeleteSymbol;
+        });
+    }, [_showingDeleteSymbol, setShowingDeleteSymbol]);
+    useEffect(() => {
+        updateGuests();
+    }, []);
 
-  useEffect(() => {
-    socket.on("guest-removed", () => {
-      console.log("guest-removed");
-      updateGuests();
-    });
-    socket.on("user-left-party", () => {
-      console.log("user-left-party");
-      updateGuests();
-    });
-    socket.on("user-joined-party", (guest) => {
-      console.log("user-joined-party");
-      updateGuests();
-    });
-    return () => {
-      socket.close();
+    useEffect(() => {
+        socket.on('guest-removed', () => {
+            console.log('guest-removed');
+            updateGuests();
+        });
+        socket.on('user-left-party', () => {
+            console.log('user-left-party');
+            updateGuests();
+        });
+        socket.on('user-joined-party', (guest) => {
+            console.log('user-joined-party');
+            updateGuests();
+        });
+        return () => {
+            socket.close();
+        };
+    }, [socket]);
+
+    const renderPerson = ({ item }) => {
+        if (item.host == true) {
+            return (
+                <ParticipantBox
+                    title={item.title}
+                    host={item.host}
+                    id={item.id}
+                />
+            );
+        }
+        return (
+            <ParticipantBox
+                title={item.title}
+                host={item.host}
+                showingDeleteSymbol={_showingDeleteSymbol}
+                id={item.id}
+            />
+        );
     };
-  }, [socket]);
+    const updateGuests = async (test) => {
+        console.log;
+        let newGuestList = [];
+        const res = await GuestService.getAllGuests(
+            partyContext.getPartyId(),
+            partyContext.getPrimaryHost().id
+        );
+        if (!res) {
+            Alert.alert('Unable to get guests');
+            return;
+        }
+        for (let host of res.hosts) {
+            newGuestList.push({
+                id: host._id,
+                title: host.name,
+                host: true,
+            });
+        }
+        for (let guest of res.guests) {
+            newGuestList.push({
+                id: guest._id,
+                title: guest.name,
+                showingDeleteSymbol: _showingDeleteSymbol,
+            });
+        }
+        setParticipantsList(newGuestList);
+    };
 
-  const renderPerson = ({ item }) => {
-    if (item.host == true) {
-      return (
-        <ParticipantBox title={item.title} host={item.host} id={item.id} />
-      );
-    }
+    const isCurrentUserHostRender = () => {
+        if (currentUserIsHost == true) {
+            return (
+                <View style={styles.lowerContainer}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            setShowingDeleteSymbol(
+                                (_showingDeleteSymbol) => !_showingDeleteSymbol
+                            );
+                        }}
+                    >
+                        <Text style={styles.removeGuests}>Remove Guests</Text>
+                    </TouchableOpacity>
+                </View>
+            );
+        }
+        return <View style={{ height: '10%' }}></View>;
+    };
+
     return (
-      <ParticipantBox
-        title={item.title}
-        host={item.host}
-        showingDeleteSymbol={_showingDeleteSymbol}
-        id={item.id}
-      />
-    );
-  };
-  const updateGuests = async () => {
-    let newGuestList = [];
-    const res = await GuestService.getAllGuests(
-      partyContext.getPartyId(),
-      partyContext.getPrimaryHost().id
-    );
-    if (!res) {
-      Alert.alert("Unable to get guests");
-      return;
-    }
-    for (let host of res.hosts) {
-      newGuestList.push({
-        id: host._id,
-        title: host.name,
-        host: true,
-      });
-    }
-    for (let guest of res.guests) {
-      newGuestList.push({
-        id: guest._id,
-        title: guest.name,
-        showingDeleteSymbol: _showingDeleteSymbol,
-      });
-    }
-    setParticipantsList(newGuestList);
-  };
-
-  const isCurrentUserHostRender = () => {
-    if (currentUserIsHost == true) {
-      return (
-        <View style={styles.lowerContainer}>
-          <TouchableOpacity
-            onPress={() => {
-              setShowingDeleteSymbol(
-                (_showingDeleteSymbol) => !_showingDeleteSymbol
-              );
-            }}
-          >
-            <Text style={styles.removeGuests}>Remove Guests</Text>
-          </TouchableOpacity>
+        <View style={styles.container}>
+            <View>
+                <Banner title="Participants" isBack={true} />
+                <Text style={styles.partyTitle}>{partyTitle}</Text>
+            </View>
+            <View style={styles.innerContainer}>
+                <FlatList
+                    data={participantsList}
+                    renderItem={renderPerson}
+                    keyExtractor={(item) => item.id}
+                />
+            </View>
+            {isCurrentUserHostRender()}
         </View>
-      );
-    }
-    return <View style={{ height: "10%" }}></View>;
-  };
-
-  return (
-    <View style={styles.container}>
-      <View>
-        <Banner title="Participants" isBack={true} />
-        <Text style={styles.partyTitle}>{partyTitle}</Text>
-      </View>
-      <View style={styles.innerContainer}>
-        <FlatList
-          data={participantsList}
-          renderItem={renderPerson}
-          keyExtractor={(item) => item.id}
-        />
-      </View>
-      {isCurrentUserHostRender()}
-    </View>
-  );
+    );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: Colors.secondary,
-    flex: 1,
-    justifyContent: "space-between",
-  },
-  innerContainer: {
-    alignSelf: "center",
-    height: "63%",
-  },
-  partyTitle: {
-    fontSize: 24,
-    color: "white",
-    alignSelf: "center",
-    padding: 10,
-  },
-  lowerContainer: {
-    alignSelf: "center",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: Colors.tertiary,
-    height: "10%",
-    width: "80%",
-    marginBottom: 5,
-    borderRadius: 4,
-  },
-  removeGuests: {
-    fontSize: 24,
-    color: "white",
-  },
-  temporary: {
-    fontSize: 12,
-    color: "red",
-  },
+    container: {
+        backgroundColor: Colors.secondary,
+        flex: 1,
+        justifyContent: 'space-between',
+    },
+    innerContainer: {
+        alignSelf: 'center',
+        height: '63%',
+    },
+    partyTitle: {
+        fontSize: 24,
+        color: 'white',
+        alignSelf: 'center',
+        padding: 10,
+    },
+    lowerContainer: {
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: Colors.tertiary,
+        height: '10%',
+        width: '80%',
+        marginBottom: 5,
+        borderRadius: 4,
+    },
+    removeGuests: {
+        fontSize: 24,
+        color: 'white',
+    },
+    temporary: {
+        fontSize: 12,
+        color: 'red',
+    },
 });
