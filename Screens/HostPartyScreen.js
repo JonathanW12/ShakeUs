@@ -17,11 +17,14 @@ export default HostPartyScreen = ({ navigation }) => {
   const userContext = useContext(UserContext);
   const socketContext = useContext(SocketContext);
 
+  const timeSelectorRef = useRef(null);
+
   async function createTheParty() {
     const res = await PartyService.createParty(
       partyContext.getActivityPack()._id,
       partyContext.getPrimaryHost().name,
-      userContext.getNotificationToken()
+      userContext.getNotificationToken(),
+      timeSelectorRef.getSelectedTime()
     );
 
     if (res) {
@@ -90,7 +93,7 @@ export default HostPartyScreen = ({ navigation }) => {
             setIndex={setIndex}
           ></CustomCarousel>
         </View>
-        <TimeSelector></TimeSelector>
+        <TimeSelector ref={timeSelectorRef}></TimeSelector>
         <View style={{ alignItems: "center", width: "100%" }}>
           <StandardButton
             textStyle={styles.buttonTextStyle}
