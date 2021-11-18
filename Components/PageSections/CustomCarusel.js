@@ -65,17 +65,13 @@ export default CustomCarousel = (props) => {
             style={{
                 flex: 1,
                 backgroundColor: Colors.secondary,
-                
             }}
         >
             <View
                 style={{
-                    flex: 1,
                     flexDirection: 'row',
-                    justifyContent: 'space-around',
                     alignItems: 'center',
-                    borderColor: "#fff",
-
+                    marginBottom: 0,
                 }}
             >
                 <Carousel
