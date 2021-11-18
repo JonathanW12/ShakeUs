@@ -34,24 +34,19 @@ export default CustomizePackScreen = ({ navigation }) => {
     }, []);
 
     useEffect(() => {
-        socketContext.on('activity-title-updated', () => {
-            loadAllActivities();
-        });
-
-        socketContext.on('activity-description-updated', () => {
-            loadAllActivities();
-        });
-
-        socketContext.on('activity-start-time-updated', () => {
-            loadAllActivities();
-        });
-
-        socketContext.on('activity-added', () => {
-            loadAllActivities();
-        });
+        socketContext.on('activity-title-updated', loadAllActivities);
+        socketContext.on('activity-description-updated', loadAllActivities);
+        socketContext.on('activity-start-time-updated', loadAllActivities);
+        socketContext.on('activity-added', loadAllActivities);
 
         return () => {
-            socketContext.close();
+            socketContext.off('activity-title-updated', loadAllActivities);
+            socketContext.off(
+                'activity-description-updated',
+                loadAllActivities
+            );
+            socketContext.off('activity-start-time-updated', loadAllActivities);
+            socketContext.off('activity-added', loadAllActivities);
         };
     }, [socketContext]);
 

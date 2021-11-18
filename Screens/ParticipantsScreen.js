@@ -1,23 +1,19 @@
-import React, { useState, useEffect, useContext } from "react";
-import Banner from "../Components/PageSections/Banner";
+import React, { useState, useEffect, useContext } from 'react';
+import Banner from '../Components/PageSections/Banner';
 import {
     View,
     Text,
     StyleSheet,
-    Image,
     FlatList,
     TouchableOpacity,
     Alert,
-} from "react-native";
-import Colors from "../Constants/Colors";
-import ParticipantBox from "../Components/UI/ParticipantBox";
-import GuestService from "../Services/GuestService";
-import PartyService from "../Services/PartyService";
-import { SocketContext } from "../Context/SocketContext";
-import { PartyContext } from "../Context/PartyContext";
-import { UserContext } from "../Context/UserContext";
-import { Socket } from "socket.io-client";
-import { useFocusEffect } from "@react-navigation/native";
+} from 'react-native';
+import Colors from '../Constants/Colors';
+import ParticipantBox from '../Components/UI/ParticipantBox';
+import GuestService from '../Services/GuestService';
+import { SocketContext } from '../Context/SocketContext';
+import { PartyContext } from '../Context/PartyContext';
+import { UserContext } from '../Context/UserContext';
 
 export default ParticipantsScreen = ({ navigation }) => {
     const partyContext = useContext(PartyContext);
@@ -41,14 +37,14 @@ export default ParticipantsScreen = ({ navigation }) => {
     }, []);
 
     useEffect(() => {
-        socket.on("guest-removed", updateGuests);
-        socket.on("user-left-party", updateGuests);
-        socket.on("user-joined-party", updateGuests);
+        socket.on('guest-removed', updateGuests);
+        socket.on('user-left-party', updateGuests);
+        socket.on('user-joined-party', updateGuests);
 
         return () => {
-            socket.off("guest-removed", updateGuests);
-            socket.off("user-left-party", updateGuests);
-            socket.off("user-joined-party", updateGuests);
+            socket.off('guest-removed', updateGuests);
+            socket.off('user-left-party', updateGuests);
+            socket.off('user-joined-party', updateGuests);
         };
     }, [socket]);
 
@@ -78,7 +74,7 @@ export default ParticipantsScreen = ({ navigation }) => {
             partyContext.getPrimaryHost().id
         );
         if (!res) {
-            Alert.alert("Unable to get guests");
+            Alert.alert('Unable to get guests');
             return;
         }
         for (let host of res.hosts) {
@@ -114,7 +110,7 @@ export default ParticipantsScreen = ({ navigation }) => {
                 </View>
             );
         }
-        return <View style={{ height: "10%" }}></View>;
+        return <View style={{ height: '10%' }}></View>;
     };
 
     return (
@@ -139,34 +135,34 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: Colors.secondary,
         flex: 1,
-        justifyContent: "space-between",
+        justifyContent: 'space-between',
     },
     innerContainer: {
-        alignSelf: "center",
-        height: "63%",
+        alignSelf: 'center',
+        height: '63%',
     },
     partyTitle: {
         fontSize: 24,
-        color: "white",
-        alignSelf: "center",
+        color: 'white',
+        alignSelf: 'center',
         padding: 10,
     },
     lowerContainer: {
-        alignSelf: "center",
-        alignItems: "center",
-        justifyContent: "center",
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
         backgroundColor: Colors.tertiary,
-        height: "10%",
-        width: "80%",
+        height: '10%',
+        width: '80%',
         marginBottom: 5,
         borderRadius: 4,
     },
     removeGuests: {
         fontSize: 24,
-        color: "white",
+        color: 'white',
     },
     temporary: {
         fontSize: 12,
-        color: "red",
+        color: 'red',
     },
 });
