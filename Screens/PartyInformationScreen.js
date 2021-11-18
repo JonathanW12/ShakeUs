@@ -43,7 +43,7 @@ export default PartyInformationScreen = ({ navigation }) => {
         let participantsSize = 0;
         const res = await GuestService.getAllGuests(
             partyContext.getPartyId(),
-            partyContext.getPrimaryHost().id
+            partyContext.getPrimaryHost()._id
         );
         if (res.hosts) {
             participantsSize = res.hosts.length + res.guests.length;
