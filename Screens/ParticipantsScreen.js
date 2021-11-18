@@ -97,17 +97,15 @@ export default ParticipantsScreen = ({ navigation }) => {
     const isCurrentUserHostRender = () => {
         if (currentUserIsHost == true) {
             return (
-                <View style={styles.lowerContainer}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            setShowingDeleteSymbol(
-                                (_showingDeleteSymbol) => !_showingDeleteSymbol
-                            );
-                        }}
-                    >
-                        <Text style={styles.removeGuests}>Remove Guests</Text>
-                    </TouchableOpacity>
-                </View>
+                <StandardButton
+                    title={'Remove Guest'}
+                    style={styles.removeButton}
+                    action={() => {
+                        setShowingDeleteSymbol(
+                            (_showingDeleteSymbol) => !_showingDeleteSymbol
+                        );
+                    }}
+                />
             );
         }
         return <View style={{ height: '10%' }}></View>;
@@ -147,19 +145,17 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         padding: 10,
     },
-    lowerContainer: {
-        alignSelf: 'center',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: Colors.tertiary,
-        height: '10%',
-        width: '80%',
-        marginBottom: 5,
-        borderRadius: 4,
-    },
     removeGuests: {
         fontSize: 24,
         color: 'white',
+    },
+    removeButton: {
+        shadowColor: '#666',
+        shadowOffset: { height: 2, width: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
+        marginBottom: 20,
+        backgroundColor: Colors.tertiary,
     },
     temporary: {
         fontSize: 12,

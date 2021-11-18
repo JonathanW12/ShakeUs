@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: Colors.primary,
         height: 65,
-        width: Dimensions.get('screen').width * 0.8,
+        width: Dimensions.get('screen').width * 0.9,
         justifyContent: 'center',
         alignSelf: 'center',
         flexDirection: 'row',
