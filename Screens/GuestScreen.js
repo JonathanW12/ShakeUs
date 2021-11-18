@@ -66,7 +66,6 @@ export default GuestScreen = ({ navigation }) => {
         partyContext.getPartyId(),
         userContext.getUserId()
       );
-      console.log("party result: " + JSON.stringify(partyResult));
       if (!partyResult) {
         Alert.alert("Unable to find party");
         return;
@@ -77,7 +76,6 @@ export default GuestScreen = ({ navigation }) => {
       const activityPackResult = await ActivityPackService.getActivityPack(
         partyResult.activityPackId
       );
-      console.log("pack result: \n" + JSON.stringify(activityPackResult));
       if (!activityPackResult) {
         Alert.alert("Unable to fetch activity pack");
         return;
@@ -87,7 +85,6 @@ export default GuestScreen = ({ navigation }) => {
       const allActivitiesResult = await ActivityService.getAllActivities(
         partyResult.activityPackId
       );
-      console.log("all result: \n " + JSON.stringify(allActivitiesResult));
       if (!allActivitiesResult) {
         Alert.alert("Unable to fetch all activities");
         return;
@@ -98,7 +95,6 @@ export default GuestScreen = ({ navigation }) => {
         partyContext.getPartyId(),
         userContext.getUserId()
       );
-      console.log("next result: \n " + JSON.stringify(nextActivityResult));
       if (!nextActivityResult) {
         Alert.alert("Unable to fetch next activity");
         return;
@@ -111,7 +107,6 @@ export default GuestScreen = ({ navigation }) => {
       setallActivities(allActivitiesResult);
 
       allActivitiesResult.forEach((element) => {
-        console.log(element);
         if (element.startTime < currentTime) {
           setcurrentActivity(element);
         }
@@ -128,7 +123,6 @@ export default GuestScreen = ({ navigation }) => {
 
     useEffect(() => {
       if (isFocused) {
-        console.log("Focus triggered me!!");
         getPartyInformation();
       }
     }, [isFocused]);

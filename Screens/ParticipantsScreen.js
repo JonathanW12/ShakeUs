@@ -7,6 +7,7 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import Colors from "../Constants/Colors";
 import ParticipantBox from "../Components/UI/ParticipantBox";
@@ -70,10 +71,15 @@ export default ParticipantsScreen = ({ navigation }) => {
   };
   const updateGuests = async () => {
     let newGuestList = [];
+    console.log("p host id: " + partyContext.getPrimaryHost().id);
     const res = await GuestService.getAllGuests(
       partyContext.getPartyId(),
       partyContext.getPrimaryHost().id
     );
+    if (!res) {
+      Alert.alert("Unable to get guests");
+      return;
+    }
     for (let host of res.hosts) {
       newGuestList.push({
         id: host._id,

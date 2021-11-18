@@ -31,6 +31,10 @@ export default JoinPartyScreen = ({ navigation }) => {
             userContext.setUserId(res.newGuest._id);
             partyContext.setGuests(res.guests);
             partyContext.setHosts(res.hosts);
+            partyContext.setPrimaryHost({
+              id: res.primaryHost._id,
+              name: res.primaryHost.name,
+            });
             partyContext.setPartyId(partyCode);
             socketContext.emit('join-room', partyContext.getPartyId());
             navigation.navigate("GuestScreen");
