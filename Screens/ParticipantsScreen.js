@@ -19,9 +19,9 @@ import { PartyContext } from "../Context/PartyContext";
 export default ParticipantsScreen = ({ navigation }) => {
   const partyContext = useContext(PartyContext);
   const socket = useContext(SocketContext);
-  //CAHNGE THE DEFAULT TO: ActivityPackService.packTitle
-  //"wild wild west" is only for visibility
-  const [partyTitle, setPartytitle] = useState("Wild wild west");
+  const [partyTitle, setPartytitle] = useState(
+    partyContext.getActivityPack.title
+  );
   //CAHNGE THE DEFAULT TO: GuestService.isHost
   //True is only for visibility
   const [currentUserIsHost, setIsHost] = useState(true);
@@ -71,7 +71,6 @@ export default ParticipantsScreen = ({ navigation }) => {
   };
   const updateGuests = async () => {
     let newGuestList = [];
-    console.log("p host id: " + partyContext.getPrimaryHost().id);
     const res = await GuestService.getAllGuests(
       partyContext.getPartyId(),
       partyContext.getPrimaryHost().id
@@ -80,8 +79,6 @@ export default ParticipantsScreen = ({ navigation }) => {
       Alert.alert("Unable to get guests");
       return;
     }
-    console.log("83 participant: ");
-    console.log(res);
     for (let host of res.hosts) {
       newGuestList.push({
         id: host._id,

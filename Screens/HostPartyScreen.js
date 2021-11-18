@@ -33,13 +33,11 @@ export default HostPartyScreen = ({ navigation }) => {
 
       userContext.setUserId(res.hostId);
       userContext.setIsPrimaryHost(true);
-      userContext.setIs;
+      userContext.setIsHost(true);
       const party = await PartyService.getParty(
         partyContext.getPartyId(),
         res.hostId
       );
-
-      console.log(party);
 
       if (party) {
         const activityPack = await ActivityPackService.getActivityPack(

@@ -10,20 +10,8 @@ const userInfo = {
 
 export const UserContext = React.createContext();
 
-const setIsHost = (isHost) => {
-  userInfo.isHost = isHost;
-};
-
 export const UserProvider = (props) => {
   const partyContext = React.useContext(PartyContext);
-
-  //doesnt work
-  useEffect(() => {
-    console.log("effect");
-    partyContext.getHosts().includes(userInfo.userId)
-      ? setIsHost(true)
-      : setIsHost(false);
-  }, [userInfo.userId, partyContext.getHosts]);
 
   const userContextActions = {
     isHost: () => {
@@ -46,6 +34,12 @@ export const UserProvider = (props) => {
     },
     setIsPrimaryHost: (isPrimaryHost) => {
       userInfo.isPrimaryHost = isPrimaryHost;
+    },
+    getIsHost: () => {
+      return userInfo.isHost;
+    },
+    setIsHost: (isHost) => {
+      userInfo.isHost = isHost;
     },
   };
 

@@ -52,8 +52,6 @@ export default PartyInformationScreen = ({ navigation }) => {
       partyContext.getPartyId(),
       partyContext.getPrimaryHost().id
     );
-    console.log("55 partyinfo: ");
-    console.log(res);
     if (res.hosts) {
       participantsSize = res.hosts.length + res.guests.length;
     }
@@ -66,7 +64,6 @@ export default PartyInformationScreen = ({ navigation }) => {
       setactivityPackage(partyContext.getActivityPack());
       setactivityCount(partyContext.getActivityPack().activities.length);
     } else {
-      console.log("No activityPack");
     }
   }
 
