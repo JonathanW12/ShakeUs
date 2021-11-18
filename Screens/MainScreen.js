@@ -86,7 +86,7 @@ export default MainScreen = ({ navigation }) => {
               }}
               title="Your Party"
               action={() => {
-                navigation.navigate("PartyInformationScreen");
+                navigation.navigate("GuestScreen");
               }}
             />
           </View>

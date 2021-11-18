@@ -9,7 +9,7 @@ const partyInfo = {
         activities: [],
     },
     primaryHost: {
-        id: '',
+        _id: '',
         name: '',
     },
     hosts: [],

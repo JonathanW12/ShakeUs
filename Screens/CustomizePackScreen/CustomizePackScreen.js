@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import Banner from "../../Components/PageSections/Banner";
-import { View, StyleSheet, FlatList } from "react-native";
+import { View, StyleSheet, FlatList, BackHandler } from "react-native";
 import ActivityPackService from "../../Services/ActivityPackService";
 import ActivityService from "../../Services/ActivityService";
 import Colors from "../../Constants/Colors";
@@ -24,6 +24,7 @@ export default CustomizePackScreen = ({ navigation }) => {
                 );
                 setSelectedActivity(activity);
             }
+            BackHandler.addEventListener("hardwareBackPress", () => navigation.goBack())
 
             return;
         })
@@ -34,6 +35,7 @@ export default CustomizePackScreen = ({ navigation }) => {
     }, []);
 
     useEffect(() => {
+
         socket.on("activity-title-updated", loadAllActivities);
         socket.on("activity-description-updated", loadAllActivities);
         socket.on("activity-start-time-updated", loadAllActivities);

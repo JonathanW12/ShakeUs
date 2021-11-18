@@ -8,6 +8,7 @@ import {
     Dimensions,
     ActivityIndicator,
     Alert,
+    BackHandler,
 } from 'react-native';
 import Colors from '../Constants/Colors';
 import ShadowCSS from '../Constants/ShadowCSS';
@@ -20,6 +21,7 @@ import { PartyContext } from './../Context/PartyContext';
 import { UserContext } from '../Context/UserContext';
 import InfoWindowBottom from '../Components/PageSections/InfoWindowBottom';
 import { useFocusEffect, useIsFocused } from '@react-navigation/core';
+import { CommonActions } from '@react-navigation/routers';
 
 export default GuestScreen = ({ navigation }) => {
     const [activityPackage, setactivityPackage] = useState(null);
@@ -136,6 +138,9 @@ export default GuestScreen = ({ navigation }) => {
   };
 
     useEffect(() => {
+
+      BackHandler.addEventListener('hardwareBackPress', () => true)
+
         if (isFocused) {
             getPartyInformation();
         }

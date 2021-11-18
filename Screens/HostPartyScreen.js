@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import Banner from '../Components/PageSections/Banner';
 import { View, Text, StyleSheet, Alert } from 'react-native';
 import StandardButton from '../Components/UI/StandardButton';
@@ -16,6 +16,8 @@ export default HostPartyScreen = ({ navigation }) => {
     const partyContext = useContext(PartyContext);
     const userContext = useContext(UserContext);
     const socketContext = useContext(SocketContext);
+
+    
 
     const timeSelectorRef = useRef(null);
     const [hours, setHours] = useState(
@@ -95,7 +97,7 @@ export default HostPartyScreen = ({ navigation }) => {
             ]
         );
 
-    const [] = useState();
+    
     const onTimeChanged = () => {
         setHours(
             new Date(timeSelectorRef.current.getSelectedTime())
