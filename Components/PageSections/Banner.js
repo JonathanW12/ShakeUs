@@ -39,7 +39,7 @@ export default Banner = (props) => {
 
     await socketContext.emit("leave-room", partyContext.getPartyId());
     setModalVisible(!modalVisible);
-    navigation.navigate("Main Screen");
+    navigation.navigate("MainScreen");
   };
 
   const deletePartyButtonHandleAsPrimaryHost = async () => {
@@ -54,7 +54,7 @@ export default Banner = (props) => {
     }
     await socketContext.emit("leave-room", partyContext.getPartyId());
     setModalVisible(!modalVisible);
-    navigation.navigate("Main Screen");
+    navigation.navigate("MainScreen");
   };
 
   const showLeaveButtonText = () => {
