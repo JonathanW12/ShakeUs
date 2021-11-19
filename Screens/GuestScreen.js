@@ -46,132 +46,172 @@ export default GuestScreen = ({ navigation }) => {
         return hours + ':' + minutes;
     };
 
-  const onSocketEvent = (data) => {
-    let listOfActivities = partyContext.getAllActivities();
+    const findNextActivity = (data) => {
+        let listOfActivities = partyContext.getAllActivities();
 
         for (let index = 0; index < listOfActivities.length; index++) {
             if (currentActivity._id == listOfActivities[index]._id) {
                 if (listOfActivities[index + 1] != null) {
-                    console.log(listOfActivities[index + 1])
                     setnextActivity(listOfActivities[index + 1]);
                 } else {
                     setnextActivity(null);
                 }
             }
         }
-    console.log(data.activity)
-    setcurrentActivity(data.activity);
-  };
+    };
 
-  const getPartyInformation = async () => {
-    //setactivityPackage(null);
-    let currentTime = +new Date();
+    const getPartyInformation = async () => {
+        //setactivityPackage(null);
+        let currentTime = +new Date();
 
-    //Handle Party Result
-    const partyResult = await PartyService.getParty(
-        partyContext.getPartyId(),
-        userContext.getUserId()
-    );
-    if (!partyResult) {
-        Alert.alert('Unable to find party');
-        return;
-    }
-    // Set the party ID for use under customizePack
+        //Handle Party Result
+        const partyResult = await PartyService.getParty(
+            partyContext.getPartyId(),
+            userContext.getUserId()
+        );
+        if (!partyResult) {
+            Alert.alert('Unable to find party');
+            return;
+        }
+        // Set the party ID for use under customizePack
 
-    //Handle Activity Pack Result
-    const activityPackResult = await ActivityPackService.getActivityPack(
-        partyResult.activityPackId
-    );
-    if (!activityPackResult) {
-        Alert.alert('Unable to fetch activity pack');
-        return;
-    }
+        //Handle Activity Pack Result
+        const activityPackResult = await ActivityPackService.getActivityPack(
+            partyResult.activityPackId
+        );
+        if (!activityPackResult) {
+            Alert.alert('Unable to fetch activity pack');
+            return;
+        }
 
-    //Handle All activities Result
-    const allActivitiesResult = await ActivityService.getAllActivities(
-        partyResult.activityPackId
-    );
-    if (!allActivitiesResult) {
-        Alert.alert('Unable to fetch all activities');
-        return;
-    }
+        //Handle All activities Result
+        const allActivitiesResult = await ActivityService.getAllActivities(
+            partyResult.activityPackId
+        );
+        if (!allActivitiesResult) {
+            Alert.alert('Unable to fetch all activities');
+            return;
+        }
 
-    //Handle Next activity result
-    
-    const nextActivityResult = await ActivityService.getNextActivity(
-        partyContext.getPartyId(),
-        userContext.getUserId()
-    );
-    
-    if (!nextActivityResult) {
-        Alert.alert('Unable to fetch next activity');
-        return;
-    }
-    
+        //Handle Next activity result
 
-    // Set activityPack in partyContext for use in customizePack
-    partyContext.setActivityPack(activityPackResult);
-    partyContext.setAllActivities(allActivitiesResult);
-    setactivityPackage(activityPackResult);
-    setallActivities(allActivitiesResult);
+        const nextActivityResult = await ActivityService.getNextActivity(
+            partyContext.getPartyId(),
+            userContext.getUserId()
+        );
 
-    let arr = []
+        if (!nextActivityResult) {
+            Alert.alert('Unable to fetch next activity');
+            return;
+        }
 
-    allActivitiesResult.forEach((element) => {
+        // Set activityPack in partyContext for use in customizePack
+        partyContext.setActivityPack(activityPackResult);
+        partyContext.setAllActivities(allActivitiesResult);
+        setactivityPackage(activityPackResult);
+        setallActivities(allActivitiesResult);
 
-      if (element.startTime < currentTime) {
-        arr.push(element);
-      }
+        let arr = [];
 
-    });
-
-    if(arr.length > 0){
-      setcurrentActivity(arr.slice(-1)[0]);
-    } else {
-      setcurrentActivity(null)
-    }
-  
-    setready(true);
-
-    if (nextActivityResult) {
-      setnextActivity(nextActivityResult);
-    } else {
-      setnextActivity(null);
-      //Alert.alert("Unable to fetch next activity");
-    }
-  };
-
-    useEffect(() => {
-        const subscription = AppState.addEventListener("change", nextAppState => {
-            if (
-              appState.current.match(/inactive|background/) &&
-              nextAppState === "active"
-            ) {
-                getPartyInformation()
-              //console.log("App has come to the foreground!");
+        allActivitiesResult.forEach((element) => {
+            if (element.startTime < currentTime) {
+                arr.push(element);
             }
-            appState.current = nextAppState;
-            setAppStateVisible(appState.current);
-            //console.log("AppState", appState.current);
-
         });
 
-        BackHandler.addEventListener('hardwareBackPress', () => true)
+        if (arr.length > 0) {
+            setcurrentActivity(arr.slice(-1)[0]);
+        } else {
+            setcurrentActivity(null);
+        }
+
+        setready(true);
+
+        if (nextActivityResult) {
+            setnextActivity(nextActivityResult);
+        } else {
+            setnextActivity(null);
+            //Alert.alert("Unable to fetch next activity");
+        }
+    };
+
+    useEffect(() => {
+        const subscription = AppState.addEventListener(
+            'change',
+            (nextAppState) => {
+                if (
+                    appState.current.match(/inactive|background/) &&
+                    nextAppState === 'active'
+                ) {
+                    getPartyInformation();
+                    //console.log("App has come to the foreground!");
+                }
+                appState.current = nextAppState;
+                setAppStateVisible(appState.current);
+                //console.log("AppState", appState.current);
+            }
+        );
+
+        BackHandler.addEventListener('hardwareBackPress', () => true);
 
         if (isFocused) {
             getPartyInformation();
         }
 
-        return () => {
-        }
+        return () => {};
     }, [isFocused]);
 
     useEffect(() => {
-        socket.on('activity-started', onSocketEvent);
+        socket.on('activity-started', onActivityStarted);
+        socket.on('activity-added', onActivityAdded);
+        socket.on('activity-removed', onActivityRemoved);
+        socket.on('user-joined-party', onUserJoinParty);
+        socket.on('user-left-party', onUserLeaveParty);
+        socket.on('guest-promoted', onUserPromoted);
+        socket.on('host-demoted', onUserDemoted);
         return () => {
-            socket.off('activity-started', onSocketEvent);
+            socket.off('activity-started', onActivityStarted);
+            socket.off('activity-added', onActivityAdded);
+            socket.off('activity-removed', onActivityRemoved);
+            socket.off('user-joined-party', onUserJoinParty);
+            socket.off('user-left-party', onUserLeaveParty);
+            socket.off('host-demoted', onUserPromoted);
+            socket.off('user-joined-party', onUserDemoted);
         };
     }, [socket]);
+
+    const onActivityStarted = (data) => {
+        partyContext.setcurrentActivity(data.activity);
+        findNextActivity();
+    };
+
+    const onActivityAdded = () => {
+        partyContext.addActivity();
+        findNextActivity();
+    };
+
+    const onActivityRemoved = () => {
+        partyContext.removeActivity();
+        findNextActivity();
+    };
+
+    const onUserJoinParty = (data) => {
+        partyContext.addGuest(data.guestId);
+    };
+
+    const onUserLeaveParty = (data) => {
+        partyContext.removeGuest(data.guestId);
+    };
+
+    const onUserPromoted = (data) => {
+        partyContext.removeGuest(data.newHostId);
+        partyContext.addHost(data.newHostId);
+    };
+
+    const onUserDemoted = (data) => {
+        partyContext.removeHost(data.removedHostId);
+        partyContext.addGuest(data.removedHostId);
+    };
 
     const handleCurrentActivity = () => {
         if (currentActivity != null) {
@@ -206,25 +246,27 @@ export default GuestScreen = ({ navigation }) => {
                 </View>
             );
         }
-    return (  
-      <View
-        style={{
-          ...ShadowCSS.standardShadow,
-          ...styles.challengeContainer,
-        }}
-      >
-        <View>
-          <Text style={styles.partyTitle}>Waiting For Next Activity</Text>
-          <View style={styles.whiteLine}></View>
-        </View>
-        <Text style={styles.guestMesssage}>
-          Waiting for the first activity to start. You can see who else has
-          joined by looking at participants from the menu.
-        </Text>
-        <View></View>
-      </View>
-    );
-  };
+        return (
+            <View
+                style={{
+                    ...ShadowCSS.standardShadow,
+                    ...styles.challengeContainer,
+                }}
+            >
+                <View>
+                    <Text style={styles.partyTitle}>
+                        Waiting For Next Activity
+                    </Text>
+                    <View style={styles.whiteLine}></View>
+                </View>
+                <Text style={styles.guestMesssage}>
+                    Waiting for the first activity to start. You can see who
+                    else has joined by looking at participants from the menu.
+                </Text>
+                <View></View>
+            </View>
+        );
+    };
 
     //Actual render below:
     if (ready) {
