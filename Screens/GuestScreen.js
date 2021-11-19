@@ -46,18 +46,21 @@ export default GuestScreen = ({ navigation }) => {
         return hours + ':' + minutes;
     };
 
-    const findNextActivity = (data) => {
+    const onSocketEvent = (data) => {
         let listOfActivities = partyContext.getAllActivities();
 
         for (let index = 0; index < listOfActivities.length; index++) {
             if (currentActivity._id == listOfActivities[index]._id) {
                 if (listOfActivities[index + 1] != null) {
+                    console.log(listOfActivities[index + 1]);
                     setnextActivity(listOfActivities[index + 1]);
                 } else {
                     setnextActivity(null);
                 }
             }
         }
+        console.log(data.activity);
+        setcurrentActivity(data.activity);
     };
 
     const getPartyInformation = async () => {
@@ -162,51 +165,33 @@ export default GuestScreen = ({ navigation }) => {
     }, [isFocused]);
 
     useEffect(() => {
-        socket.on('activity-started', onActivityStarted);
-        socket.on('activity-added', onActivityAdded);
-        socket.on('activity-title-updated', onActivityUpdated);
-        socket.on('activity-description-updated', onActivityUpdated);
-        socket.on('activity-start-time-updated', onActivityUpdated);
-        socket.on('activity-removed', onActivityRemoved);
-        socket.on('user-joined-party', onUserJoinParty);
-        socket.on('user-left-party', onUserLeaveParty);
-        socket.on('guest-promoted', onUserPromoted);
-        socket.on('host-demoted', onUserDemoted);
+        socket.on('activity-started', onSocketEvent);
         return () => {
-            socket.off('activity-started', onActivityStarted);
-            socket.off('activity-added', onActivityAdded);
-            socket.off('activity-title-updated', onActivityUpdated);
-            socket.off('activity-description-updated', onActivityUpdated);
-            socket.off('activity-start-time-updated', onActivityUpdated);
-            socket.off('activity-removed', onActivityRemoved);
-            socket.off('user-joined-party', onUserJoinParty);
-            socket.off('user-left-party', onUserLeaveParty);
-            socket.off('host-demoted', onUserPromoted);
-            socket.off('user-joined-party', onUserDemoted);
+            socket.off('activity-started', onSocketEvent);
         };
     }, [socket]);
 
     const onActivityStarted = (data) => {
         partyContext.setcurrentActivity(data.activity);
-        findNextActivity();
+        onSocketEvent();
         console.log(data);
     };
 
     const onActivityAdded = (data) => {
         partyContext.addActivity();
-        findNextActivity();
+        onSocketEvent();
         console.log(data);
     };
 
     const onActivityUpdated = (data) => {
         partyContext.updateActivity(data.updatedActivity);
-        findNextActivity();
+        onSocketEvent();
         console.log(data);
     };
 
     const onActivityRemoved = (data) => {
         partyContext.removeActivity(data);
-        findNextActivity();
+        onSocketEvent();
         console.log(data);
     };
 
