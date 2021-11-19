@@ -65,6 +65,7 @@ export default GuestScreen = ({ navigation }) => {
     };
 
     const getPartyInformation = async () => {
+        console.log("BUH1");
         //setactivityPackage(null);
         let currentTime = +new Date();
 
@@ -140,6 +141,7 @@ export default GuestScreen = ({ navigation }) => {
     };
 
     useEffect(() => {
+        console.log("BUH2");
         const subscription = AppState.addEventListener(
             "change",
             (nextAppState) => {
@@ -163,24 +165,24 @@ export default GuestScreen = ({ navigation }) => {
         }
 
         return () => {};
-    }, [isFocused]);
+    }, [isFocused, socket]);
 
     useEffect(() => {
-        socket.on("activity-started", onSocketEvent);
+        socket.on("activity-added", onUpdate);
+        socket.on("activity-startTime-updated", onUpdate);
+        socket.on("activity-title-updated", onUpdate);
+        socket.on("activity-description-updated", onUpdate);
+        socket.on("activity-deleted", onUpdate);
         return () => {
-            socket.off("activity-started", onSocketEvent);
+            socket.off("activity-added", onUpdate);
         };
     }, [socket]);
 
-    const onActivityStarted = (data) => {
-        partyContext.setcurrentActivity(data.activity);
-        onSocketEvent();
-        console.log(data);
+    const onUpdate = (data) => {
+        getPartyInformation();
     };
 
-    const onActivityAdded = (data) => {
-        partyContext.addActivity();
-        onSocketEvent();
+    const onActivity = (data) => {
         console.log(data);
     };
 
