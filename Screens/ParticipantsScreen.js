@@ -61,7 +61,6 @@ export default ParticipantsScreen = ({ navigation }) => {
     }, [socket]);
 
     const renderPerson = ({ item }) => {
-      console.log(item.id);
       if (item.host == true) {
         return (
           <ParticipantBox title={item.title} host={item.host} id={item.id} />
@@ -94,7 +93,6 @@ export default ParticipantsScreen = ({ navigation }) => {
         });
       }
       for (let guest of res.guests) {
-        console.log(guest._id);
         newGuestList.push({
           id: guest._id,
           title: guest.name,

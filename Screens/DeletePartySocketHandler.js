@@ -49,7 +49,7 @@ export default DeletePartySocketHandler = () => {
     navigation.navigate("MainScreen");
     //set all states back to default
     userContext.setUserId(userInfo.userId);
-    userContext.setNotificationToken(userInfo.notificationToken);
+    //userContext.setNotificationToken(userInfo.notificationToken);
     userContext.setIsPrimaryHost(userInfo.isPrimaryHost);
     userContext.setIsHost(userInfo.isHost);
 

@@ -57,16 +57,12 @@ export default GuestScreen = ({ navigation }) => {
       for (let index = 0; index < listOfActivities.length; index++) {
         if (data.activity._id == listOfActivities[index]._id) {
           if (listOfActivities[index + 1] != null) {
-            console.log(listOfActivities[index + 1]);
             setnextActivity(listOfActivities[index + 1]);
           } else {
             setnextActivity(null);
           }
         }
       }
-    
-    console.log(data.activity);
-    //setcurrentActivity(data.activity);
   };
 
   const nextAppState = (nextAppState) => {
@@ -75,15 +71,12 @@ export default GuestScreen = ({ navigation }) => {
       nextAppState === "active"
     ) {
       getPartyInformation();
-      //console.log("App has come to the foreground!");
     }
     appState.current = nextAppState;
     setAppStateVisible(appState.current);
-    //console.log("AppState", appState.current);
   };
 
   const getPartyInformation = async () => {
-    //setactivityPackage(null);
     let currentTime = +new Date();
 
     //Handle Party Result
@@ -167,9 +160,6 @@ export default GuestScreen = ({ navigation }) => {
       getPartyInformation();
     }
 
-    //console.log(subscription);
-    //subscription.remove();
-
     return () => {
         AppState.removeEventListener("change", nextAppState);
         
@@ -191,48 +181,6 @@ export default GuestScreen = ({ navigation }) => {
       socket.off("activity-deleted ", getPartyInformation);
     };
   }, [socket]);
-
-  const onActivityStarted = (data) => {
-    partyContext.setcurrentActivity(data.activity);
-    onSocketEvent();
-    console.log(data);
-  };
-
-  const onActivityAdded = (data) => {
-    partyContext.addActivity();
-    onSocketEvent();
-    console.log(data);
-  };
-
-  const onActivityUpdated = (data) => {
-    partyContext.updateActivity(data.updatedActivity);
-    onSocketEvent();
-    console.log(data);
-  };
-
-  const onActivityRemoved = (data) => {
-    partyContext.removeActivity(data);
-    onSocketEvent();
-    console.log(data);
-  };
-
-  const onUserJoinParty = (data) => {
-    partyContext.addGuest(data.guestId);
-  };
-
-  const onUserLeaveParty = (data) => {
-    partyContext.removeGuest(data.guestId);
-  };
-
-  const onUserPromoted = (data) => {
-    partyContext.removeGuest(data.newHostId);
-    partyContext.addHost(data.newHostId);
-  };
-
-  const onUserDemoted = (data) => {
-    partyContext.removeHost(data.removedHostId);
-    partyContext.addGuest(data.removedHostId);
-  };
 
   const handleCurrentActivity = () => {
     if (currentActivity != null) {
