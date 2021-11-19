@@ -46,7 +46,8 @@ export default GuestScreen = ({ navigation }) => {
         return hours + ':' + minutes;
     };
 
-    const findNextActivity = (data) => {
+    const findNextActivity = () => {
+        getPartyInformation();
         let listOfActivities = partyContext.getAllActivities();
 
         for (let index = 0; index < listOfActivities.length; index++) {
