@@ -141,7 +141,6 @@ export default GuestScreen = ({ navigation }) => {
     };
 
     useEffect(() => {
-        console.log("BUH2");
         const subscription = AppState.addEventListener(
             "change",
             (nextAppState) => {
