@@ -7,24 +7,24 @@ export default StandardInput = (props) => {
     const [text, onChangeText] = React.useState(true ? props.value : null);
 
     return (
-      <View
-        style={{
-          ...styles.container,
-          ...ShadowCSS.standardShadow,
-          ...props.style,
-        }}
-      >
-        <TextInput
-          style={styles.inputField}
-          onChangeText={props.onChangeText}
-          value={props.value}
-          placeholder={props.placeholder}
-          maxLength={props.maxLength}
-          ref={textInputRef}
-          autoCapitalize={props.autoCapitalize}
-          autoCorrect={props.autoCorrect}
-        />
-      </View>
+        <View
+            style={{
+                ...ShadowCSS.standardShadow,
+                ...styles.container,
+                ...props.style,
+            }}
+        >
+            <TextInput
+                style={styles.inputField}
+                onChangeText={props.onChangeText}
+                value={props.value}
+                placeholder={props.placeholder}
+                maxLength={props.maxLength}
+                ref={textInputRef}
+                autoCapitalize={props.autoCapitalize}
+                autoCorrect={props.autoCorrect}
+            />
+        </View>
     );
 };
 
@@ -32,6 +32,9 @@ const styles = StyleSheet.create({
     inputField: {
         fontSize: 22,
         textAlign: 'center',
+        width: '100%',
+        height: '100%',
+        elevation: 0,
     },
     container: {
         height: 65,
@@ -39,6 +42,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flexDirection: 'row',
         backgroundColor: 'white',
-        borderRadius: 4,
+        borderRadius: 200,
+        shadowColor: '#666',
+        shadowOffset: { height: 2, width: 0 },
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
+        elevation: 0,
+        marginTop: 10,
     },
 });

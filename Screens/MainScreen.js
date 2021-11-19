@@ -64,10 +64,10 @@ export default MainScreen = ({ navigation }) => {
     };
 
     useEffect(() => {
-      sethostId(partyContext.getPrimaryHost().id);
+        sethostId(partyContext.getPrimaryHost()._id);
     }, [hostId]);
 
-    if (partyContext.getPrimaryHost().id) {
+    if (partyContext.getPrimaryHost()._id) {
       return (
         <View style={styles.container}>
           <View style={styles.logoTitleContainer}>
@@ -86,7 +86,7 @@ export default MainScreen = ({ navigation }) => {
               }}
               title="Your Party"
               action={() => {
-                navigation.navigate("PartyInformationScreen");
+                navigation.navigate("GuestScreen");
               }}
             />
           </View>

@@ -43,7 +43,7 @@ export default PartyInformationScreen = ({ navigation }) => {
         let participantsSize = 0;
         const res = await GuestService.getAllGuests(
             partyContext.getPartyId(),
-            partyContext.getPrimaryHost().id
+            partyContext.getPrimaryHost()._id
         );
         if (res.hosts) {
             participantsSize = res.hosts.length + res.guests.length;
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         alignItems: 'center',
         backgroundColor: 'white',
-        borderRadius: 5,
+        borderRadius: 4,
         paddingLeft: 7,
         paddingRight: 7,
     },

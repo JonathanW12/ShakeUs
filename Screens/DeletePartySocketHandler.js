@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { StyleSheet, Alert } from "react-native";
+import { StyleSheet, Alert, View } from "react-native";
 import { SocketContext } from "../Context/SocketContext";
 import { PartyContext } from "../Context/PartyContext";
 import { UserContext } from "../Context/UserContext";
@@ -62,8 +62,11 @@ export default DeletePartySocketHandler = () => {
     partyContext.getAllActivities(partyInfo.getAllActivities);
   };
   const removedFromParty = (data) => {
-    if (data.rempovedGuestId == userContext.getUserId()) partyIsDeleted();
+    if (data.removedGuestId == userContext.getUserId()) {
+    }
+    partyIsDeleted();
   };
+  return <View></View>;
 };
 
 const styles = StyleSheet.create({});

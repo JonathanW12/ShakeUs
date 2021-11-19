@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableHighlight } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import HiddenActivitySection from './HiddenActivitySection';
 import Colors from '../../Constants/Colors';
 import { useRef } from 'react';
@@ -18,10 +18,11 @@ export default ActivityContainer = (props) => {
     };
 
     return (
-        <TouchableHighlight
+        <TouchableOpacity
             onPress={() => {
                 toggleActivity();
             }}
+            activeOpacity={1}
         >
             <View
                 style={[
@@ -52,7 +53,7 @@ export default ActivityContainer = (props) => {
                     item={props.item}
                 ></HiddenActivitySection>
             </View>
-        </TouchableHighlight>
+        </TouchableOpacity>
     );
 };
 
@@ -70,8 +71,8 @@ const styles = StyleSheet.create({
         paddingBottom: 15,
         paddingLeft: 10,
         paddingRight: 10,
-        textShadowColor: 'rgba(0, 0, 0, 0.3)',
-        textShadowRadius: 0.5,
-        textShadowOffset: { width: 1, height: 1 },
+    },
+    button: {
+        backgroundColor: Colors.tertiary,
     },
 });

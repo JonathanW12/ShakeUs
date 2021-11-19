@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
     Dimensions,
     Alert,
+    TouchableWithoutFeedback,
 } from 'react-native';
 import Colors from '../../Constants/Colors';
 import { Icon } from 'react-native-elements';
@@ -36,6 +37,7 @@ export default Banner = (props) => {
             return;
         }
 
+
         await socketContext.emit('leave-room', partyContext.getPartyId());
         setModalVisible(!modalVisible);
         navigation.navigate('MainScreen');
@@ -51,8 +53,15 @@ export default Banner = (props) => {
             Alert.alert('You cannot delete the party');
             return;
         }
-        await socketContext.emit('leave-room', partyContext.getPartyId());
+
+        partyContext.setPrimaryHost({
+            _id: '',
+            name: '',
+        });
+        
         setModalVisible(!modalVisible);
+        await socketContext.emit("leave-room", partyContext.getPartyId());
+
         navigation.navigate('MainScreen');
     };
 
@@ -112,6 +121,7 @@ export default Banner = (props) => {
                         onPress={() => {
                             setModalVisible(!modalVisible);
                         }}
+                        activeOpacity={1}
                         style={styles.invisibleButton}
                     ></TouchableOpacity>
                     <View style={styles.modalContent}>
@@ -122,6 +132,7 @@ export default Banner = (props) => {
                                     setModalVisible(!modalVisible);
                                     navigation.navigate('GuestScreen');
                                 }}
+                                activeOpacity={1}
                                 style={styles.menuItem}
                             >
                                 <Text style={styles.participantsText}>
@@ -134,6 +145,7 @@ export default Banner = (props) => {
                                     setModalVisible(!modalVisible);
                                     navigation.navigate('ParticipantsScreen');
                                 }}
+                                activeOpacity={1}
                                 style={styles.menuItem}
                             >
                                 <Text style={styles.participantsText}>
@@ -148,6 +160,7 @@ export default Banner = (props) => {
                                             'CustomizePackScreen'
                                         );
                                     }}
+                                    activeOpacity={1}
                                     style={styles.menuItem}
                                 >
                                     <Text style={styles.participantsText}>
@@ -168,6 +181,7 @@ export default Banner = (props) => {
                                     }
                                 }
                             }}
+                            activeOpacity={1}
                             style={styles.footer}
                         >
                             <Text style={styles.leavePartyText}>
@@ -181,6 +195,7 @@ export default Banner = (props) => {
                         onPress={() => {
                             setModalVisible(true);
                         }}
+                        activeOpacity={1}
                         style={styles.bannerContainer}
                     >
                         <Icon name={'menu'} type="feather" color="white" />

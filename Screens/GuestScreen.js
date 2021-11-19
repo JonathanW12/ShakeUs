@@ -1,26 +1,29 @@
-import React, { useEffect, useState, useContext } from 'react';
-import Banner from '../Components/PageSections/Banner';
+import React, { useEffect, useState, useContext, useRef } from "react";
+import Banner from "../Components/PageSections/Banner";
 import {
-    View,
-    Text,
-    StyleSheet,
-    Image,
-    Dimensions,
-    ActivityIndicator,
-    Alert,
-} from 'react-native';
-import Colors from '../Constants/Colors';
-import ShadowCSS from '../Constants/ShadowCSS';
-import ActivityPackService from '../Services/ActivityPackService';
-import PartyService from '../Services/PartyService';
-import ActivityService from '../Services/ActivityService';
-import ActivityStartTime from '../Components/UI/ActivityStartTime';
-import { SocketContext } from '../Context/SocketContext';
-import { PartyContext } from './../Context/PartyContext';
-import { UserContext } from '../Context/UserContext';
-import InfoWindowBottom from '../Components/PageSections/InfoWindowBottom';
-import { useFocusEffect, useIsFocused } from '@react-navigation/core';
-import { DeletePartySocketHandler } from "./DeletePartySocketHandler";
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Dimensions,
+  ActivityIndicator,
+  Alert,
+  BackHandler,
+  AppState,
+} from "react-native";
+import Colors from "../Constants/Colors";
+import ShadowCSS from "../Constants/ShadowCSS";
+import ActivityPackService from "../Services/ActivityPackService";
+import PartyService from "../Services/PartyService";
+import ActivityService from "../Services/ActivityService";
+import ActivityStartTime from "../Components/UI/ActivityStartTime";
+import { SocketContext } from "../Context/SocketContext";
+import { PartyContext } from "./../Context/PartyContext";
+import { UserContext } from "../Context/UserContext";
+import InfoWindowBottom from "../Components/PageSections/InfoWindowBottom";
+import { useFocusEffect, useIsFocused } from "@react-navigation/core";
+import { CommonActions } from "@react-navigation/routers";
+import DeletePartySocketHandle from "./DeletePartySocketHandler";
 
 export default GuestScreen = ({ navigation }) => {
   const [activityPackage, setactivityPackage] = useState(null);
@@ -31,6 +34,8 @@ export default GuestScreen = ({ navigation }) => {
   const socket = useContext(SocketContext);
   const partyContext = useContext(PartyContext);
   const userContext = useContext(UserContext);
+  const appState = useRef(AppState.currentState);
+  const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
   const isFocused = useIsFocused();
 
@@ -46,19 +51,21 @@ export default GuestScreen = ({ navigation }) => {
     let listOfActivities = partyContext.getAllActivities();
 
     for (let index = 0; index < listOfActivities.length; index++) {
-      if (currentActivity == listOfActivities[index]) {
+      if (currentActivity._id == listOfActivities[index]._id) {
         if (listOfActivities[index + 1] != null) {
+          console.log(listOfActivities[index + 1]);
           setnextActivity(listOfActivities[index + 1]);
         } else {
           setnextActivity(null);
         }
       }
     }
+    console.log(data.activity);
     setcurrentActivity(data.activity);
   };
 
   const getPartyInformation = async () => {
-    setactivityPackage(null);
+    //setactivityPackage(null);
     let currentTime = +new Date();
 
     //Handle Party Result
@@ -91,10 +98,12 @@ export default GuestScreen = ({ navigation }) => {
     }
 
     //Handle Next activity result
+
     const nextActivityResult = await ActivityService.getNextActivity(
       partyContext.getPartyId(),
       userContext.getUserId()
     );
+
     if (!nextActivityResult) {
       Alert.alert("Unable to fetch next activity");
       return;
@@ -106,25 +115,51 @@ export default GuestScreen = ({ navigation }) => {
     setactivityPackage(activityPackResult);
     setallActivities(allActivitiesResult);
 
+    let arr = [];
+
     allActivitiesResult.forEach((element) => {
       if (element.startTime < currentTime) {
-        setcurrentActivity(element);
+        arr.push(element);
       }
     });
+
+    if (arr.length > 0) {
+      setcurrentActivity(arr.slice(-1)[0]);
+    } else {
+      setcurrentActivity(null);
+    }
+
     setready(true);
 
     if (nextActivityResult) {
       setnextActivity(nextActivityResult);
     } else {
       setnextActivity(null);
-      Alert.alert("Unable to fetch next activity");
+      //Alert.alert("Unable to fetch next activity");
     }
   };
 
   useEffect(() => {
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === "active"
+      ) {
+        getPartyInformation();
+        //console.log("App has come to the foreground!");
+      }
+      appState.current = nextAppState;
+      setAppStateVisible(appState.current);
+      //console.log("AppState", appState.current);
+    });
+
+    BackHandler.addEventListener("hardwareBackPress", () => true);
+
     if (isFocused) {
       getPartyInformation();
     }
+
+    return () => {};
   }, [isFocused]);
 
   useEffect(() => {
@@ -134,9 +169,85 @@ export default GuestScreen = ({ navigation }) => {
     };
   }, [socket]);
 
+  const onActivityStarted = (data) => {
+    partyContext.setcurrentActivity(data.activity);
+    onSocketEvent();
+    console.log(data);
+  };
+
+  const onActivityAdded = (data) => {
+    partyContext.addActivity();
+    onSocketEvent();
+    console.log(data);
+  };
+
+  const onActivityUpdated = (data) => {
+    partyContext.updateActivity(data.updatedActivity);
+    onSocketEvent();
+    console.log(data);
+  };
+
+  const onActivityRemoved = (data) => {
+    partyContext.removeActivity(data);
+    onSocketEvent();
+    console.log(data);
+  };
+
+  const onUserJoinParty = (data) => {
+    partyContext.addGuest(data.guestId);
+  };
+
+  const onUserLeaveParty = (data) => {
+    partyContext.removeGuest(data.guestId);
+  };
+
+  const onUserPromoted = (data) => {
+    partyContext.removeGuest(data.newHostId);
+    partyContext.addHost(data.newHostId);
+  };
+
+  const onUserDemoted = (data) => {
+    partyContext.removeHost(data.removedHostId);
+    partyContext.addGuest(data.removedHostId);
+  };
+
   const handleCurrentActivity = () => {
     if (currentActivity != null) {
       return (
+        <>
+          <DeletePartySocketHandler />
+          <View
+            style={{
+              ...ShadowCSS.standardShadow,
+              ...styles.challengeContainer,
+            }}
+          >
+            <View>
+              <Text style={styles.partyTitle}>{currentActivity.title}</Text>
+              <View style={styles.whiteLine}></View>
+              <Text style={styles.partyTitle}>
+                <ActivityStartTime
+                  activity={currentActivity}
+                  style={{
+                    ...styles.blueText,
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                />
+              </Text>
+            </View>
+            <Text style={styles.guestMesssage}>
+              {currentActivity.description}
+            </Text>
+            <View></View>
+          </View>
+        </>
+      );
+    }
+    return (
+      <>
+        <DeletePartySocketHandler />
         <View
           style={{
             ...ShadowCSS.standardShadow,
@@ -144,44 +255,16 @@ export default GuestScreen = ({ navigation }) => {
           }}
         >
           <View>
-            <Text style={styles.partyTitle}>{currentActivity.title}</Text>
+            <Text style={styles.partyTitle}>Waiting For Next Activity</Text>
             <View style={styles.whiteLine}></View>
-            <Text style={styles.partyTitle}>
-              <ActivityStartTime
-                activity={currentActivity}
-                style={{
-                  ...styles.blueText,
-                  flex: 1,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              />
-            </Text>
           </View>
           <Text style={styles.guestMesssage}>
-            {currentActivity.description}
+            Waiting for the first activity to start. You can see who else has
+            joined by looking at participants from the menu.
           </Text>
           <View></View>
         </View>
-      );
-    }
-    return (
-      <View
-        style={{
-          ...ShadowCSS.standardShadow,
-          ...styles.challengeContainer,
-        }}
-      >
-        <View>
-          <Text style={styles.partyTitle}>Waiting For Next Activity</Text>
-          <View style={styles.whiteLine}></View>
-        </View>
-        <Text style={styles.guestMesssage}>
-          Waiting for the first activity to start. You can see who else has
-          joined by looking at participants from the menu.
-        </Text>
-        <View></View>
-      </View>
+      </>
     );
   };
 
@@ -219,71 +302,71 @@ export default GuestScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    container: { backgroundColor: Colors.secondary, flex: 1 },
-    currentActivity: {
-        color: 'white',
-        textAlign: 'center',
-        fontSize: 22,
-        margin: 15,
-    },
-    guestMesssage: {
-        fontSize: 20,
-        color: 'white',
-        margin: 15,
-        textAlign: 'center',
-    },
-    button: { width: '60%', height: 40, marginBottom: 10, marginTop: 5 },
-    challengeContainer: {
-        width: '90%',
-        height: '40%',
-        padding: 5,
-        backgroundColor: Colors.primary,
-        justifyContent: 'space-between',
-        borderRadius: 4,
-        alignSelf: 'center',
-        marginBottom: 20,
-    },
-    partyTitle: {
-        fontSize: 22,
-        alignSelf: 'center',
-        paddingTop: 5,
-        paddingBottom: 5,
-        color: 'white',
-    },
-    whiteLine: {
-        width: '80%',
-        height: 2,
-        backgroundColor: 'white',
-        alignSelf: 'center',
-    },
-    lowerContainer: {
-        justifyContent: 'flex-end',
-        flex: 1,
-    },
-    nextActivity: {
-        backgroundColor: '#CC9300',
-        width: '100%',
-        height: Dimensions.get('screen').height * 0.05,
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        color: 'white',
-    },
-    timeStamp: {
-        backgroundColor: Colors.primary,
-        width: '100%',
-        height: Dimensions.get('screen').height * 0.1,
-        textAlign: 'center',
-        color: Colors.secondary,
-        fontSize: 35,
-        textAlignVertical: 'center',
-    },
-    loadingIcon: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    blueText: {
-        color: Colors.secondary,
-        fontSize: 35,
-    },
+  container: { backgroundColor: Colors.secondary, flex: 1 },
+  currentActivity: {
+    color: "white",
+    textAlign: "center",
+    fontSize: 24,
+    margin: 15,
+  },
+  guestMesssage: {
+    fontSize: 20,
+    color: "white",
+    margin: 15,
+    textAlign: "center",
+  },
+  button: { width: "60%", height: 40, marginBottom: 10, marginTop: 5 },
+  challengeContainer: {
+    width: "90%",
+    height: "40%",
+    padding: 5,
+    backgroundColor: Colors.primary,
+    justifyContent: "space-between",
+    borderRadius: 4,
+    alignSelf: "center",
+    marginBottom: 20,
+  },
+  partyTitle: {
+    fontSize: 22,
+    alignSelf: "center",
+    paddingTop: 5,
+    paddingBottom: 5,
+    color: "white",
+  },
+  whiteLine: {
+    width: "80%",
+    height: 2,
+    backgroundColor: "white",
+    alignSelf: "center",
+  },
+  lowerContainer: {
+    justifyContent: "flex-end",
+    flex: 1,
+  },
+  nextActivity: {
+    backgroundColor: "#CC9300",
+    width: "100%",
+    height: Dimensions.get("screen").height * 0.05,
+    textAlign: "center",
+    textAlignVertical: "center",
+    color: "white",
+  },
+  timeStamp: {
+    backgroundColor: Colors.primary,
+    width: "100%",
+    height: Dimensions.get("screen").height * 0.1,
+    textAlign: "center",
+    color: Colors.secondary,
+    fontSize: 35,
+    textAlignVertical: "center",
+  },
+  loadingIcon: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  blueText: {
+    color: Colors.secondary,
+    fontSize: 35,
+  },
 });

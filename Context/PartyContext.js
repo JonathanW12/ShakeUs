@@ -9,7 +9,7 @@ const partyInfo = {
         activities: [],
     },
     primaryHost: {
-        id: '',
+        _id: '',
         name: '',
     },
     hosts: [],
@@ -56,7 +56,45 @@ export default PartyProvider = (props) => {
         },
         getAllActivities: () => {
             return partyInfo.allActivities;
-        }
+        },
+        updateActivity: (activity) => {
+            const index = partyInfo.allActivities.findIndex(
+                (a) => a._id === activity._id
+            );
+            partyInfo.allActivities[index] = activity;
+
+            const index2 = partyInfo.activityPack.activities.findIndex(
+                (a) => a._id === activity._id
+            );
+            partyInfo.activityPack.activities[index2] = activity;
+        },
+        addActivity: (activity) => {
+            partyInfo.allActivities.push(activity);
+            partyInfo.activityPack.activities.push(activity);
+        },
+        removeActivity: (activity) => {
+            const index = partyInfo.allActivities.findIndex(
+                (a) => a._id === activity._id
+            );
+            partyInfo.allActivities.splice(index, 1);
+
+            const index2 = partyInfo.activityPack.activities.findIndex(
+                (a) => a._id === activity._id
+            );
+            partyInfo.activityPack.activities.splice(index2, 1);
+        },
+        addGuest: (guest) => {
+            partyInfo.guests.push(guest);
+        },
+        removeGuest: (guest) => {
+            partyInfo.guests.splice(partyInfo.guests.indexOf(guest), 1);
+        },
+        addHost: (host) => {
+            partyInfo.hosts.push(host);
+        },
+        removeHost: (host) => {
+            partyInfo.hosts.splice(partyInfo.hosts.indexOf(host), 1);
+        },
     };
 
     return (
