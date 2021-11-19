@@ -57,6 +57,17 @@ export default PartyProvider = (props) => {
         getAllActivities: () => {
             return partyInfo.allActivities;
         },
+        updateActivity: (activity) => {
+            const index = partyInfo.allActivities.findIndex(
+                (a) => a._id === activity._id
+            );
+            partyInfo.allActivities[index] = activity;
+
+            const index2 = partyInfo.activityPack.activities.findIndex(
+                (a) => a._id === activity._id
+            );
+            partyInfo.activityPack.activities[index2] = activity;
+        },
         addGuest: (guest) => {
             partyInfo.guests.push(guest);
         },

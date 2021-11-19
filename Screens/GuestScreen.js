@@ -164,6 +164,9 @@ export default GuestScreen = ({ navigation }) => {
     useEffect(() => {
         socket.on('activity-started', onActivityStarted);
         socket.on('activity-added', onActivityAdded);
+        socket.on('activity-title-updated', onActivityUpdated);
+        socket.on('activity-description-updated', onActivityUpdated);
+        socket.on('activity-start-time-updated', onActivityUpdated);
         socket.on('activity-removed', onActivityRemoved);
         socket.on('user-joined-party', onUserJoinParty);
         socket.on('user-left-party', onUserLeaveParty);
@@ -172,6 +175,9 @@ export default GuestScreen = ({ navigation }) => {
         return () => {
             socket.off('activity-started', onActivityStarted);
             socket.off('activity-added', onActivityAdded);
+            socket.off('activity-title-updated', onActivityUpdated);
+            socket.off('activity-description-updated', onActivityUpdated);
+            socket.off('activity-start-time-updated', onActivityUpdated);
             socket.off('activity-removed', onActivityRemoved);
             socket.off('user-joined-party', onUserJoinParty);
             socket.off('user-left-party', onUserLeaveParty);
@@ -190,6 +196,12 @@ export default GuestScreen = ({ navigation }) => {
         partyContext.addActivity();
         findNextActivity();
         console.log('activity added');
+    };
+
+    const onActivityUpdated = () => {
+        partyContext.updateActivity();
+        findNextActivity();
+        console.log('activity updated');
     };
 
     const onActivityRemoved = () => {
