@@ -174,6 +174,10 @@ export default GuestScreen = ({ navigation }) => {
         socket.on("activity-deleted", onUpdate);
         return () => {
             socket.off("activity-added", onUpdate);
+            socket.off("activity-startTime-updated", onUpdate);
+            socket.off("activity-title-updated", onUpdate);
+            socket.off("activity-description-updated", onUpdate);
+            socket.off("activity-deleted", onUpdate);
         };
     }, [socket]);
 
