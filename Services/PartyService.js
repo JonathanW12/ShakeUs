@@ -100,6 +100,7 @@ export default class PartyService {
   }
 
   static async removeHostFromParty(partyId, primaryHostId, removedHostId) {
+    console.log("DELETING HOST FROM PARTY")
     const res = await fetch(
       "https://shakeus.herokuapp.com:443/party/remove-host",
       {
@@ -114,6 +115,7 @@ export default class PartyService {
     return res.ok;
   }
   static async removeGuestFromParty(partyId, hostId, removedGuestId) {
+    console.log("DELETING GUEST FROM PARTY")
     const res = await fetch(
       "https://shakeus.herokuapp.com:443/party/remove-guest",
       {
@@ -168,6 +170,7 @@ export default class PartyService {
   }
 
   static async deleteParty(partyId, primaryHostId) {
+    console.log("DELETING PARTY")
     const res = await fetch("https://shakeus.herokuapp.com:443/party", {
       method: "DELETE",
       headers: {

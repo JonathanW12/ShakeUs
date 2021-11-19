@@ -29,7 +29,6 @@ const partyInfo = {
 };
 
 export default DeletePartySocketHandler = () => {
-  console.log("im woooorking");
   const navigation = useNavigation();
   const socketContext = useContext(SocketContext);
   const userContext = useContext(UserContext);
@@ -61,10 +60,12 @@ export default DeletePartySocketHandler = () => {
     partyContext.setGuests(partyInfo.guests);
     partyContext.getAllActivities(partyInfo.getAllActivities);
   };
+
   const removedFromParty = (data) => {
     if (data.removedGuestId == userContext.getUserId()) {
+      partyIsDeleted();
     }
-    partyIsDeleted();
+    
   };
   return <View></View>;
 };

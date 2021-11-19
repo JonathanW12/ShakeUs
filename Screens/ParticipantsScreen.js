@@ -80,7 +80,7 @@ export default ParticipantsScreen = ({ navigation }) => {
       let newGuestList = [];
       const res = await GuestService.getAllGuests(
         partyContext.getPartyId(),
-        partyContext.getPrimaryHost()._id
+        userContext.getUserId()
       );
       if (!res) {
         Alert.alert("Unable to get guests");

@@ -50,18 +50,23 @@ export default GuestScreen = ({ navigation }) => {
   const onSocketEvent = (data) => {
     let listOfActivities = partyContext.getAllActivities();
 
-    for (let index = 0; index < listOfActivities.length; index++) {
-      if (currentActivity._id == listOfActivities[index]._id) {
-        if (listOfActivities[index + 1] != null) {
-          console.log(listOfActivities[index + 1]);
-          setnextActivity(listOfActivities[index + 1]);
-        } else {
-          setnextActivity(null);
+    if(currentActivity == null){
+      setcurrentActivity(data.activity)
+    }
+
+      for (let index = 0; index < listOfActivities.length; index++) {
+        if (data.activity._id == listOfActivities[index]._id) {
+          if (listOfActivities[index + 1] != null) {
+            console.log(listOfActivities[index + 1]);
+            setnextActivity(listOfActivities[index + 1]);
+          } else {
+            setnextActivity(null);
+          }
         }
       }
-    }
+    
     console.log(data.activity);
-    setcurrentActivity(data.activity);
+    //setcurrentActivity(data.activity);
   };
 
   const nextAppState = (nextAppState) => {
@@ -173,8 +178,17 @@ export default GuestScreen = ({ navigation }) => {
 
   useEffect(() => {
     socket.on("activity-started", onSocketEvent);
+    socket.on("activity-added", getPartyInformation);
+    socket.on("activity-title-updated", getPartyInformation);
+    socket.on("activity-deleted ", getPartyInformation);
+
+
+
     return () => {
       socket.off("activity-started", onSocketEvent);
+      socket.off("activity-added", getPartyInformation);
+      socket.off("activity-title-updated", getPartyInformation);
+      socket.off("activity-deleted ", getPartyInformation);
     };
   }, [socket]);
 
