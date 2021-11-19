@@ -68,6 +68,21 @@ export default PartyProvider = (props) => {
             );
             partyInfo.activityPack.activities[index2] = activity;
         },
+        addActivity: (activity) => {
+            partyInfo.allActivities.push(activity);
+            partyInfo.activityPack.activities.push(activity);
+        },
+        removeActivity: (activity) => {
+            const index = partyInfo.allActivities.findIndex(
+                (a) => a._id === activity._id
+            );
+            partyInfo.allActivities.splice(index, 1);
+
+            const index2 = partyInfo.activityPack.activities.findIndex(
+                (a) => a._id === activity._id
+            );
+            partyInfo.activityPack.activities.splice(index2, 1);
+        },
         addGuest: (guest) => {
             partyInfo.guests.push(guest);
         },

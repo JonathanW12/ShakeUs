@@ -189,25 +189,25 @@ export default GuestScreen = ({ navigation }) => {
     const onActivityStarted = (data) => {
         partyContext.setcurrentActivity(data.activity);
         findNextActivity();
-        console.log('activity started');
+        console.log(data);
     };
 
-    const onActivityAdded = () => {
+    const onActivityAdded = (data) => {
         partyContext.addActivity();
         findNextActivity();
-        console.log('activity added');
+        console.log(data);
     };
 
-    const onActivityUpdated = () => {
-        partyContext.updateActivity();
+    const onActivityUpdated = (data) => {
+        partyContext.updateActivity(data.updatedActivity);
         findNextActivity();
-        console.log('activity updated');
+        console.log(data);
     };
 
-    const onActivityRemoved = () => {
-        partyContext.removeActivity();
+    const onActivityRemoved = (data) => {
+        partyContext.removeActivity(data);
         findNextActivity();
-        console.log('activity removed');
+        console.log(data);
     };
 
     const onUserJoinParty = (data) => {
