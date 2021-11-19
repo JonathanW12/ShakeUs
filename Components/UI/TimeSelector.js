@@ -63,7 +63,7 @@ export default TimeSelector = (props) => {
                         onChange={onChange}
                         style={{
                             height: 90,
-                            backgroundColor: Colors.primary,
+                            backgroundColor: Colors.primaryDark,
                             marginBottom: 20,
                         }}
                         textColor={"white"}

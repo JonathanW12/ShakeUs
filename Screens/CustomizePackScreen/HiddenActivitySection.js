@@ -3,9 +3,9 @@ import React, {
     useImperativeHandle,
     useRef,
     useState,
-} from 'react';
-import { Animated, StyleSheet, Text, Dimensions } from 'react-native';
-import Colors from './../../Constants/Colors';
+} from "react";
+import { Animated, StyleSheet, Text, Dimensions, Platform } from "react-native";
+import Colors from "./../../Constants/Colors";
 
 export default HiddenActivitySection = forwardRef((props, ref) => {
     const startingHeight = 0;
@@ -20,6 +20,7 @@ export default HiddenActivitySection = forwardRef((props, ref) => {
     const onTextLayout = (event) => {
         let { x, y, width, height } = event.nativeEvent.layout;
         height = Math.floor(height);
+        if (Platform.OS === "ios") height *= 7;
         if (height > startingHeight) {
             setFullHeight(height);
         }
@@ -63,17 +64,17 @@ export default HiddenActivitySection = forwardRef((props, ref) => {
 const styles = StyleSheet.create({
     hiddenActivitySection: {
         backgroundColor: Colors.primary,
-        overflow: 'hidden',
+        overflow: "hidden",
         flex: 1,
-        alignItems: 'center',
+        alignItems: "center",
     },
     activityDescription: {
-        color: '#ffffff',
+        color: "#ffffff",
         fontSize: 18,
-        borderTopColor: '#fff',
+        borderTopColor: "#fff",
         borderTopWidth: 1,
         paddingTop: 10,
         paddingBottom: 10,
-        width: Dimensions.get('window').width - 20,
+        width: Dimensions.get("window").width - 20,
     },
 });

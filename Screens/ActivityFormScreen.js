@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import Banner from "../Components/PageSections/Banner";
 import Colors from "./../Constants/Colors";
 import StandardInput from "../Components/UI/StandardInput";
@@ -12,7 +12,9 @@ import { PartyContext } from "./../Context/PartyContext";
 export default ActivityFormScreen = ({ route, navigation }) => {
     const { newActivity, activityId, activityStartTime } = route.params;
     const partyContext = useContext(PartyContext);
-    const [date, setDate] = useState(new Date(activityStartTime));
+    const [date, setDate] = useState(
+        newActivity ? new Date() : new Date(activityStartTime)
+    );
 
     const [title, setTitle] = useState(
         newActivity ? "" : route.params.activityTitle
@@ -45,23 +47,27 @@ export default ActivityFormScreen = ({ route, navigation }) => {
     };
 
     const createActivity = async (activity) => {
-        const res = await ActivityService.createActivity(
-            activity.title,
-            activity.description,
-            activity.startTime
-        );
-
-        if (res) {
-            activity._id = res.activityId;
-
-            const addRes = ActivityPackService.addActivityToPack(
-                partyContext.getActivityPack()._id,
-                res.activityId
+        if (activity.title && activity.description && activity.startTime) {
+            const res = await ActivityService.createActivity(
+                activity.title,
+                activity.description,
+                activity.startTime
             );
 
-            return addRes;
+            if (res) {
+                activity._id = res.activityId;
+
+                const addRes = ActivityPackService.addActivityToPack(
+                    partyContext.getActivityPack()._id,
+                    res.activityId
+                );
+
+                return addRes;
+            } else {
+                throw new Error("Failed to create activity");
+            }
         } else {
-            throw new Error("Failed to create activity");
+            Alert.alert("You must input both a title and a description");
         }
     };
 

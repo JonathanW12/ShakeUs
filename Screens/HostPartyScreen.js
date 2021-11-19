@@ -69,7 +69,7 @@ export default HostPartyScreen = ({ navigation }) => {
         }
     };
 
-    const createTwoButtonAlert = () =>
+    const createTwoButtonAlert = () => {
         Alert.alert(
             "Confirmation",
             `Create party: ${partyContext.getActivityPack().title}`,
@@ -81,6 +81,7 @@ export default HostPartyScreen = ({ navigation }) => {
                 { text: "OK", onPress: () => createTheParty() },
             ]
         );
+    };
 
     return (
         <View style={styles.container}>
