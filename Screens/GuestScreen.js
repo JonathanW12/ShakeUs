@@ -183,16 +183,19 @@ export default GuestScreen = ({ navigation }) => {
     const onActivityStarted = (data) => {
         partyContext.setcurrentActivity(data.activity);
         findNextActivity();
+        console.log('activity started');
     };
 
     const onActivityAdded = () => {
         partyContext.addActivity();
         findNextActivity();
+        console.log('activity added');
     };
 
     const onActivityRemoved = () => {
         partyContext.removeActivity();
         findNextActivity();
+        console.log('activity removed');
     };
 
     const onUserJoinParty = (data) => {
