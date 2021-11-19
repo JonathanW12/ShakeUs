@@ -29,8 +29,8 @@ export default HostPartyScreen = ({ navigation }) => {
         if (res) {
             partyContext.setPartyId(res.partyId);
             partyContext.setPrimaryHost({
-                id: res.hostId,
-                name: partyContext.getPrimaryHost().name,
+              _id: res.hostId,
+              name: partyContext.getPrimaryHost().name,
             });
 
             userContext.setUserId(res.hostId);

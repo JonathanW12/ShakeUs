@@ -59,9 +59,9 @@ export default Banner = (props) => {
             name: '',
         });
         
-
-        await socketContext.emit('leave-room', partyContext.getPartyId());
         setModalVisible(!modalVisible);
+        await socketContext.emit("leave-room", partyContext.getPartyId());
+
         navigation.navigate('MainScreen');
     };
 

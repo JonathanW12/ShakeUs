@@ -23,6 +23,7 @@ import { UserContext } from "../Context/UserContext";
 import InfoWindowBottom from "../Components/PageSections/InfoWindowBottom";
 import { useFocusEffect, useIsFocused } from "@react-navigation/core";
 import { CommonActions } from "@react-navigation/routers";
+import { DeletePartySocketHander } from "./DeletePartySocketHandler";
 
 export default GuestScreen = ({ navigation }) => {
     const [activityPackage, setactivityPackage] = useState(null);
@@ -253,24 +254,28 @@ export default GuestScreen = ({ navigation }) => {
             );
         }
         return (
-            <View
-                style={{
-                    ...ShadowCSS.standardShadow,
-                    ...styles.challengeContainer,
-                }}
-            >
-                <View>
-                    <Text style={styles.partyTitle}>
-                        Waiting For Next Activity
+            <>
+                <DeletePartySocketHander />
+                <View
+                    style={{
+                        ...ShadowCSS.standardShadow,
+                        ...styles.challengeContainer,
+                    }}
+                >
+                    <View>
+                        <Text style={styles.partyTitle}>
+                            Waiting For Next Activity
+                        </Text>
+                        <View style={styles.whiteLine}></View>
+                    </View>
+                    <Text style={styles.guestMesssage}>
+                        Waiting for the first activity to start. You can see who
+                        else has joined by looking at participants from the
+                        menu.
                     </Text>
-                    <View style={styles.whiteLine}></View>
+                    <View></View>
                 </View>
-                <Text style={styles.guestMesssage}>
-                    Waiting for the first activity to start. You can see who
-                    else has joined by looking at participants from the menu.
-                </Text>
-                <View></View>
-            </View>
+            </>
         );
     };
 

@@ -37,17 +37,22 @@ export default ParticipantBox = (props) => {
                         type="feather"
                         color="red"
                         onPress={() => {
+                            console.log("values1:" + props.id);
+                            console.log("values:2" + partyContext.getPartyId());
+                            console.log(
+                              "values3:" + partyContext.getPrimaryHost()._id
+                            );
                             PartyService.removeGuestFromParty(
-                                partyContext.getPartyId(),
-                                partyContext.getPrimaryHost()._id,
-                                props._id
+                              partyContext.getPartyId(),
+                              partyContext.getPrimaryHost()._id,
+                              props.id
                             )
-                                .then((res) => {
-                                    if (res.status === 200) {
-                                        //person removed
-                                    }
-                                })
-                                .catch((err) => console.error(err));
+                              .then((res) => {
+                                if (res.status === 200) {
+                                  //person removed
+                                }
+                              })
+                              .catch((err) => console.error(err));
                         }}
                     />
                 )}

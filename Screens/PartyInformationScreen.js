@@ -61,64 +61,65 @@ export default PartyInformationScreen = ({ navigation }) => {
     }
 
     if (activityPackage != null) {
-        return (
-            <View style={styles.container}>
-                <Banner title="Party Information" />
-                <View style={styles.innerWrapper}>
-                    <View
-                        style={{
-                            ...ShadowCSS.standardShadow,
-                            ...styles.challengeContainer,
-                        }}
-                    >
-                        <View>
-                            <Text style={styles.partyTitle}>Activity Pack</Text>
-                        </View>
+      ;
+      return (
+        <View style={styles.container}>
+          <Banner title="Party Information" />
+          <View style={styles.innerWrapper}>
+            <View
+              style={{
+                ...ShadowCSS.standardShadow,
+                ...styles.challengeContainer,
+              }}
+            >
+              <View>
+                <Text style={styles.partyTitle}>Activity Pack</Text>
+              </View>
 
-                        <View>
-                            <SmallButton
-                                style={{
-                                    ...styles.button,
-                                    backgroundColor: Colors.secondary,
-                                }}
-                                title="Customize"
-                                action={() => {
-                                    navigation.navigate('CustomizePackScreen');
-                                }}
-                            />
+              <View>
+                <SmallButton
+                  style={{
+                    ...styles.button,
+                    backgroundColor: Colors.secondary,
+                  }}
+                  title="Customize"
+                  action={() => {
+                    navigation.navigate("CustomizePackScreen");
+                  }}
+                />
 
-                            <Text style={styles.partyTitle}>
-                                Guests: {participantCount}{' '}
-                            </Text>
-                            <SmallButton
-                                style={{
-                                    ...styles.button,
-                                    backgroundColor: Colors.secondary,
-                                }}
-                                title="Guest List"
-                                action={() => {
-                                    navigation.navigate('ParticipantsScreen');
-                                }}
-                            />
-                        </View>
-                    </View>
-                </View>
-
-                <InfoWindowBottom
-                    title="Party Code"
-                    content={partyContext.getPartyId()}
-                ></InfoWindowBottom>
+                <Text style={styles.partyTitle}>
+                  Guests: {participantCount}{" "}
+                </Text>
+                <SmallButton
+                  style={{
+                    ...styles.button,
+                    backgroundColor: Colors.secondary,
+                  }}
+                  title="Guest List"
+                  action={() => {
+                    navigation.navigate("ParticipantsScreen");
+                  }}
+                />
+              </View>
             </View>
-        );
+          </View>
+
+          <InfoWindowBottom
+            title="Party Code"
+            content={partyContext.getPartyId()}
+          ></InfoWindowBottom>
+        </View>
+      );
     } else {
-        return (
-            <View style={styles.container}>
-                <Banner title="Party Information" />
-                <View style={styles.loadingIcon}>
-                    <ActivityIndicator size={52} color={Colors.primary} />
-                </View>
-            </View>
-        );
+      return (
+        <View style={styles.container}>
+          <Banner title="Party Information" />
+          <View style={styles.loadingIcon}>
+            <ActivityIndicator size={52} color={Colors.primary} />
+          </View>
+        </View>
+      );
     }
 };
 
