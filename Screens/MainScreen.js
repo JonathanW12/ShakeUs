@@ -67,7 +67,7 @@ export default MainScreen = ({ navigation }) => {
         sethostId(partyContext.getPrimaryHost()._id);
     }, [hostId]);
 
-    if (partyContext.getPrimaryHost().id) {
+    if (partyContext.getPrimaryHost()._id) {
       return (
         <View style={styles.container}>
           <View style={styles.logoTitleContainer}>
@@ -93,37 +93,37 @@ export default MainScreen = ({ navigation }) => {
         </View>
       );
     } else {
-        return (
-            <View style={styles.container}>
-                <View style={styles.logoTitleContainer}>
-                    <Image
-                        source={require('../assets/ShakeUsLogo.png')}
-                        style={styles.logo}
-                    />
-                    <Text style={styles.title}>ShAKeUs</Text>
-                </View>
-                <View style={styles.contentContainer}>
-                    <StandardButton
-                        textStyle={styles.buttonTextStyle}
-                        style={{
-                            ...styles.button,
-                            backgroundColor: Colors.tertiary,
-                        }}
-                        title="Join Party"
-                        action={handleActionJoinParty}
-                    />
-                    <StandardButton
-                        textStyle={styles.buttonTextStyle}
-                        style={{
-                            ...styles.button,
-                            backgroundColor: Colors.primary,
-                        }}
-                        title="Host Party"
-                        action={handleActionHostParty}
-                    />
-                </View>
-            </View>
-        );
+      return (
+        <View style={styles.container}>
+          <View style={styles.logoTitleContainer}>
+            <Image
+              source={require("../assets/ShakeUsLogo.png")}
+              style={styles.logo}
+            />
+            <Text style={styles.title}>ShAKeUs</Text>
+          </View>
+          <View style={styles.contentContainer}>
+            <StandardButton
+              textStyle={styles.buttonTextStyle}
+              style={{
+                ...styles.button,
+                backgroundColor: Colors.tertiary,
+              }}
+              title="Join Party"
+              action={handleActionJoinParty}
+            />
+            <StandardButton
+              textStyle={styles.buttonTextStyle}
+              style={{
+                ...styles.button,
+                backgroundColor: Colors.primary,
+              }}
+              title="Host Party"
+              action={handleActionHostParty}
+            />
+          </View>
+        </View>
+      );
     }
 };
 

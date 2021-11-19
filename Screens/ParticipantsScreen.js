@@ -61,49 +61,47 @@ export default ParticipantsScreen = ({ navigation }) => {
     }, [socket]);
 
     const renderPerson = ({ item }) => {
-        if (item.host == true) {
-            return (
-                <ParticipantBox
-                    title={item.title}
-                    host={item.host}
-                    id={item.id}
-                />
-            );
-        }
+      console.log(item.id);
+      if (item.host == true) {
         return (
-            <ParticipantBox
-                title={item.title}
-                host={item.host}
-                showingDeleteSymbol={_showingDeleteSymbol}
-                id={item.id}
-            />
+          <ParticipantBox title={item.title} host={item.host} id={item.id} />
         );
+      }
+      return (
+        <ParticipantBox
+          title={item.title}
+          host={item.host}
+          showingDeleteSymbol={_showingDeleteSymbol}
+          id={item.id}
+        />
+      );
     };
     const updateGuests = async () => {
-        let newGuestList = [];
-        const res = await GuestService.getAllGuests(
-            partyContext.getPartyId(),
-            partyContext.getPrimaryHost().id
-        );
-        if (!res) {
-            Alert.alert('Unable to get guests');
-            return;
-        }
-        for (let host of res.hosts) {
-            newGuestList.push({
-                id: host._id,
-                title: host.name,
-                host: true,
-            });
-        }
-        for (let guest of res.guests) {
-            newGuestList.push({
-                id: guest._id,
-                title: guest.name,
-                showingDeleteSymbol: _showingDeleteSymbol,
-            });
-        }
-        setParticipantsList(newGuestList);
+      let newGuestList = [];
+      const res = await GuestService.getAllGuests(
+        partyContext.getPartyId(),
+        partyContext.getPrimaryHost()._id
+      );
+      if (!res) {
+        Alert.alert("Unable to get guests");
+        return;
+      }
+      for (let host of res.hosts) {
+        newGuestList.push({
+          id: host._id,
+          title: host.name,
+          host: true,
+        });
+      }
+      for (let guest of res.guests) {
+        console.log(guest._id);
+        newGuestList.push({
+          id: guest._id,
+          title: guest.name,
+          showingDeleteSymbol: _showingDeleteSymbol,
+        });
+      }
+      setParticipantsList(newGuestList);
     };
 
     const isCurrentUserHostRender = () => {
