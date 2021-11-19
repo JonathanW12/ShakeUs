@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useContext, useRef } from 'react';
-import Banner from '../Components/PageSections/Banner';
+import React, { useEffect, useState, useContext, useRef } from "react";
+import Banner from "../Components/PageSections/Banner";
 import {
     View,
     Text,
@@ -10,19 +10,19 @@ import {
     Alert,
     BackHandler,
     AppState,
-} from 'react-native';
-import Colors from '../Constants/Colors';
-import ShadowCSS from '../Constants/ShadowCSS';
-import ActivityPackService from '../Services/ActivityPackService';
-import PartyService from '../Services/PartyService';
-import ActivityService from '../Services/ActivityService';
-import ActivityStartTime from '../Components/UI/ActivityStartTime';
-import { SocketContext } from '../Context/SocketContext';
-import { PartyContext } from './../Context/PartyContext';
-import { UserContext } from '../Context/UserContext';
-import InfoWindowBottom from '../Components/PageSections/InfoWindowBottom';
-import { useFocusEffect, useIsFocused } from '@react-navigation/core';
-import { CommonActions } from '@react-navigation/routers';
+} from "react-native";
+import Colors from "../Constants/Colors";
+import ShadowCSS from "../Constants/ShadowCSS";
+import ActivityPackService from "../Services/ActivityPackService";
+import PartyService from "../Services/PartyService";
+import ActivityService from "../Services/ActivityService";
+import ActivityStartTime from "../Components/UI/ActivityStartTime";
+import { SocketContext } from "../Context/SocketContext";
+import { PartyContext } from "./../Context/PartyContext";
+import { UserContext } from "../Context/UserContext";
+import InfoWindowBottom from "../Components/PageSections/InfoWindowBottom";
+import { useFocusEffect, useIsFocused } from "@react-navigation/core";
+import { CommonActions } from "@react-navigation/routers";
 
 export default GuestScreen = ({ navigation }) => {
     const [activityPackage, setactivityPackage] = useState(null);
@@ -41,12 +41,13 @@ export default GuestScreen = ({ navigation }) => {
     const unixToHours = (unix) => {
         let unix_timestamp = unix;
         let date = new Date(unix_timestamp);
-        let hours = date.getHours().toString().padStart(2, '0');
-        var minutes = date.getMinutes().toString().padStart(2, '0');
-        return hours + ':' + minutes;
+        let hours = date.getHours().toString().padStart(2, "0");
+        var minutes = date.getMinutes().toString().padStart(2, "0");
+        return hours + ":" + minutes;
     };
 
-    const onSocketEvent = (data) => {
+    const findNextActivity = () => {
+        getPartyInformation();
         let listOfActivities = partyContext.getAllActivities();
 
         for (let index = 0; index < listOfActivities.length; index++) {
@@ -73,7 +74,7 @@ export default GuestScreen = ({ navigation }) => {
             userContext.getUserId()
         );
         if (!partyResult) {
-            Alert.alert('Unable to find party');
+            Alert.alert("Unable to find party");
             return;
         }
         // Set the party ID for use under customizePack
@@ -83,7 +84,7 @@ export default GuestScreen = ({ navigation }) => {
             partyResult.activityPackId
         );
         if (!activityPackResult) {
-            Alert.alert('Unable to fetch activity pack');
+            Alert.alert("Unable to fetch activity pack");
             return;
         }
 
@@ -92,7 +93,7 @@ export default GuestScreen = ({ navigation }) => {
             partyResult.activityPackId
         );
         if (!allActivitiesResult) {
-            Alert.alert('Unable to fetch all activities');
+            Alert.alert("Unable to fetch all activities");
             return;
         }
 
@@ -104,7 +105,7 @@ export default GuestScreen = ({ navigation }) => {
         );
 
         if (!nextActivityResult) {
-            Alert.alert('Unable to fetch next activity');
+            Alert.alert("Unable to fetch next activity");
             return;
         }
 
@@ -140,11 +141,11 @@ export default GuestScreen = ({ navigation }) => {
 
     useEffect(() => {
         const subscription = AppState.addEventListener(
-            'change',
+            "change",
             (nextAppState) => {
                 if (
                     appState.current.match(/inactive|background/) &&
-                    nextAppState === 'active'
+                    nextAppState === "active"
                 ) {
                     getPartyInformation();
                     //console.log("App has come to the foreground!");
@@ -155,7 +156,7 @@ export default GuestScreen = ({ navigation }) => {
             }
         );
 
-        BackHandler.addEventListener('hardwareBackPress', () => true);
+        BackHandler.addEventListener("hardwareBackPress", () => true);
 
         if (isFocused) {
             getPartyInformation();
@@ -165,9 +166,9 @@ export default GuestScreen = ({ navigation }) => {
     }, [isFocused]);
 
     useEffect(() => {
-        socket.on('activity-started', onSocketEvent);
+        socket.on("activity-started", onSocketEvent);
         return () => {
-            socket.off('activity-started', onSocketEvent);
+            socket.off("activity-started", onSocketEvent);
         };
     }, [socket]);
 
@@ -233,8 +234,8 @@ export default GuestScreen = ({ navigation }) => {
                                 style={{
                                     ...styles.blueText,
                                     flex: 1,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
+                                    justifyContent: "center",
+                                    alignItems: "center",
                                 }}
                             />
                         </Text>
@@ -278,13 +279,13 @@ export default GuestScreen = ({ navigation }) => {
                 {handleCurrentActivity()}
                 {nextActivity ? (
                     <InfoWindowBottom
-                        title={'Next activity starting at:'}
+                        title={"Next activity starting at:"}
                         content={unixToHours(nextActivity.startTime)}
                     />
                 ) : (
                     <InfoWindowBottom
-                        title={'Next activity starting at:'}
-                        content={'No more activities'}
+                        title={"Next activity starting at:"}
+                        content={"No more activities"}
                     />
                 )}
             </View>
@@ -304,66 +305,66 @@ export default GuestScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: { backgroundColor: Colors.secondary, flex: 1 },
     currentActivity: {
-        color: 'white',
-        textAlign: 'center',
+        color: "white",
+        textAlign: "center",
         fontSize: 24,
         margin: 15,
     },
     guestMesssage: {
         fontSize: 20,
-        color: 'white',
+        color: "white",
         margin: 15,
-        textAlign: 'center',
+        textAlign: "center",
     },
-    button: { width: '60%', height: 40, marginBottom: 10, marginTop: 5 },
+    button: { width: "60%", height: 40, marginBottom: 10, marginTop: 5 },
     challengeContainer: {
-        width: '90%',
-        height: '40%',
+        width: "90%",
+        height: "40%",
         padding: 5,
         backgroundColor: Colors.primary,
-        justifyContent: 'space-between',
+        justifyContent: "space-between",
         borderRadius: 4,
-        alignSelf: 'center',
+        alignSelf: "center",
         marginBottom: 20,
     },
     partyTitle: {
         fontSize: 22,
-        alignSelf: 'center',
+        alignSelf: "center",
         paddingTop: 5,
         paddingBottom: 5,
-        color: 'white',
+        color: "white",
     },
     whiteLine: {
-        width: '80%',
+        width: "80%",
         height: 2,
-        backgroundColor: 'white',
-        alignSelf: 'center',
+        backgroundColor: "white",
+        alignSelf: "center",
     },
     lowerContainer: {
-        justifyContent: 'flex-end',
+        justifyContent: "flex-end",
         flex: 1,
     },
     nextActivity: {
-        backgroundColor: '#CC9300',
-        width: '100%',
-        height: Dimensions.get('screen').height * 0.05,
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        color: 'white',
+        backgroundColor: "#CC9300",
+        width: "100%",
+        height: Dimensions.get("screen").height * 0.05,
+        textAlign: "center",
+        textAlignVertical: "center",
+        color: "white",
     },
     timeStamp: {
         backgroundColor: Colors.primary,
-        width: '100%',
-        height: Dimensions.get('screen').height * 0.1,
-        textAlign: 'center',
+        width: "100%",
+        height: Dimensions.get("screen").height * 0.1,
+        textAlign: "center",
         color: Colors.secondary,
         fontSize: 35,
-        textAlignVertical: 'center',
+        textAlignVertical: "center",
     },
     loadingIcon: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        justifyContent: "center",
+        alignItems: "center",
     },
     blueText: {
         color: Colors.secondary,
